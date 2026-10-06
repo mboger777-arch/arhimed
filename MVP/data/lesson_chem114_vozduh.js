@@ -393,7 +393,7 @@
   const ПЛИТКИ = (плитки,обработчик,колонок,выбор) => `<div class="лоток" data-anim style="--i:4${колонок?';grid-template-columns:repeat('+колонок+',minmax(0,1fr))':''}">${плитки.map(([что,имя,тело],i)=>
     `<button type="button" class="плитка${выбор===i?' вкл':''}" onclick="${обработчик}(${i})"><svg viewBox="0 0 64 64" aria-hidden="true">${L_().defs()}<rect width="64" height="64" rx="8" fill="url(#рл-студия)"/>${тело}</svg><span>${имя}</span></button>`).join('')}</div>`;
   const ДВ = () => L_().ДВИЖ;
-  const ИЗВВ = 'hsla(198,30%,90%,.45)', МУТЬ = 'hsla(40,15%,95%,.9)';
+  const ИЗВВ = 'hsla(198,35%,88%,.42)', МУТЬ = 'hsla(45,18%,94%,.92)';
   const пузыри = (x,yН,yВ,ш,n) => Array.from({length:n},(_,k)=>{ const px=x-ш/2+((k*29)%ш), r=1.2+(k%3)*0.7;
     return `<circle cx="${px}" cy="${yН}" r="${r}" fill="none" stroke="#fff" stroke-width=".8" opacity=".85">${ДВ()?`<animate attributeName="cy" values="${yН};${yВ}" dur="${(0.8+(k%4)*0.25).toFixed(2)}s" begin="${((k%5)*0.15).toFixed(2)}s" repeatCount="indefinite"/>`:''}</circle>`; }).join('');
   const дым = (x,y,n) => Array.from({length:n||2},(_,k)=>`<path d="M${x-3+k*6} ${y} q-5 -8 0 -16 q5 -8 0 -16" stroke="#9aa0a6" stroke-width="1.6" fill="none" opacity=".45">${ДВ()?`<animate attributeName="opacity" values=".15;.5;.15" dur="${1.6+k*0.3}s" repeatCount="indefinite"/>`:''}</path>`).join('');
@@ -526,16 +526,24 @@
   }
 
   /* 6. Вдох и выдох */
-  const лицо = (x,y) => `<g><path d="M${x+10} ${y+34} Q${x+4} ${y+50} ${x+2} ${y+70} H${x+60} V${y+34} Z" fill="#3a8a8a"/>
-    <path d="M${x+14} ${y-4} Q${x+14} ${y-34} ${x+40} ${y-36} Q${x+66} ${y-36} ${x+66} ${y-6} Q${x+66} ${y+22} ${x+46} ${y+30} Q${x+24} ${y+34} ${x+18} ${y+20} L${x+14} ${y+14} Q${x+8} ${y+12} ${x+10} ${y+6} L${x+4} ${y+2} Q${x+2} ${y-2} ${x+10} ${y-4} Z" fill="#f2c8a0"/>
-    <path d="M${x+14} ${y-8} Q${x+16} ${y-38} ${x+42} ${y-40} Q${x+70} ${y-38} ${x+70} ${y-8} Q${x+70} ${y+12} ${x+62} ${y+20} Q${x+58} ${y-6} ${x+46} ${y-12} Q${x+30} ${y-18} ${x+14} ${y-8} Z" fill="#6a3a1a"/>
-    <circle cx="${x+22}" cy="${y-4}" r="2.2" fill="#2a2a2a"/><ellipse cx="${x+50}" cy="${y+4}" rx="4" ry="6" fill="#e8b890"/><circle cx="${x+15}" cy="${y+18}" r="2.6" fill="#9a4a3a"/></g>`;
+  const лицо = (x,y) => `<g><radialGradient id="c114-кожа" cx=".35" cy=".35" r=".8"><stop offset="0" stop-color="#ffe0c4"/><stop offset=".6" stop-color="#f0c09a"/><stop offset="1" stop-color="#c88e66"/></radialGradient>
+    <linearGradient id="c114-волосы" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a5a32"/><stop offset=".5" stop-color="#5a3418"/><stop offset="1" stop-color="#3a200c"/></linearGradient>
+    <linearGradient id="c114-кофта" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a6a6a"/><stop offset=".5" stop-color="#4a9a9a"/><stop offset="1" stop-color="#2a6a6a"/></linearGradient>
+    <path d="M${x+10} ${y+34} Q${x+4} ${y+50} ${x+2} ${y+70} H${x+60} V${y+34} Z" fill="url(#c114-кофта)"/><path d="M${x+22} ${y+36} Q${x+34} ${y+44} ${x+48} ${y+36}" stroke="#1f5050" stroke-width="1.4" fill="none"/>
+    <path d="M${x+14} ${y-4} Q${x+14} ${y-34} ${x+40} ${y-36} Q${x+66} ${y-36} ${x+66} ${y-6} Q${x+66} ${y+22} ${x+46} ${y+30} Q${x+24} ${y+34} ${x+18} ${y+20} L${x+14} ${y+14} Q${x+8} ${y+12} ${x+10} ${y+6} L${x+4} ${y+2} Q${x+2} ${y-2} ${x+10} ${y-4} Z" fill="url(#c114-кожа)"/>
+    <path d="M${x+5} ${y+1.5} Q${x+8} ${y+4} ${x+11} ${y+5}" stroke="#a86a48" stroke-width="1" fill="none" opacity=".7"/><ellipse cx="${x+30}" cy="${y+12}" rx="7" ry="4" fill="#ff9a8a" opacity=".3"/>
+    <path d="M${x+14} ${y-8} Q${x+16} ${y-38} ${x+42} ${y-40} Q${x+70} ${y-38} ${x+70} ${y-8} Q${x+70} ${y+12} ${x+62} ${y+20} Q${x+58} ${y-6} ${x+46} ${y-12} Q${x+30} ${y-18} ${x+14} ${y-8} Z" fill="url(#c114-волосы)"/>
+    ${[0,1,2,3,4].map(k=>`<path d="M${x+20+k*9} ${y-14+k} Q${x+30+k*8} ${y-30} ${x+44+k*5} ${y-36}" stroke="#a87a4a" stroke-width=".8" fill="none" opacity=".5"/>`).join('')}
+    <path d="M${x+17} ${y-9} q4 -2 8 0" stroke="#3a200c" stroke-width="1.4" fill="none"/><ellipse cx="${x+21}" cy="${y-3.5}" rx="2.2" ry="2.6" fill="#2a1a10"/><circle cx="${x+20.4}" cy="${y-4.4}" r=".8" fill="#fff"/>
+    <ellipse cx="${x+50}" cy="${y+4}" rx="4.4" ry="6.4" fill="#e8a888"/><path d="M${x+49} ${y+1} q2 3 0 6" stroke="#b87a58" stroke-width=".9" fill="none"/>
+    <ellipse cx="${x+15}" cy="${y+18}" rx="2.6" ry="2.2" fill="#8a3a2a"/></g>`;
   function F6(s){
     const Н=262, y0=216, у=y0+14, Л=L_(), г=!!s.г6, д=!!s.в6, в=s.ответ6, ок=в===1;
     const пр = Л.груша(28,у,1.2,г) + Л.колба(110,у,1.05,{уровень:.42,цвет:ИЗВВ,пузырьки:г}) + Л.колба(232,у,1.05,{уровень:.42,цвет:д?МУТЬ:ИЗВВ,пузырьки:д});
     const поверх = Л.трубка(`M28 ${у-46} V${у-130} Q28 ${у-140} 38 ${у-140} H100 Q110 ${у-140} 110 ${у-130} V${у-22}`) +
       Л.трубка(`M232 ${у-22} V${у-128} Q232 ${у-140} 244 ${у-140} H262`) + лицо(258,у-150) +
       (д?`<path d="M266 ${у-136} q-10 -2 -20 0" stroke="#bfe6fa" stroke-width="2" fill="none" opacity=".7"/>`:'') +
+      (д?Array.from({length:22},(_,k)=>`<circle cx="${232-22+((k*37)%44)}" cy="${у-8-((k*23)%18)}" r="${(0.7+(k%3)*0.35).toFixed(2)}" fill="#ffffff" opacity=".8">${ДВ()?`<animate attributeName="cy" values="${у-8-((k*23)%18)};${у-6}" dur="${(3+(k%4)*0.7).toFixed(1)}s" repeatCount="indefinite"/>`:''}</circle>`).join(''):'') +
       метка(70,4,г?'воздух из груши: вода чистая':'вдыхаемый воздух',г?СН:ЗЛ,{кегль:10}) + метка(210,30,д?'выдох: вода помутнела!':'выдыхаемый воздух',д?КР:ЗЛ,{кегль:10}) +
       Л.имяПрибора(110,у+12,'известковая вода')+Л.имяПрибора(232,у+12,'известковая вода');
     return ЖУРНАЛ(s) + ШАПКА('Опыт 5','Вдох и выдох') +
@@ -558,7 +566,7 @@
     const пр = `<rect x="70" y="${у-6}" width="196" height="6" rx="2" fill="url(#рл-доска)"/>` + Л.свеча(136,у-6,1,горит) + Л.мята(210,у-6,1.05,сила);
     const луч = пробовал ? `<path d="M40 40 L96 ${у-120}" stroke="#ffe9a0" stroke-width="7" opacity=".18"/><ellipse cx="96" cy="${у-120}" rx="5" ry="14" transform="rotate(-35 96 ${у-120})" fill="url(#рл-стекло)" stroke="#c8ccd0" stroke-width="1.4"/><path d="M96 ${у-120} L136 ${у-52}" stroke="#fff3c0" stroke-width="1.6" opacity=".8" stroke-dasharray="3 3"/>` : '';
     const поверх = луч + Л.колпак(168,у-6,170,176,{туман:!горит}) + (!горит&&пробовал?дым(136,у-62,2):'') +
-      (пробовал&&!горит?метка(136,у-200,'не загорелась',КР,{кегль:10}):'') + (горит?метка(136,у-200,'горит!',ЗЕ,{кегль:11}):'') +
+      (пробовал&&!горит?метка(150,у-120,'не загорелась',КР,{кегль:10}):'') + (горит?метка(150,у-120,'горит!',ЗЕ,{кегль:11}):'') +
       `<circle cx="28" cy="30" r="14" fill="#ffd76a"/>${[0,1,2,3,4,5,6,7].map(k=>`<path d="M${28+Math.cos(k*0.785)*18} ${30+Math.sin(k*0.785)*18} L${28+Math.cos(k*0.785)*24} ${30+Math.sin(k*0.785)*24}" stroke="#ffd76a" stroke-width="2"/>`).join('')}` +
       метка(240,4,П.д===0?'17 августа 1771 года: свеча погасла':П.д===10?'27 августа: прошло 10 дней':'прошло 3 дня',ЗЛ,{кегль:10});
     return ЖУРНАЛ(s) + ШАПКА('Опыт 6','Опыт Пристли') +

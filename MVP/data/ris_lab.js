@@ -70,6 +70,20 @@
     <linearGradient id="рл-доска" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8a868"/><stop offset=".5" stop-color="#b88444"/><stop offset="1" stop-color="#8a5a2a"/></linearGradient>
     <linearGradient id="рл-доскатём" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a4a22"/><stop offset=".5" stop-color="#a87038"/><stop offset="1" stop-color="#6a3e1a"/></linearGradient>
     <linearGradient id="рл-перчатка" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ab8f0"/><stop offset=".5" stop-color="#4a86d8"/><stop offset="1" stop-color="#2a5aa8"/></linearGradient>
+    <filter id="рл-ореол" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="4.5"/></filter>
+    <filter id="рл-дымка" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1"/></filter>
+    <linearGradient id="рл-воск" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cdbb98"/><stop offset=".18" stop-color="#efe3cb"/><stop offset=".42" stop-color="#fffbf1"/><stop offset=".62" stop-color="#f6ecd8"/><stop offset=".88" stop-color="#dccaa6"/><stop offset="1" stop-color="#b9a47c"/></linearGradient>
+    <radialGradient id="рл-воскверх" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2c4" stop-opacity=".95"/><stop offset=".7" stop-color="#ffe0a0" stop-opacity=".35"/><stop offset="1" stop-color="#ffd890" stop-opacity="0"/></radialGradient>
+    <linearGradient id="рл-пламя" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3a6cff" stop-opacity=".85"/><stop offset=".14" stop-color="#ff9a2a"/><stop offset=".34" stop-color="#ffd25a"/><stop offset=".62" stop-color="#ffb43a"/><stop offset=".86" stop-color="#ff7a18" stop-opacity=".9"/><stop offset="1" stop-color="#ff5a10" stop-opacity=".4"/></linearGradient>
+    <radialGradient id="рл-ядро" cx=".5" cy=".6" r=".5"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#fff7d0"/><stop offset="1" stop-color="#ffe38a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="рл-жар" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd27a" stop-opacity=".75"/><stop offset=".45" stop-color="#ff9a3a" stop-opacity=".25"/><stop offset="1" stop-color="#ff7a20" stop-opacity="0"/></radialGradient>
+    <linearGradient id="рл-древесина" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0d4a0"/><stop offset=".45" stop-color="#d8b070"/><stop offset="1" stop-color="#a87a40"/></linearGradient>
+    <linearGradient id="рл-обуглено" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0e0a08"/><stop offset=".55" stop-color="#2a1c12"/><stop offset="1" stop-color="#6a4a2a" stop-opacity="0"/></linearGradient>
+    <radialGradient id="рл-резина" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d8745a"/><stop offset=".35" stop-color="#a03a24"/><stop offset=".8" stop-color="#5a160a"/><stop offset="1" stop-color="#3a0c04"/></radialGradient>
+    <linearGradient id="рл-лист" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ade7a"/><stop offset=".5" stop-color="#3fa84a"/><stop offset="1" stop-color="#1f6a2c"/></linearGradient>
+    <linearGradient id="рл-стебель" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f6a24"/><stop offset=".5" stop-color="#7ab85a"/><stop offset="1" stop-color="#2f6a24"/></linearGradient>
+    <linearGradient id="рл-толща" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8f6f2" stop-opacity=".55"/><stop offset="1" stop-color="#9ac8bc" stop-opacity=".35"/></linearGradient>
+    <radialGradient id="рл-каустика" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e8f8ff" stop-opacity=".32"/><stop offset="1" stop-color="#e8f8ff" stop-opacity="0"/></radialGradient>
   </defs>`;
 
   /* ---------- цвет раствора: вид 'вода' | 'сахар' | 'соль' | 'купорос'; доля 0..1 ---------- */
@@ -734,15 +748,17 @@
   }
   /* ---------- кристаллизатор с водой: (x,y) — середина низа, ш×в ---------- */
   function кристаллизатор(x,y,ш,в,опц){
-    const о=опц||{}, л=x-ш/2, ур=y-в*0.72;
-    return `<g>${тень(x,y,ш,.4)}
-      <rect x="${f(л+2)}" y="${f(ур)}" width="${f(ш-4)}" height="${f(y-ур-2)}" rx="3" fill="${цвет('вода')}"/>
-      <rect x="${f(л+2)}" y="${f(ур)}" width="${f(ш-4)}" height="${f(y-ур-2)}" rx="3" fill="url(#рл-глубина)"/>
-      <path d="M${f(л+2)} ${f(ур)} H${f(л+ш-2)}" stroke="#bfe6fa" stroke-width="1.4"/>
+    const о=опц||{}, л=x-ш/2, п=x+ш/2, ур=y-в*0.72;
+    return `<g>${тень(x,y,ш,.45)}<ellipse cx="${f(x+4)}" cy="${f(y+2)}" rx="${f(ш*0.38)}" ry="3.2" fill="url(#рл-каустика)"/>
+      <rect x="${f(л+2)}" y="${f(ур)}" width="${f(ш-4)}" height="${f(y-ур-4)}" rx="3" fill="${цвет('вода')}"/>
+      <rect x="${f(л+2)}" y="${f(ур)}" width="${f(ш-4)}" height="${f(y-ур-4)}" rx="3" fill="url(#рл-глубина)"/>
+      <rect x="${f(л+2)}" y="${f(ур)}" width="${f(ш-4)}" height="${f(y-ур-4)}" rx="3" fill="url(#рл-жидкость)"/>
+      <ellipse cx="${f(x)}" cy="${f(ур)}" rx="${f(ш/2-2)}" ry="2.2" fill="#d8f0fa" opacity=".35"/><path d="M${f(л+2)} ${f(ур)} H${f(п-2)}" stroke="#e8f8ff" stroke-width="1.2" opacity=".85"/>
       ${о.внутри||''}
-      <path d="M${f(л)} ${f(y-в)} V${f(y-3)} Q${f(л)} ${f(y)} ${f(л+3)} ${f(y)} H${f(л+ш-3)} Q${f(л+ш)} ${f(y)} ${f(л+ш)} ${f(y-3)} V${f(y-в)}" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-opacity=".6" stroke-width="1"/>
-      <rect x="${f(л+3)}" y="${f(y-в+4)}" width="2" height="${f(в-8)}" fill="#fff" opacity=".6"/>
-      <ellipse cx="${f(x)}" cy="${f(y-в)}" rx="${f(ш/2)}" ry="3" fill="none" stroke="#fff" stroke-width="1.2" opacity=".7"/>
+      <rect x="${f(л+1)}" y="${f(y-4.5)}" width="${f(ш-2)}" height="4" rx="2" fill="url(#рл-толща)"/>
+      <path d="M${f(л)} ${f(y-в)} V${f(y-3)} Q${f(л)} ${f(y)} ${f(л+3)} ${f(y)} H${f(п-3)} Q${f(п)} ${f(y)} ${f(п)} ${f(y-3)} V${f(y-в)}" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-opacity=".7" stroke-width="1"/>
+      ${стеклоКрая(л,п,y-в,y)}
+      <ellipse cx="${f(x)}" cy="${f(y-в)}" rx="${f(ш/2)}" ry="3" fill="none" stroke="#fff" stroke-width="1.3" opacity=".75"/><ellipse cx="${f(x)}" cy="${f(y-в+1)}" rx="${f(ш/2-2)}" ry="2.2" fill="none" stroke="#6a8494" stroke-width=".6" opacity=".5"/>
     </g>`;
   }
   /* ---------- перевёрнутый мерный цилиндр в кристаллизаторе: газ вытесняет воду; (x,yНиз) — край у дна, ш×в, мл газа из объёма ---------- */
@@ -752,8 +768,8 @@
     return `<g>
       <rect x="${f(л+1.5)}" y="${f(верх+4+газВ)}" width="${f(ш-3)}" height="${f(в-8-газВ)}" fill="${цвет('вода')}"/>
       ${газВ>0?`<path d="M${f(л+1.5)} ${f(верх+4+газВ)} Q${f(x)} ${f(верх+4+газВ+3)} ${f(л+ш-1.5)} ${f(верх+4+газВ)}" stroke="#bfe6fa" stroke-width="1" fill="none"/>`:''}
-      <rect x="${f(л)}" y="${f(верх)}" width="${f(ш)}" height="${f(в)}" rx="2" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-opacity=".6" stroke-width=".9"/>
-      <rect x="${f(л+2)}" y="${f(верх+4)}" width="2" height="${f(в-8)}" fill="#fff" opacity=".6"/>${дел}
+      <rect x="${f(л)}" y="${f(верх)}" width="${f(ш)}" height="${f(в)}" rx="2" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-opacity=".7" stroke-width=".9"/>
+      <rect x="${f(л+1)}" y="${f(верх+.6)}" width="${f(ш-2)}" height="4" rx="2" fill="url(#рл-толща)"/>${стеклоКрая(л,л+ш,верх,yНиз)}${дел}
     </g>`;
   }
   /* ---------- штатив с лапкой ---------- */
@@ -808,19 +824,24 @@
         ${вода>0?`<rect x="${f(л)}" y="${f(y-в*вода)}" width="${f(ш)}" height="${f(в*вода)}" fill="${цвет('вода')}"/><rect x="${f(л)}" y="${f(y-в*вода)}" width="${f(ш)}" height="${f(в*вода)}" fill="#6ab0d8" opacity=".22"/><rect x="${f(л)}" y="${f(y-в*вода)}" width="${f(ш)}" height="${f(в*вода)}" fill="url(#рл-жидкость)"/>${вода<1?`<path d="M${f(л)} ${f(y-в*вода)} H${f(л+ш)}" stroke="#bfe6fa" stroke-width="1.4"/>`:''}`:''}
         ${о.внутри||''}
       </g>
-      <rect x="${f(л)}" y="${f(y-в)}" width="${f(ш)}" height="${f(в)}" rx="4" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-opacity=".6" stroke-width="1"/>
-      <rect x="${f(л+3)}" y="${f(y-в+6)}" width="2.4" height="${f(в-12)}" rx="1" fill="#fff" opacity=".65"/>
+      <rect x="${f(л)}" y="${f(y-в)}" width="${f(ш)}" height="${f(в)}" rx="4" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-opacity=".7" stroke-width="1"/>
+      <rect x="${f(л+1)}" y="${f(y-5)}" width="${f(ш-2)}" height="4.4" rx="2" fill="url(#рл-толща)"/>${стеклоКрая(л,л+ш,y-в,y)}
+      <ellipse cx="${f(x)}" cy="${f(y-в+1)}" rx="${f(ш/2-1)}" ry="2" fill="none" stroke="#fff" stroke-width="1.1" opacity=".7"/>${о.безТени?'':`<ellipse cx="${f(x+3)}" cy="${f(y+2)}" rx="${f(ш*0.42)}" ry="2.6" fill="url(#рл-каустика)"/>`}
       ${о.пластинка?`<rect x="${f(л-6)}" y="${f(о.перевёрнут?y-1:y-в-3)}" width="${f(ш+12)}" height="3.4" rx="1" fill="#dcebf5" fill-opacity=".55" stroke="#a8bccb" stroke-width=".6"/>`:''}
     </g>`;
   }
   /* ---------- лучинка: (x,y) — тлеющий конец, угол; вид 'тлеет'|'горит'|'нет' ---------- */
   function лучинка(x,y,угол,вид){
     return `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(угол||0)})">
-      <rect x="0" y="-2" width="70" height="4" rx="1.4" fill="#d8b47a"/><path d="M0 -1 H70" stroke="#a8844a" stroke-width=".6"/>
-      <rect x="-3" y="-2.4" width="6" height="4.8" rx="2" fill="${вид==='нет'?'#2a2a2a':'#1a1210'}"/>
-      ${вид==='тлеет'?`<circle cx="-2" cy="0" r="2.6" fill="#ff7a2a"><animate attributeName="opacity" values="1;.5;1" dur="1.2s" repeatCount="indefinite"/></circle><circle cx="-2" cy="0" r="7" fill="url(#рл-огонь)" opacity=".7"/>
-        <path d="M-3 -4 q-3 -6 0 -12 q3 -6 0 -12" stroke="#9aa0a6" stroke-width="1.6" fill="none" opacity=".45"/>`:''}
-      ${вид==='горит'?`<g transform="rotate(${f(-(угол||0))} 0 0)"><path d="M-3 0 Q-12 -14 -4 -30 Q4 -14 3 0 Z" fill="#ffb640">${ДВИЖ?`<animate attributeName="d" values="M-3 0 Q-12 -14 -4 -30 Q4 -14 3 0 Z;M-3 0 Q-10 -15 -2 -33 Q5 -14 3 0 Z;M-3 0 Q-12 -14 -4 -30 Q4 -14 3 0 Z" dur=".6s" repeatCount="indefinite"/>`:''}</path><path d="M-2 0 Q-6 -8 -2 -16 Q2 -8 2 0 Z" fill="#fff4a0"/><circle cx="-3" cy="-12" r="16" fill="url(#рл-огонь)" opacity=".45"/></g>`:''}
+      <path d="M0 -2.1 H69 Q70.5 -2.1 70.5 -.6 V.6 Q70.5 2.1 69 2.1 H0 Z" fill="url(#рл-древесина)"/>
+      <path d="M8 -1.1 Q30 -.6 52 -1.2 M14 .6 Q36 1.1 66 .4 M26 -.2 H40" stroke="#9a6a34" stroke-width=".45" fill="none" opacity=".7"/>
+      <path d="M0 -2.1 H69" stroke="#fff6dc" stroke-width=".5" opacity=".7"/>
+      <path d="M-3.2 -2.3 Q-4.4 0 -3.2 2.3 H12 V-2.3 Z" fill="url(#рл-обуглено)"/>
+      ${вид==='тлеет'?`<ellipse cx="-2.4" cy="0" rx="2.4" ry="2.2" fill="#ff8a2a">${ДВИЖ?`<animate attributeName="fill" values="#ff8a2a;#ffc060;#ff6a1a;#ff8a2a" dur="1.3s" repeatCount="indefinite"/>`:''}</ellipse>
+        <ellipse cx="-2.4" cy="0" rx="7" ry="6" fill="url(#рл-жар)" filter="url(#рл-ореол)"/><circle cx="-1.6" cy="-.8" r=".7" fill="#fff4c0"/>
+        <path d="M-3 -4 q-3 -6 0 -12 q3 -6 0 -12" stroke="#b8bec4" stroke-width="1.6" fill="none" opacity=".45" filter="url(#рл-дымка)"/>`:''}
+      ${вид==='нет'?`<path d="M-3 -3 q-3 -6 0 -12 q3 -6 0 -12 q-3 -6 0 -10" stroke="#c0c6cc" stroke-width="1.8" fill="none" opacity=".5" filter="url(#рл-дымка)"/>`:''}
+      ${вид==='горит'?`<g transform="rotate(${f(-(угол||0))} 0 0)">${пламя(28,6.5,.6)}</g>`:''}
     </g>`;
   }
   /* ---------- ложечка для сжигания: (x,y) — чашечка; вещество и вид горения ---------- */
@@ -839,12 +860,16 @@
   }
   /* ---------- свеча: (x,y) — низ; горит; опц.колпак — стеклянный стакан сверху (гасит) ---------- */
   function свеча(x,y,м,горит,колпак){
-    return `<g transform="translate(${f(x)} ${f(y)}) scale(${м||1})">${тень(0,0,30,.4)}
-      <rect x="-7" y="-40" width="14" height="40" rx="2" fill="#f4ece0"/><rect x="-7" y="-40" width="5" height="40" fill="#fff" opacity=".5"/>
-      <path d="M-7 -40 Q0 -36 7 -40" stroke="#e8dcc8" stroke-width="2" fill="none"/>
-      <path d="M0 -40 V-46" stroke="#2a2018" stroke-width="1.4"/>
-      ${горит?`<path d="M0 -44 Q-6 -54 0 -68 Q6 -54 0 -44 Z" fill="#ffb640">${ДВИЖ?`<animate attributeName="d" values="M0 -44 Q-6 -54 0 -68 Q6 -54 0 -44 Z;M0 -44 Q-5 -55 1 -70 Q6 -54 0 -44 Z;M0 -44 Q-6 -54 0 -68 Q6 -54 0 -44 Z" dur=".8s" repeatCount="indefinite"/>`:''}</path><path d="M0 -45 Q-2 -50 0 -54 Q2 -50 0 -45 Z" fill="#7ab8ff"/><circle cx="0" cy="-56" r="20" fill="url(#рл-огонь)" opacity=".4"/>`
-        :`<path d="M0 -46 q-3 -8 0 -14 q3 -8 0 -16" stroke="#9aa0a6" stroke-width="1.6" fill="none" opacity=".5"/>`}
+    return `<g transform="translate(${f(x)} ${f(y)}) scale(${м||1})">${тень(0,0,30,.45)}
+      ${горит?`<ellipse cx="0" cy="1" rx="22" ry="4" fill="#ffcf7a" opacity=".16" filter="url(#рл-мягко)"/>`:''}
+      <path d="M-7 -38 V-1 Q-7 0 -6 0 H6 Q7 0 7 -1 V-38 Z" fill="url(#рл-воск)"/>
+      <path d="M-7 -38 V-1" stroke="#fff" stroke-width=".6" opacity=".25"/>
+      <path d="M4.6 -38 Q5.4 -30 4.8 -24 Q4.4 -21 5.6 -20 Q6.8 -21 6.6 -26 V-38 Z" fill="#fbf3e2"/><path d="M-6.2 -37 Q-6.6 -33 -5.8 -31 Q-5 -30 -4.8 -33 V-37 Z" fill="#fbf3e2"/>
+      <ellipse cx="0" cy="-38.4" rx="7" ry="2.2" fill="${горит?'#fff4d6':'#efe4cc'}"/><ellipse cx="0" cy="-38" rx="5.2" ry="1.4" fill="${горит?'#fde6a8':'#e2d4b6'}"/>
+      ${горит?`<ellipse cx="0" cy="-34" rx="9" ry="7" fill="url(#рл-воскверх)"/>`:''}
+      <path d="M0 -38.5 Q-.6 -42 .6 -45.5" stroke="#1a120c" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      ${горит?`<circle cx=".6" cy="-45.5" r="1.1" fill="#ff7a2a"/><g transform="translate(0 -43)">${пламя(26,6,.85)}</g>`
+        :`<path d="M.6 -46 q-3 -8 0 -14 q3 -8 0 -16" stroke="#b8bec4" stroke-width="1.6" fill="none" opacity=".45" filter="url(#рл-дымка)"/>`}
       ${колпак?`<path d="M-22 0 V-86 Q-22 -92 -16 -92 H16 Q22 -92 22 -86 V0" fill="#dcebf5" fill-opacity=".12" stroke="#a8bccb" stroke-opacity=".7" stroke-width="1"/><rect x="-19" y="-88" width="2.4" height="80" fill="#fff" opacity=".5"/>`:''}
     </g>`;
   }
@@ -940,6 +965,21 @@
       <text x="${f(x+34)}" y="${f(y-16)}" font-size="13" font-weight="bold" fill="#ffd76a" font-family="${ШРИФТ}">${чистый?'пах!':'гав!'}</text></g>`;
   }
 
+  /* пламя свечи/лучинки: основание (0,0), высота h, ширина ш; живое */
+  function пламя(h,ш,dur){
+    const d0=`M0 0 Q${f(-ш)} ${f(-h*0.38)} ${f(-ш*0.25)} ${f(-h*0.78)} Q0 ${f(-h*1.02)} ${f(ш*0.12)} ${f(-h)} Q${f(ш*0.9)} ${f(-h*0.55)} 0 0 Z`;
+    const d1=`M0 0 Q${f(-ш*0.9)} ${f(-h*0.4)} ${f(-ш*0.05)} ${f(-h*0.82)} Q${f(ш*0.1)} ${f(-h*1.08)} ${f(ш*0.3)} ${f(-h*1.04)} Q${f(ш)} ${f(-h*0.52)} 0 0 Z`;
+    const ан=ДВИЖ?`<animate attributeName="d" values="${d0};${d1};${d0}" dur="${dur||.9}s" repeatCount="indefinite"/>`:'';
+    return `<g><ellipse cx="0" cy="${f(-h*0.5)}" rx="${f(ш*3.4)}" ry="${f(h*0.95)}" fill="url(#рл-жар)" filter="url(#рл-ореол)"/>
+      <path d="${d0}" fill="url(#рл-пламя)" filter="url(#рл-дымка)">${ан}</path>
+      <ellipse cx="0" cy="${f(-h*0.42)}" rx="${f(ш*0.42)}" ry="${f(h*0.3)}" fill="url(#рл-ядро)"/>
+      <ellipse cx="0" cy="${f(-h*0.1)}" rx="${f(ш*0.38)}" ry="${f(h*0.12)}" fill="#4a7aff" opacity=".7" filter="url(#рл-дымка)"/></g>`;
+  }
+  /* блик и толщина стеклянной стенки вдоль вертикали (л — левый край, п — правый, верх, низ) */
+  const стеклоКрая = (л,п,верх,низ) => `<path d="M${f(л+1.2)} ${f(верх+3)} V${f(низ-3)} M${f(п-1.2)} ${f(верх+3)} V${f(низ-3)}" stroke="#5a7484" stroke-width="1.6" opacity=".45"/>
+      <rect x="${f(л+3)}" y="${f(верх+5)}" width="${f(Math.max(1.6,(п-л)*0.045))}" height="${f(низ-верх-12)}" rx="1" fill="#fff" opacity=".75"/>
+      <rect x="${f(л+3+Math.max(3,(п-л)*0.09))}" y="${f(верх+8)}" width="${f(Math.max(3,(п-л)*0.1))}" height="${f(низ-верх-18)}" rx="2" fill="#fff" opacity=".16"/>
+      <rect x="${f(п-5)}" y="${f(верх+10)}" width="1.6" height="${f((низ-верх)*0.5)}" rx=".8" fill="#fff" opacity=".45"/>`;
   /* ---------- колпачок спиртовки отдельно: (x,y) — низ ---------- */
   function колпачок(x,y,м){
     return `<g transform="translate(${f(x)} ${f(y)}) scale(${м||1})"><ellipse cx="1" cy="0.5" rx="9" ry="1.6" fill="#000" opacity=".35"/><path d="M-7 0 Q-7 -14 0 -14 Q7 -14 7 0 Z" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-opacity=".7" stroke-width=".8"/><path d="M-4 -3 Q-4 -10 -1 -11" stroke="#fff" stroke-width="1.2" fill="none" opacity=".7"/></g>`;
@@ -1088,31 +1128,49 @@
 
   /* ---------- стеклянный колпак (колокол): (x,y) — середина нижнего края, ш×в; опц.туман — запотел ---------- */
   function колпак(x,y,ш,в,опц){
-    const о=опц||{}, р=ш/2, кл=ид('клп');
+    const о=опц||{}, р=ш/2;
     const d=`M${f(x-р)} ${f(y)} V${f(y-в*0.55)} Q${f(x-р)} ${f(y-в)} ${f(x)} ${f(y-в)} Q${f(x+р)} ${f(y-в)} ${f(x+р)} ${f(y-в*0.55)} V${f(y)}`;
-    return `<g>
-      <path d="${d} Z" fill="url(#рл-стекло)" opacity=".55"/>${о.туман?`<path d="${d} Z" fill="#e8f4fa" opacity=".18"/>`:''}
-      <path d="${d}" fill="none" stroke="#bcd4e2" stroke-width="1.6" opacity=".85"/>
-      <path d="M${f(x-р+5)} ${f(y-6)} V${f(y-в*0.55)} Q${f(x-р+5)} ${f(y-в+8)} ${f(x-р*0.3)} ${f(y-в+4)}" stroke="#fff" stroke-width="2.2" fill="none" opacity=".55" stroke-linecap="round"/>
-      <ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(р)}" ry="3" fill="none" stroke="#bcd4e2" stroke-width="1.2" opacity=".7"/>
-      <rect x="${f(x-5)}" y="${f(y-в-9)}" width="10" height="9" rx="3" fill="url(#рл-стекло)" stroke="#bcd4e2" stroke-width="1"/><circle cx="${f(x)}" cy="${f(y-в-11)}" r="5.4" fill="url(#рл-стекло)" stroke="#bcd4e2" stroke-width="1"/>
+    const dВн=`M${f(x-р+2.4)} ${f(y-1)} V${f(y-в*0.55)} Q${f(x-р+2.4)} ${f(y-в+2.4)} ${f(x)} ${f(y-в+2.4)} Q${f(x+р-2.4)} ${f(y-в+2.4)} ${f(x+р-2.4)} ${f(y-в*0.55)} V${f(y-1)}`;
+    return `<g><ellipse cx="${f(x+5)}" cy="${f(y+2)}" rx="${f(р*0.9)}" ry="3.4" fill="url(#рл-каустика)"/>
+      <path d="${d} Z" fill="url(#рл-стекло)" opacity=".6"/>${о.туман?`<path d="${d} Z" fill="#e8f4fa" opacity=".2"/>${Array.from({length:14},(_,k)=>`<circle cx="${f(x-р*0.7+((k*37)%100)/100*р*1.4)}" cy="${f(y-в*0.15-((k*53)%100)/100*в*0.6)}" r="${f(0.6+(k%3)*0.4)}" fill="#fff" opacity=".35"/>`).join('')}`:''}
+      <path d="${dВн}" fill="none" stroke="#5a7484" stroke-width="1" opacity=".4"/>
+      <path d="${d}" fill="none" stroke="#cfe2ee" stroke-width="2" opacity=".9"/>
+      <path d="M${f(x-р+6)} ${f(y-8)} V${f(y-в*0.55)} Q${f(x-р+6)} ${f(y-в+9)} ${f(x-р*0.25)} ${f(y-в+5)}" stroke="#fff" stroke-width="2.6" fill="none" opacity=".7" stroke-linecap="round"/>
+      <path d="M${f(x-р+13)} ${f(y-16)} V${f(y-в*0.5)}" stroke="#fff" stroke-width="5" opacity=".1" stroke-linecap="round"/>
+      <path d="M${f(x+р-6)} ${f(y-в*0.5)} V${f(y-в*0.22)}" stroke="#fff" stroke-width="1.6" opacity=".5" stroke-linecap="round"/>
+      <path d="M${f(x+р*0.2)} ${f(y-в+4)} Q${f(x+р*0.55)} ${f(y-в+6)} ${f(x+р*0.75)} ${f(y-в+16)}" stroke="#fff" stroke-width="1.4" fill="none" opacity=".55"/>
+      <ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(р)}" ry="3.2" fill="none" stroke="#dbeaf2" stroke-width="2.4" opacity=".75"/><ellipse cx="${f(x)}" cy="${f(y+.6)}" rx="${f(р-1)}" ry="2.4" fill="none" stroke="#5a7484" stroke-width=".6" opacity=".5"/>
+      <rect x="${f(x-5)}" y="${f(y-в-9)}" width="10" height="9" rx="3" fill="url(#рл-стекло)" stroke="#cfe2ee" stroke-width="1.2"/><circle cx="${f(x)}" cy="${f(y-в-11)}" r="5.6" fill="url(#рл-стекло)" stroke="#cfe2ee" stroke-width="1.2"/><circle cx="${f(x-1.8)}" cy="${f(y-в-12.6)}" r="1.6" fill="#fff" opacity=".85"/>
     </g>`;
   }
   /* ---------- веточка мяты в стаканчике с водой: (x,y) — низ; сила 0..1 — сколько листьев выросло ---------- */
   function мята(x,y,м,сила){
     const к=м||1, n=3+Math.round((сила||0)*4);
-    const листья = Array.from({length:n},(_,i)=>{ const yy=-34-i*9, сторона=i%2?1:-1, r=7+Math.min(i,3);
-      return `<g transform="translate(0 ${yy}) rotate(${сторона*(38-i*3)})"><ellipse cx="${сторона*r*0.95}" cy="0" rx="${r}" ry="${r*0.55}" fill="${i<3?'#3a9a4a':'#5ac06a'}"/><path d="M0 0 L${сторона*r*1.8} 0" stroke="#2a7a3a" stroke-width=".7"/></g>`; }).join('');
-    return `<g transform="translate(${f(x)} ${f(y)}) scale(${к})">${тень(0,0,30,.35)}
-      <path d="M0 -14 Q-2 ${-30-n*5} 1 ${-40-n*9}" stroke="#4a8a3a" stroke-width="2.2" fill="none"/>${листья}
-      <path d="M-11 0 L-13 -26 H13 L11 0 Z" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-width=".8"/><path d="M-12 -2 L-13 -16 H13 L12 -2 Z" fill="${цвет('вода')}"/><path d="M-9 -22 V-4" stroke="#fff" stroke-width="1.2" opacity=".6"/>
+    const лист=(L,w)=>{ const N=10; let верх='', низ='';
+      for(let i=0;i<=N;i++){ const t0=i/N, xx=L*t0, ww=w*Math.pow(Math.sin(Math.PI*t0),0.8), зуб=i>0&&i<N?(i%2?0.9:0):0;
+        верх+=`${i?'L':'M'}${f(xx)} ${f(-ww-зуб)} `; низ=`L${f(xx)} ${f(ww+зуб)} `+низ; }
+      const жилки=[0.25,0.45,0.65].map(t0=>`M${f(L*t0)} 0 L${f(L*(t0+0.14))} ${f(-w*0.62)} M${f(L*t0)} 0 L${f(L*(t0+0.14))} ${f(w*0.62)}`).join(' ');
+      return `<path d="${верх}${низ}Z" fill="url(#рл-лист)"/><path d="M0 0 L${f(L*0.95)} 0" stroke="#c8f0b0" stroke-width=".8" opacity=".75"/><path d="${жилки}" stroke="#bfe8a8" stroke-width=".45" opacity=".6" fill="none"/>
+        <path d="${верх}" fill="none" stroke="#1f5a24" stroke-width=".4" opacity=".6"/>`; };
+    const листья = Array.from({length:n},(_,i)=>{ const yy=-34-i*9, сторона=i%2?1:-1, L=15+Math.min(i,3)*2.4, w=(15+Math.min(i,3)*2.4)*0.3;
+      return `<g transform="translate(0 ${yy}) rotate(${сторона>0?-(38-i*3):180+(38-i*3)})">${лист(L,w)}</g>`; }).join('');
+    return `<g transform="translate(${f(x)} ${f(y)}) scale(${к})">${тень(0,0,30,.4)}<ellipse cx="2" cy="1.5" rx="13" ry="2" fill="url(#рл-каустика)"/>
+      <path d="M-11.4 -3 L-12.6 -16 H12.6 L11.4 -3 Z" fill="${цвет('вода')}"/><path d="M-12.6 -16 H12.6" stroke="#e8f8ff" stroke-width=".9" opacity=".8"/>
+      <path d="M1.6 -2 Q.4 -9 1 -16" stroke="url(#рл-стебель)" stroke-width="2.2" fill="none" opacity=".75"/>
+      <path d="M0 -16 Q-2 ${-30-n*5} 1 ${-40-n*9}" stroke="url(#рл-стебель)" stroke-width="2.4" fill="none" stroke-linecap="round"/>${листья}
+      <path d="M-11 0 L-13 -26 H13 L11 0 Z" fill="url(#рл-стекло)" stroke="#8fa8b8" stroke-width=".8"/><rect x="-11" y="-3.4" width="22" height="3.4" rx="1" fill="url(#рл-толща)"/>
+      <path d="M-10 -23 L-9 -4" stroke="#fff" stroke-width="1.4" opacity=".7"/><path d="M9.4 -22 L8.6 -10" stroke="#fff" stroke-width=".9" opacity=".45"/><ellipse cx="0" cy="-26" rx="13" ry="1.6" fill="none" stroke="#fff" stroke-width=".9" opacity=".7"/>
     </g>`;
   }
   /* ---------- резиновая груша с трубкой: (x,y) — низ груши; сжата ---------- */
   function груша(x,y,м,сжата){
-    return `<g transform="translate(${f(x)} ${f(y)}) scale(${м||1})">${тень(0,0,30,.35)}
-      <ellipse cx="0" cy="-16" rx="${сжата?10:14}" ry="16" fill="#8a2a1a"/><ellipse cx="-5" cy="-21" rx="4" ry="6" fill="#c8604a" opacity=".6"/>
-      <rect x="-3" y="-38" width="6" height="8" rx="2" fill="#2a2a2a"/></g>`;
+    const rx=сжата?10.5:14;
+    return `<g transform="translate(${f(x)} ${f(y)}) scale(${м||1})">${тень(0,0,32,.45)}
+      <path d="M-3.4 -31 Q-4.6 -28 ${f(-rx*0.6)} -26 Q${f(-rx)} -21 ${f(-rx)} -14 Q${f(-rx)} 0 0 0 Q${f(rx)} 0 ${f(rx)} -14 Q${f(rx)} -21 ${f(rx*0.6)} -26 Q4.6 -28 3.4 -31 Z" fill="url(#рл-резина)"/><ellipse cx="0" cy="-2.4" rx="${f(rx*0.7)}" ry="2" fill="#2a0804" opacity=".35"/>
+      <ellipse cx="${f(-rx*0.4)}" cy="-21" rx="${f(rx*0.22)}" ry="6.5" fill="#ffb8a0" opacity=".35" filter="url(#рл-дымка)"/><ellipse cx="${f(-rx*0.42)}" cy="-23" rx="1.2" ry="3" fill="#fff" opacity=".55"/>
+      ${сжата?`<path d="M-6 -18 q3 2 0 5 M5 -20 q-3 2 0 6" stroke="#3a0c04" stroke-width=".8" fill="none" opacity=".7"/>`:''}
+      <path d="M-3.4 -31 V-38 Q-3.4 -40 -1.4 -40 H1.4 Q3.4 -40 3.4 -38 V-31 Z" fill="#1c1c1e"/><path d="M-2 -38 V-32" stroke="#6a6a6e" stroke-width=".8"/>
+    </g>`;
   }
   /* ---------- железная вата (стальная мочалка): (cx,cy) — центр, r; ржа 0..1 ---------- */
   function вата(cx,cy,r,ржа){
