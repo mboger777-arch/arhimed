@@ -53,6 +53,23 @@
     соль: {лупа:'кристаллы — ровные кубики', вода:'растворилась, раствор прозрачный', огонь:'не плавится, кристаллы потрескивают'},
     сахар:{лупа:'кристаллы неправильной формы', вода:'растворился, раствор прозрачный', огонь:'плавится и темнеет — получилась карамель'}
   };
+  const СВЕТОФОР = [
+    {имя:'жёлтый',  ц:'hsla(46,95%,55%,.85)',  т:'Раствор жёлтый: в нём почти не осталось кислорода.'},
+    {имя:'зелёный', ц:'hsla(135,70%,40%,.85)', т:'Встряхнули — раствор позеленел: в него попал кислород из воздуха над жидкостью.'},
+    {имя:'красный', ц:'hsla(350,75%,45%,.85)', т:'Прошло полминуты — раствор покраснел: кислород расходуется.'},
+    {имя:'жёлтый',  ц:'hsla(46,95%,55%,.85)',  т:'Ещё через минуту — снова жёлтый. Встряхни — и всё повторится!'}
+  ];
+  const ДОМ = [
+    {к:'соль',     имя:'Соль',         факт:'<b>Хлорид натрия NaCl.</b> Её добывают из морской воды и подземных пластов. Без соли организм не может передавать нервные сигналы.'},
+    {к:'сода',     имя:'Сода',         факт:'<b>Гидрокарбонат натрия NaHCO₃.</b> С кислотой выделяет углекислый газ — поэтому тесто с содой становится пышным.'},
+    {к:'уксус',    имя:'Уксус',        факт:'<b>Раствор уксусной кислоты.</b> Его получают брожением — та же реакция превращает вино в уксус.'},
+    {к:'мыло',     имя:'Мыло',         факт:'Мыло варят из жиров и щёлочи — это химическая реакция <b>омыления</b>. Молекула мыла одним концом цепляется за жир, другим — за воду.'},
+    {к:'паста',    имя:'Зубная паста', факт:'В пасте есть <b>соединения фтора</b>: они делают эмаль зубов прочнее, а мел мягко её полирует.'},
+    {к:'таблетки', имя:'Лекарства',    факт:'Лекарства создают химики-фармацевты. Аспирин впервые получили в чистом виде в 1897 году — и пьют до сих пор.'},
+    {к:'батарейка',имя:'Батарейка',    факт:'Внутри батарейки идёт <b>химическая реакция</b>, и её энергия превращается в электрический ток.'},
+    {к:'хлеб',     имя:'Хлеб',         факт:'Дрожжи выделяют <b>углекислый газ</b> — тесто поднимается. А румяная корочка — тоже реакция: сахара и белки темнеют при нагреве.'}
+  ];
+  const ЕЩЁ = {железо:'рельсы, сковорода, ключ', стекло:'окно, бусы, лампочка', парафин:'восковые мелки, пропитка спичек', медь:'провода, кастрюли, статуя Свободы', золото:'медали, контакты в телефоне', сахар:'конфеты, сироп, карамель'};
   const КОРОТКО = { соль:{лупа:'кубики', вода:'раств.', огонь:'нет'}, сахар:{лупа:'неровные', вода:'раств.', огонь:'карамель'} };
   const ПРИБОРЫ = [
     {к:'пробирка',  имя:'Пробирка',        зачем:'для опытов с малыми количествами веществ'},
@@ -401,9 +418,29 @@
 
 
   const L_ = () => window.РЛ;
+  const ГР = `<defs>
+    <linearGradient id="c1100-золото" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5206"/><stop offset=".22" stop-color="#e8b020"/><stop offset=".42" stop-color="#fff2b0"/><stop offset=".6" stop-color="#f0c030"/><stop offset=".85" stop-color="#a87a10"/><stop offset="1" stop-color="#6a4a06"/></linearGradient>
+    <linearGradient id="c1100-золотоВ" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c0"/><stop offset=".5" stop-color="#f4c430"/><stop offset="1" stop-color="#b8860b"/></linearGradient>
+    <linearGradient id="c1100-медь" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a2a0c"/><stop offset=".28" stop-color="#d8844a"/><stop offset=".45" stop-color="#ffd4a8"/><stop offset=".62" stop-color="#c8743a"/><stop offset="1" stop-color="#6a3010"/></linearGradient>
+    <radialGradient id="c1100-монета" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffe0c0"/><stop offset=".35" stop-color="#e8945a"/><stop offset=".8" stop-color="#b8642a"/><stop offset="1" stop-color="#7a3a14"/></radialGradient>
+    <linearGradient id="c1100-железо" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a3e44"/><stop offset=".3" stop-color="#b8bec6"/><stop offset=".46" stop-color="#f4f6f8"/><stop offset=".62" stop-color="#9aa0a8"/><stop offset="1" stop-color="#3a3e44"/></linearGradient>
+    <linearGradient id="c1100-сахарВ" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6e2d8"/></linearGradient>
+    <linearGradient id="c1100-сахарБ" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f0ece2"/><stop offset="1" stop-color="#d8d2c4"/></linearGradient>
+    <linearGradient id="c1100-сахарП" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8c2b2"/><stop offset="1" stop-color="#aaa494"/></linearGradient>
+    <radialGradient id="c1100-пена" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffe8ee"/><stop offset=".45" stop-color="#ff8aa0"/><stop offset="1" stop-color="#c8284a"/></radialGradient>
+    <linearGradient id="c1100-лава" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9aac"/><stop offset="1" stop-color="#c82a48"/></linearGradient>
+    <radialGradient id="c1100-корка" cx=".4" cy=".25" r=".85"><stop offset="0" stop-color="#f4c070"/><stop offset=".55" stop-color="#c8843a"/><stop offset="1" stop-color="#7a4414"/></radialGradient>
+    <radialGradient id="c1100-мыло" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff0f4"/><stop offset=".5" stop-color="#f4b0c4"/><stop offset="1" stop-color="#c87898"/></radialGradient>
+    <linearGradient id="c1100-фольга" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".35" stop-color="#a8b0b8"/><stop offset=".6" stop-color="#f8fafc"/><stop offset="1" stop-color="#8a929a"/></linearGradient>
+    <radialGradient id="c1100-пилюля" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#eef0f2"/><stop offset="1" stop-color="#b8bec6"/></radialGradient>
+    <linearGradient id="c1100-батарея" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#050506"/><stop offset=".32" stop-color="#4a4e56"/><stop offset=".55" stop-color="#16181b"/><stop offset="1" stop-color="#000"/></linearGradient>
+    <linearGradient id="c1100-латунь" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6a4a08"/><stop offset=".35" stop-color="#ffe08a"/><stop offset=".6" stop-color="#c89a2a"/><stop offset="1" stop-color="#5a3a06"/></linearGradient>
+    <linearGradient id="c1100-тюбик" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#e4e8ec"/><stop offset="1" stop-color="#a8b0b8"/></linearGradient>
+    <linearGradient id="c1100-шкаф" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3a2c"/><stop offset="1" stop-color="#2a2018"/></linearGradient>
+  </defs>`;
   const сцена = (Н,y0,предметы,поверх) => { const Л=L_(); return Л.студия(Н,y0)+Л.отражение(предметы,y0,Н-y0)+предметы+(поверх||''); };
-  const свгЛ = (тело,высота) => `<svg viewBox="0 0 336 ${высота}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${L_().defs()}${ОПРЕДЕЛЕНИЯ}${тело}</svg>`;
-  const свгЖ = (тело,высота) => `<svg viewBox="0 0 336 ${высота}" preserveAspectRatio="xMidYMid meet">${L_().defs()}${ОПРЕДЕЛЕНИЯ}${тело}</svg>`;
+  const свгЛ = (тело,высота) => `<svg viewBox="0 0 336 ${высота}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${L_().defs()}${ОПРЕДЕЛЕНИЯ}${ГР}${тело}</svg>`;
+  const свгЖ = (тело,высота) => `<svg viewBox="0 0 336 ${высота}" preserveAspectRatio="xMidYMid meet">${L_().defs()}${ОПРЕДЕЛЕНИЯ}${ГР}${тело}</svg>`;
   const метка = (cx,y,t0,цвет,опц) => { const о=опц||{}, к=о.кегль||12, ш=String(t0).length*к*0.58+20, в=к+11;
     const x=Math.min(336-ш/2-4, Math.max(ш/2+4, cx));
     return `<rect x="${(x-ш/2).toFixed(1)}" y="${y}" width="${ш.toFixed(1)}" height="${в}" rx="${(в/2).toFixed(1)}" fill="rgba(12,14,18,.82)" stroke="${цвет||'#6a7480'}" stroke-width="1.2"/>
@@ -418,10 +455,25 @@
   const дым = (x,y,n,ц) => Array.from({length:n||2},(_,k)=>`<path d="M${x-4+k*7} ${y} q-6 -10 0 -20 q6 -10 0 -20" stroke="${ц||'#b8bec4'}" stroke-width="2" fill="none" opacity=".45" filter="url(#рл-дымка)">${ДВ()?`<animateTransform attributeName="transform" type="translate" values="0 4;0 -8" dur="${1.6+k*0.3}s" repeatCount="indefinite"/>`:''}</path>`).join('');
 
   /* ---------- рисунки ---------- */
-  const кольцо = (x,y,м) => `<g transform="translate(${x} ${y}) scale(${м||1})"><ellipse cx="0" cy="-16" rx="24" ry="11" fill="none" stroke="#9a6a08" stroke-width="7"/><ellipse cx="0" cy="-17.5" rx="24" ry="11" fill="none" stroke="#f4c430" stroke-width="5"/><path d="M-18 -25 q12 -5 26 -2" stroke="#fff8c8" stroke-width="1.6" fill="none"/><ellipse cx="2" cy="0" rx="22" ry="2.4" fill="#000" opacity=".35" filter="url(#рл-мягко)"/></g>`;
-  const кубик = (x,y,м) => `<g transform="translate(${x} ${y}) scale(${м||1})"><ellipse cx="3" cy="0" rx="20" ry="3" fill="#000" opacity=".35" filter="url(#рл-мягко)"/><path d="M-16 0 V-26 L-6 -34 H18 V-8 L8 0 Z" fill="#e8e6e0"/><path d="M-16 -26 L-6 -34 H18 L8 -26 Z" fill="#ffffff"/><path d="M8 -26 L18 -34 V-8 L8 0 Z" fill="#cfccc4"/><rect x="-16" y="-26" width="24" height="26" fill="#f4f2ec"/>
-    ${Array.from({length:22},(_,k)=>`<rect x="${-14+(k*7)%22}" y="${-24+(k*11)%22}" width="1.4" height="1.4" fill="#d8d4ca"/>`).join('')}</g>`;
-  const монета = (x,y,м) => `<g transform="translate(${x} ${y}) scale(${м||1})"><ellipse cx="2" cy="1" rx="24" ry="5" fill="#000" opacity=".35" filter="url(#рл-мягко)"/><ellipse cx="0" cy="-4" rx="24" ry="8" fill="#8a4a1a"/><ellipse cx="0" cy="-6" rx="24" ry="8" fill="#d8844a"/><ellipse cx="0" cy="-6" rx="18" ry="5.6" fill="none" stroke="#a85a2a" stroke-width="1"/>${тА(0,-3,'10',8,'#8a4a1a')}<path d="M-16 -10 q10 -4 22 -3" stroke="#ffd0a0" stroke-width="1.2" fill="none"/></g>`;
+  const тень0 = (x,y,rx) => `<ellipse cx="${x+rx*0.12}" cy="${y+1}" rx="${rx}" ry="${Math.max(2.4,rx*0.12)}" fill="#000" opacity=".45" filter="url(#рл-мягко)"/>`;
+  const кольцо = (x,y,м) => `<g transform="translate(${x} ${y}) scale(${м||1})">${тень0(0,0,24)}
+    <ellipse cx="0" cy="-15" rx="25" ry="11.5" fill="none" stroke="#5a3a04" stroke-width="8.6"/>
+    <ellipse cx="0" cy="-16.5" rx="25" ry="11.5" fill="none" stroke="url(#c1100-золото)" stroke-width="7"/>
+    <ellipse cx="0" cy="-18" rx="25" ry="11.5" fill="none" stroke="url(#c1100-золотоВ)" stroke-width="2.4" opacity=".8"/>
+    <path d="M-20 -24 q10 -6 24 -4" stroke="#fffbe0" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M14 -8 q6 -2 9 -6" stroke="#fff4c0" stroke-width="1.2" fill="none" opacity=".8"/>
+    <circle cx="-8" cy="-27" r="1.6" fill="#fff"/></g>`;
+  const кубик = (x,y,м) => `<g transform="translate(${x} ${y}) scale(${м||1})">${тень0(2,0,20)}
+    <path d="M-16 -26 L-6 -34 H18 L8 -26 Z" fill="url(#c1100-сахарВ)"/><path d="M8 -26 L18 -34 V-8 L8 0 Z" fill="url(#c1100-сахарП)"/><rect x="-16" y="-26" width="24" height="26" fill="url(#c1100-сахарБ)"/>
+    ${Array.from({length:40},(_,k)=>{ const грань=k%3, xx=грань===0?-15+(k*7)%22:грань===1?-14+(k*5)%20:9+(k*3)%8, yy=грань===0?-25+(k*11)%24:грань===1?-32+(k*3)%6:-30+(k*13)%26;
+      return `<rect x="${xx}" y="${yy}" width="${1+(k%2)*0.6}" height="${1+(k%2)*0.6}" fill="${k%4?'#cfcabd':'#ffffff'}" opacity=".85"/>`; }).join('')}
+    <path d="M-16 -26 L-6 -34 H18" stroke="#fff" stroke-width=".9" fill="none"/><path d="M8 -26 V0" stroke="#b8b2a2" stroke-width=".6"/>
+    ${[[-10,-30],[4,-31],[-12,-12]].map(([a,b])=>`<path d="M${a} ${b-2.4} l.6 1.8 l1.8 .6 l-1.8 .6 l-.6 1.8 l-.6 -1.8 l-1.8 -.6 l1.8 -.6 Z" fill="#fff"/>`).join('')}</g>`;
+  const монета = (x,y,м) => `<g transform="translate(${x} ${y}) scale(${м||1})">${тень0(2,0,24)}
+    <ellipse cx="0" cy="-3.6" rx="24" ry="8" fill="#6a3010"/><path d="M-24 -4 V-6.4 A24 8 0 0 0 24 -6.4 V-4 A24 8 0 0 1 -24 -4 Z" fill="url(#c1100-медь)"/>
+    ${Array.from({length:22},(_,k)=>{ const a=Math.PI*(k/21), xx=-24*Math.cos(a); return `<path d="M${xx.toFixed(1)} ${(-4+8*Math.sin(a)*0.3).toFixed(1)} v-2" stroke="#8a4a1a" stroke-width=".5" opacity=".7"/>`; }).join('')}
+    <ellipse cx="0" cy="-6.4" rx="24" ry="8" fill="url(#c1100-монета)"/><ellipse cx="0" cy="-6.4" rx="20" ry="6.4" fill="none" stroke="#9a5222" stroke-width="1.2"/><ellipse cx="0" cy="-6.8" rx="20" ry="6.4" fill="none" stroke="#ffd0a0" stroke-width=".6" opacity=".7"/>
+    <text x="0.6" y="-3" text-anchor="middle" font-size="9" font-weight="bold" fill="#6a3010" font-family="Georgia,serif" transform="scale(1 .62) translate(0 -2.6)">10</text><text x="0" y="-3.6" text-anchor="middle" font-size="9" font-weight="bold" fill="#ffd8b0" font-family="Georgia,serif" transform="scale(1 .62) translate(0 -2.6)" opacity=".55">10</text>
+    <path d="M-16 -11 q12 -4 24 -3" stroke="#fff4e0" stroke-width="1.6" fill="none" opacity=".85" stroke-linecap="round"/></g>`;
   const тело = (вид,x,у) => { const Л=L_();
     if(вид==='гвоздь') return Л.образец(x,у,'Fe',2.4);
     if(вид==='стакан') return Л.стакан(x,у,70,84,{уровень:0});
@@ -430,29 +482,63 @@
     if(вид==='кольцо') return кольцо(x,у,1.6);
     return кубик(x,у,2);
   };
-  const слиток = (x,у,ц1,ц2,ц3) => `<g><ellipse cx="${x+3}" cy="${у+1}" rx="34" ry="4" fill="#000" opacity=".4" filter="url(#рл-мягко)"/><path d="M${x-30} ${у} L${x-22} ${у-18} H${x+22} L${x+30} ${у} Z" fill="${ц2}"/><path d="M${x-22} ${у-18} H${x+22} L${x+16} ${у-24} H${x-16} Z" fill="${ц1}"/><path d="M${x+22} ${у-18} L${x+30} ${у} L${x+24} ${у} L${x+16} ${у-24} Z" fill="${ц3}"/><path d="M${x-18} ${у-20} H${x+12}" stroke="#fff" stroke-width="1.2" opacity=".6"/></g>`;
-  const ВЕЩ_РИС = {железо:(x,у)=>слиток(x,у,'#d8dce0','#8a9098','#5a6068'), медь:(x,у)=>слиток(x,у,'#ffb080','#c8743a','#8a4a1a'), золото:(x,у)=>слиток(x,у,'#fff0a0','#e8b020','#a87a10'),
+  const слиток = (x,у,гр,ц1,ц3,клеймо) => `<g>${тень0(x,у,34)}<ellipse cx="${x+4}" cy="${у+1.6}" rx="30" ry="2.4" fill="${ц1}" opacity=".18" filter="url(#рл-мягко)"/>
+    <path d="M${x-31} ${у} L${x-23} ${у-19} H${x+23} L${x+31} ${у} Z" fill="url(#${гр})"/><path d="M${x-31} ${у} L${x-23} ${у-19}" stroke="#fff" stroke-width=".8" opacity=".5"/>
+    <path d="M${x-23} ${у-19} H${x+23} L${x+16} ${у-26} H${x-16} Z" fill="${ц1}"/><path d="M${x-16} ${у-26} H${x+16}" stroke="#fff" stroke-width="1.2" opacity=".8"/>
+    <path d="M${x+23} ${у-19} L${x+31} ${у} L${x+25} ${у} L${x+16} ${у-26} Z" fill="${ц3}"/>
+    <rect x="${x-10}" y="${у-14}" width="20" height="8" rx="1.5" fill="none" stroke="${ц3}" stroke-width=".8" opacity=".8"/><text x="${x}" y="${у-8}" text-anchor="middle" font-size="5.6" font-weight="bold" fill="${ц3}" font-family="Arial">${клеймо||''}</text>
+    <path d="M${x-14} ${у-23} H${x+6}" stroke="#fff" stroke-width="1.6" opacity=".55" stroke-linecap="round"/></g>`;
+  const ВЕЩ_РИС = {железо:(x,у)=>слиток(x,у,'c1100-железо','#e8ecf0','#4a5058','Fe'), медь:(x,у)=>слиток(x,у,'c1100-медь','#ffc090','#7a3a14','Cu'), золото:(x,у)=>слиток(x,у,'c1100-золото','#fff2a8','#8a6008','Au 999'),
     стекло:(x,у)=>[[-18,0,10],[4,-2,-20],[20,0,30],[-4,4,60]].map(([dx,dy,у0])=>`<path d="M${x+dx} ${у+dy} l12 -16 l8 14 Z" transform="rotate(${у0} ${x+dx} ${у+dy})" fill="url(#рл-стекло)" stroke="#bcd4e2" stroke-width="1"/>`).join(''),
     парафин:(x,у)=>`<path d="M${x-26} ${у} q4 -16 16 -14 q6 -12 18 -2 q12 -4 16 16 Z" fill="url(#рл-воск)"/><path d="M${x-14} ${у-10} q6 -4 12 -2" stroke="#fff" stroke-width="1" opacity=".6" fill="none"/>`,
     сахар:(x,у)=>L_().кристаллы(x,у,56,16,'сахар',26,3)};
   /* ложечка с веществом над спиртовкой */
-  const ложка = (x,y,вещ,нагрето) => `<g><path d="M${x+14} ${y-4} L${x+96} ${y-34}" stroke="url(#рл-сталь)" stroke-width="3" stroke-linecap="round"/><path d="M${x-16} ${y-6} Q${x-16} ${y+6} ${x} ${y+6} Q${x+16} ${y+6} ${x+16} ${y-6} Z" fill="url(#рл-сталь)"/>
-    ${вещ==='сахар'&&нагрето?`<ellipse cx="${x}" cy="${y-4}" rx="13" ry="4.6" fill="#8a4a10"/><ellipse cx="${x-3}" cy="${y-5.4}" rx="6" ry="1.6" fill="#d8904a" opacity=".8"/>${[0,1,2].map(k=>`<circle cx="${x-6+k*6}" cy="${y-5}" r="1.2" fill="none" stroke="#f4c890" stroke-width=".6"/>`).join('')}`
+  const ложка = (x,y,вещ,нагрето) => `<g><path d="M${x+14} ${y-4} L${x+96} ${y-34}" stroke="#4a5058" stroke-width="4.4" stroke-linecap="round"/><path d="M${x+14} ${y-4} L${x+96} ${y-34}" stroke="url(#рл-сталь)" stroke-width="3" stroke-linecap="round"/><path d="M${x+20} ${y-7.4} L${x+92} ${y-34}" stroke="#fff" stroke-width=".7" opacity=".7"/>
+    <path d="M${x-16} ${y-6} Q${x-16} ${y+6} ${x} ${y+6} Q${x+16} ${y+6} ${x+16} ${y-6} Z" fill="url(#рл-сталь)"/><path d="M${x-12} ${y-2} Q${x-8} ${y+3} ${x} ${y+3}" stroke="#fff" stroke-width="1" fill="none" opacity=".7"/>
+    ${нагрето?`<ellipse cx="${x}" cy="${y+8}" rx="18" ry="6" fill="#ffb060" opacity=".25" filter="url(#рл-ореол)"/>`:''}
+    ${вещ==='сахар'&&нагрето?`<ellipse cx="${x}" cy="${y-4}" rx="13" ry="4.6" fill="#6a3006"/><ellipse cx="${x}" cy="${y-4.6}" rx="11.5" ry="3.8" fill="#a85a14"/><ellipse cx="${x-3}" cy="${y-5.6}" rx="6" ry="1.4" fill="#f4c070" opacity=".9"/><circle cx="${x+4}" cy="${y-5.4}" r=".9" fill="#fff"/>${[0,1,2].map(k=>`<circle cx="${x-6+k*6}" cy="${y-5}" r="1.2" fill="none" stroke="#f4c890" stroke-width=".6"/>`).join('')}`
       :`<path d="M${x-12} ${y-4} Q${x} ${y-12} ${x+12} ${y-4} Z" fill="#f8f6f0"/>${Array.from({length:7},(_,k)=>`<rect x="${x-9+k*3}" y="${y-8+(k%2)}" width="2" height="2" fill="#e0dcd2"/>`).join('')}`}</g>`;
   const лупаКристаллы = (cx,cy,r,вещ) => L_().лупа(cx,cy,r,null,{внутри:`<rect x="${cx-r}" y="${cy-r}" width="${2*r}" height="${2*r}" fill="#20303c"/>`+
     (вещ==='соль' ? Array.from({length:9},(_,k)=>{ const x=cx-r*0.6+(k%3)*r*0.5, y=cy-r*0.55+Math.floor(k/3)*r*0.5, s=r*0.26; return `<path d="M${x} ${y} h${s} v${s} h${-s} Z" fill="#f4f8fa" stroke="#b8c8d4" stroke-width=".8"/><path d="M${x} ${y} l${s*0.3} ${-s*0.3} h${s} l${-s*0.3} ${s*0.3} Z" fill="#ffffff"/><path d="M${x+s} ${y} l${s*0.3} ${-s*0.3} v${s} l${-s*0.3} ${s*0.3} Z" fill="#d8e4ec"/>`; }).join('')
       : Array.from({length:7},(_,k)=>{ const x=cx-r*0.55+(k*37)%(r*1.1), y=cy-r*0.5+(k*23)%(r*1.0); return `<path d="M${x} ${y} l${r*0.22} ${-r*0.1} l${r*0.12} ${r*0.24} l${-r*0.18} ${r*0.18} l${-r*0.2} ${-r*0.06} Z" fill="#fbfaf4" stroke="#c8c4b4" stroke-width=".8"/>`; }).join('')),подпись:вещ==='соль'?'кубики':'неправильные'});
   /* перегонный куб алхимика */
-  const алембик = (x,y) => `<g><path d="M${x-26} ${y} Q${x-30} ${y-30} ${x} ${y-36} Q${x+30} ${y-30} ${x+26} ${y} Z" fill="#b8742a"/><path d="M${x-22} ${y-4} Q${x-24} ${y-26} ${x-4} ${y-32}" stroke="#ffd0a0" stroke-width="1.4" fill="none" opacity=".7"/>
-    <path d="M${x-10} ${y-36} Q${x} ${y-56} ${x+12} ${y-40} L${x+60} ${y-20}" stroke="#c8843a" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${x+60} ${y-20} L${x+62} ${y-6}" stroke="#c8843a" stroke-width="4"/>${L_().колба(x+66,y+30,0.4,{уровень:.3,цвет:'hsla(120,40%,60%,.6)'})}</g>`;
+  const алембик = (x,y) => `<g>${тень0(x,y,30)}<path d="M${x-26} ${y} Q${x-31} ${y-30} ${x} ${y-37} Q${x+31} ${y-30} ${x+26} ${y} Z" fill="url(#c1100-медь)"/>
+    ${[-18,-6,6,18].map(d=>`<circle cx="${x+d}" cy="${y-6}" r="1.4" fill="#7a3a14"/><circle cx="${x+d-0.4}" cy="${y-6.4}" r=".5" fill="#ffd0a0"/>`).join('')}<path d="M${x-26} ${y-10} H${x+26}" stroke="#7a3a14" stroke-width="1.2"/>
+    <path d="M${x-21} ${y-6} Q${x-24} ${y-26} ${x-6} ${y-33}" stroke="#ffe0c0" stroke-width="2" fill="none" opacity=".7"/>
+    <path d="M${x-10} ${y-36} Q${x} ${y-58} ${x+12} ${y-41} L${x+60} ${y-20}" stroke="#7a3a14" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M${x-10} ${y-36} Q${x} ${y-58} ${x+12} ${y-41} L${x+60} ${y-20}" stroke="url(#c1100-медь)" stroke-width="5.6" fill="none" stroke-linecap="round"/>
+    <path d="M${x+60} ${y-20} L${x+62} ${y-6}" stroke="#c8843a" stroke-width="4"/><circle cx="${x+62}" cy="${y-2}" r="1.8" fill="hsla(120,40%,60%,.9)">${ДВ()?`<animate attributeName="cy" values="${y-4};${y+16}" dur="1.4s" repeatCount="indefinite"/>`:''}</circle>
+    ${L_().колба(x+66,y+30,0.4,{уровень:.3,цвет:'hsla(120,40%,60%,.6)'})}${L_().пламя(16,5,.7).replace('<g>','<g transform="translate('+x+' '+(y+12)+')">')}</g>`;
+
+  /* искры-звёздочки */
+  const искры = (n,x0,y0,ш,в) => Array.from({length:n},(_,k)=>{ const x=x0+((k*53)%ш), y=y0+((k*37)%в), r=1.2+(k%3)*0.7;
+    return `<path d="M${x} ${y-r*2.4} L${x+r*0.5} ${y-r*0.5} L${x+r*2.4} ${y} L${x+r*0.5} ${y+r*0.5} L${x} ${y+r*2.4} L${x-r*0.5} ${y+r*0.5} L${x-r*2.4} ${y} L${x-r*0.5} ${y-r*0.5} Z" fill="#fff6c8" opacity=".8">${ДВ()?`<animate attributeName="opacity" values="0;.95;0" dur="${(1.6+(k%5)*0.5).toFixed(1)}s" begin="${((k%7)*0.3).toFixed(1)}s" repeatCount="indefinite"/>`:''}</path>`; }).join('');
+  /* бытовые вещи для шага «Химия дома»: (x,y) — низ */
+  const ВЕЩЬ_ДОМ = {
+    соль:(x,y)=>L_().банка(x,y,34,46,{содержимое:'соль',надпись:['соль']}),
+    сода:(x,y)=>L_().банка(x,y,34,46,{содержимое:'соль',надпись:['сода']}),
+    уксус:(x,y)=>L_().склянка(x,y,30,62,{уровень:.7,цвет:'hsla(198,40%,88%,.35)',этикетка:['уксус'],полоса:'#c8402a'}),
+    мыло:(x,y)=>`<g>${тень0(x,y,26)}<ellipse cx="${x}" cy="${y-3}" rx="27" ry="5.4" fill="url(#рл-сталь)"/><ellipse cx="${x}" cy="${y-4}" rx="23" ry="3.6" fill="#a8b0b8"/><rect x="${x-19}" y="${y-19}" width="38" height="15" rx="7" fill="url(#c1100-мыло)"/><rect x="${x-14}" y="${y-17}" width="20" height="3.6" rx="1.8" fill="#fff" opacity=".7"/><text x="${x}" y="${y-8}" text-anchor="middle" font-size="5" font-weight="bold" fill="#b86a88" font-family="Georgia,serif" opacity=".8">МЫЛО</text>
+      ${[0,1,2].map(k=>`<circle cx="${x+8+k*6}" cy="${y-26-k*6}" r="${2.6+k}" fill="url(#рл-стекло)" stroke="#e8f4ff" stroke-width=".7" opacity=".85"/><circle cx="${x+7+k*6}" cy="${y-27-k*6}" r=".8" fill="#fff"/>`).join('')}</g>`,
+    паста:(x,y)=>`<g>${тень0(x,y,28)}<path d="M${x-30} ${y-1} L${x-30} ${y-9} L${x+14} ${y-15} Q${x+16} ${y-8} ${x+14} ${y-1} Z" fill="url(#c1100-тюбик)"/><path d="M${x-30} ${y-9} L${x-30} ${y-1}" stroke="#c8ccd0" stroke-width="2.4"/>${[0,1,2].map(k=>`<path d="M${x-29} ${y-8+k*2.6} h2" stroke="#9aa0a8" stroke-width=".6"/>`).join('')}
+      <path d="M${x-22} ${y-8.4} L${x+8} ${y-12.6} L${x+8} ${y-7.4} L${x-22} ${y-4} Z" fill="#2a6ab8"/><path d="M${x-22} ${y-6.6} L${x+8} ${y-10}" stroke="#e8402a" stroke-width="1"/><path d="M${x-24} ${y-11} L${x+12} ${y-15.6}" stroke="#fff" stroke-width="1" opacity=".8"/>
+      <rect x="${x+14}" y="${y-14}" width="10" height="13" rx="2.4" fill="#e8402a"/>${[0,1,2].map(k=>`<path d="M${x+16+k*3} ${y-13} v11" stroke="#a82a1a" stroke-width=".6"/>`).join('')}<rect x="${x+15}" y="${y-13}" width="2" height="11" fill="#fff" opacity=".35"/></g>`,
+    таблетки:(x,y)=>`<g>${тень0(x,y,26)}<rect x="${x-24}" y="${y-30}" width="48" height="30" rx="3" fill="url(#c1100-фольга)"/><path d="M${x-24} ${y-20} H${x+24} M${x-24} ${y-10} H${x+24} M${x-8} ${y-30} V${y} M${x+8} ${y-30} V${y}" stroke="#8a929a" stroke-width=".5" opacity=".7"/>
+      ${[0,1,2,3,4,5].map(k=>{ const cx=x-15+(k%3)*15, cy=y-22+Math.floor(k/3)*13, пусто=k===4; return `<ellipse cx="${cx}" cy="${cy}" rx="6.4" ry="4.8" fill="url(#рл-стекло)" stroke="#c8ccd0" stroke-width=".7"/>${пусто?`<path d="M${cx-4} ${cy-2} l3 3 l-2 2 l4 -1" stroke="#7a828a" stroke-width=".7" fill="none"/>`:`<ellipse cx="${cx}" cy="${cy}" rx="5" ry="3.6" fill="url(#c1100-пилюля)"/><path d="M${cx-4.6} ${cy} H${cx+4.6}" stroke="#c8ccd0" stroke-width=".5"/>`}`; }).join('')}</g>`,
+    батарейка:(x,y)=>`<g>${тень0(x,y,14)}<rect x="${x-10}" y="${y-46}" width="20" height="46" rx="3" fill="url(#c1100-батарея)"/><rect x="${x-10}" y="${y-46}" width="20" height="17" rx="3" fill="url(#c1100-латунь)"/><rect x="${x-10}" y="${y-30}" width="20" height="1.2" fill="#000" opacity=".5"/>
+      <rect x="${x-3.4}" y="${y-50}" width="6.8" height="4.4" rx="1" fill="url(#рл-сталь)"/><ellipse cx="${x}" cy="${y-46}" rx="10" ry="2" fill="#e8d088" opacity=".7"/><rect x="${x-7}" y="${y-44}" width="2.4" height="42" fill="#fff" opacity=".22"/>
+      <text x="${x}" y="${y-14}" text-anchor="middle" font-size="7" font-weight="bold" fill="#f4f6f8" font-family="Arial">AA</text><text x="${x}" y="${y-6}" text-anchor="middle" font-size="4.4" fill="#c8ccd0" font-family="Arial">1,5 V</text><text x="${x}" y="${y-35}" text-anchor="middle" font-size="6" font-weight="bold" fill="#5a3a06" font-family="Arial">+</text></g>`,
+    хлеб:(x,y)=>`<g>${тень0(x,y,32)}<path d="M${x-32} ${y} Q${x-34} ${y-28} ${x} ${y-30} Q${x+34} ${y-28} ${x+32} ${y} Z" fill="url(#c1100-корка)"/>
+      ${[-16,-2,12].map(d=>`<path d="M${x+d-7} ${y-21} q7 -6 15 -1" stroke="#6a3a10" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M${x+d-6} ${y-20.4} q6 -4 12 -1" stroke="#f8e0b0" stroke-width="1.2" fill="none" opacity=".8"/>`).join('')}
+      ${Array.from({length:14},(_,k)=>`<circle cx="${x-22+(k*13)%44}" cy="${y-24+(k*7)%14}" r=".7" fill="#fff8e8" opacity=".75"/>`).join('')}<path d="M${x-26} ${y-14} Q${x-22} ${y-24} ${x-10} ${y-27}" stroke="#ffe0a0" stroke-width="1.4" fill="none" opacity=".6"/></g>`
+  };
 
   /* ================= КАДРЫ ================= */
 
   /* 1. Карточка */
   function F1(s){
     const Н=246, y0=196, у=y0+14, Л=L_(), к=s.вк1==null?0:s.вк1, вид=s.видвк1||{0:true}, все=ВКЛАДКИ.every((x,i)=>вид[i]), в=s.ответ1, ок=в===0;
-    const пр = Л.колба(52,у,0.8,{уровень:.45,цвет:'hsla(320,70%,60%,.7)'}) + Л.штативПробирок(140,у,26,[{уровень:.5,цвет:'hsla(200,70%,60%,.7)'},{уровень:.4,цвет:'hsla(50,90%,60%,.7)'},{уровень:.6,цвет:'hsla(120,60%,50%,.7)'}],0.8) + Л.стакан(222,у,56,62,{уровень:.5,цвет:'hsla(28,90%,60%,.7)'}) + Л.очки(296,у-2,0.9);
-    const поверх = Л.таблица(18,36,150,{}) + метка(256,40,'Что такое химия',ЗЛ,{кегль:12}) + Л.молекула(226,104,1,'H2O',{подписи:true}) + Л.молекула(296,124,0.8,'CO2',{подписи:true});
+    const пр = Л.колба(52,у,0.8,{уровень:.45,цвет:'hsla(320,70%,60%,.7)',пузырьки:true,переливы:['hsla(320,70%,60%,.7)','hsla(200,80%,55%,.7)','hsla(130,70%,45%,.7)','hsla(46,95%,55%,.7)']}) + Л.штативПробирок(140,у,26,[{уровень:.5,цвет:'hsla(200,70%,60%,.7)',пузыри:.5},{уровень:.4,цвет:'hsla(50,90%,60%,.7)',пузыри:.25},{уровень:.6,цвет:'hsla(120,60%,50%,.7)',пузыри:.7}],0.8) + Л.стакан(222,у,56,62,{уровень:.5,цвет:'hsla(28,90%,60%,.7)'}) + Л.очки(296,у-2,0.9);
+    const поверх = искры(14,14,24,308,150) + Л.таблица(18,36,150,{}) + метка(256,40,'Что такое химия',ЗЛ,{кегль:12}) + Л.молекула(226,104,1,'H2O',{подписи:true}) + Л.молекула(296,124,0.8,'CO2',{подписи:true});
     return ЖУРНАЛ(s) + ШАПКА('Первый урок','Что такое химия') +
       `<div class="pic тёмная">${свгЛ(сцена(Н,y0,пр,поверх),Н)}</div>` +
       `<div class="вкладки" data-anim style="--i:3">${ВКЛАДКИ.map((x,i)=>`<button type="button" class="${к===i?'вкл':''}${вид[i]?' был':''}${i===4?' опасно':''}" onclick="r1100вк(${i})">${x[0]}</button>`).join('')}</div>` +
@@ -462,6 +548,46 @@
         (в==null ? СКАЗ('Вопрос','Что изучает химия?') :
           РАЗБОР(ок,['Верно: химия — наука о веществах и их превращениях.','Это астрономия и физика. Химия изучает <b>вещества</b>.'][в]))) +
       (ок ? ПРАВИЛО('<b>Химия</b> — наука о веществах, их свойствах и превращениях.') : '');
+  }
+
+  /* 1а. Химический светофор */
+  function FA(s){
+    const Н=280, y0=232, у=y0+14, Л=L_(), ф=s.ф0||0, вид=s.видф0||{0:true}, все=[0,1,2,3].every(i=>вид[i]), трясу=!!s.тряс0, в=s.ответ0, ок=в===0;
+    const С=СВЕТОФОР[ф];
+    const колба = Л.колба(150,у,1.55,{уровень:.55,цвет:С.ц,пробка:true}) + (ф===1?`<g transform="translate(150 ${у-50})">${Array.from({length:10},(_,k)=>`<circle cx="${-28+(k*23)%56}" cy="${-(k*13)%30}" r="${1.4+(k%3)*0.6}" fill="none" stroke="#fff" stroke-width=".8" opacity=".8">${ДВ()?`<animate attributeName="cy" values="0;-36" dur="${(0.9+(k%4)*0.3).toFixed(1)}s" repeatCount="indefinite"/>`:''}</circle>`).join('')}</g>`:'');
+    const тряска = трясу&&ДВ() ? `<animateTransform attributeName="transform" type="rotate" values="0 150 ${у};-9 150 ${у};8 150 ${у};-6 150 ${у};4 150 ${у};0 150 ${у}" dur=".8s" repeatCount="1"/>` : '';
+    const пр = `<g>${тряска}${колба}</g>`;
+    const огни = [2,0,1].map((i,k)=>{ const ц=['#f4c820','#2ab84a','#e8303a'][i], горит=(ф===1&&i===1)||(ф===2&&i===2)||((ф===0||ф===3)&&i===0);
+      return `<circle cx="292" cy="${66+k*42}" r="15" fill="${горит?ц:'#2a2e34'}" stroke="#1a1c1f" stroke-width="3"/>${горит?`<circle cx="292" cy="${66+k*42}" r="26" fill="${ц}" opacity=".25" filter="url(#рл-ореол)"/>`:''}`; }).join('');
+    const поверх = `<rect x="270" y="40" width="44" height="130" rx="12" fill="#1a1c1f" stroke="#4a525c"/>` + огни + искры(6,40,40,180,80) +
+      метка(150,4,'раствор: '+С.имя+(ф===2?' · через 30 с':ф===3?' · через минуту':ф===1?' · встряхнули':''),['#f4c820','#2ab84a','#e8303a','#f4c820'][ф],{кегль:11});
+    return ЖУРНАЛ(s) + ШАПКА('Чудо-опыт','Химический светофор') +
+      `<div class="pic тёмная">${свгЛ(сцена(Н,y0,пр,поверх),Н)}</div>` +
+      `<div class="ask пара">${BTN(3,'','🫨 Встряхнуть колбу',"r1100ф('тряс')")}${BTN(4,'','⏳ Подождать',"r1100ф('ждать')")}</div>` +
+      A(5,'карт','<span class="метка">Что видно</span><div class="текст">'+С.т+'</div>') +
+      (!все ? СКАЗ('Опыт','В колбе — раствор глюкозы, щёлочи и красителя индигокармина. Встряхивай колбу и жди: раствор, как светофор, сам меняет цвет.') :
+        ОТВЕТЫ('',['в раствор попадает кислород из воздуха над жидкостью','колба нагревается от рук'],0,в,0) +
+        (в==null ? СКАЗ('Вопрос','Почему после встряхивания раствор снова зеленеет?') :
+          РАЗБОР(ок,['Верно: кислород окрашивает краситель в зелёный, а глюкоза потом снова отнимает его — красный, жёлтый.','Руки здесь ни при чём — колба почти не нагрелась. Дело в кислороде воздуха над раствором.'][в]))) +
+      (ок ? ТЕОРИЯ('превращения веществ','Цвет меняется, потому что меняется <b>вещество</b>: молекулы красителя то получают кислород, то отдают его глюкозе. Это и есть химия — наука о превращениях веществ.') +
+        ДИВО('«Светофор» можно перезапускать десятки раз — пока в растворе не кончится глюкоза.') : '');
+  }
+
+  /* 1б. Химия дома */
+  function FB(s){
+    const Н=300, Л=L_(), к=s.д0, вид=s.видд0||{}, найдено=ДОМ.filter((x,i)=>вид[i]).length, все=найдено>=ДОМ.length;
+    const xs=[50,128,206,284], полки=[124,236];
+    const полка=(y)=>`<rect x="8" y="${y}" width="320" height="8" rx="2" fill="url(#рл-доска)"/><path d="M30 ${y+8} v8 h8 Z M306 ${y+8} v8 h-8 Z" fill="#8a5a2a"/>`;
+    let тело = L_().студия(Н,Н-4) + `<rect x="4" y="20" width="328" height="${Н-30}" rx="10" fill="url(#c1100-шкаф)" stroke="#6a5240" stroke-width="2"/>${Array.from({length:9},(_,k)=>`<path d="M8 ${40+k*28} Q120 ${36+k*28} 220 ${42+k*28} T328 ${38+k*28}" stroke="#5a4636" stroke-width=".8" fill="none" opacity=".5"/>`).join('')}<rect x="10" y="26" width="316" height="${Н-42}" rx="6" fill="none" stroke="#1a140e" stroke-width="2" opacity=".6"/><ellipse cx="168" cy="40" rx="140" ry="22" fill="#fff4d8" opacity=".06"/>` + полка(полки[0]) + полка(полки[1]);
+    ДОМ.forEach((x,i)=>{ const cx=xs[i%4], y=полки[Math.floor(i/4)];
+      тело += (к===i?`<ellipse cx="${cx}" cy="${y-1}" rx="34" ry="5" fill="#ffd76a" opacity=".45"/>`:'') + ВЕЩЬ_ДОМ[x.к](cx,y) +
+        (вид[i]?`<circle cx="${cx+28}" cy="${y-60}" r="8" fill="#3a9a5a"/><path d="M${cx+24.5} ${y-60} l2.6 2.6 l4.4 -5" stroke="#fff" stroke-width="1.6" fill="none"/>`:'') +
+        `<rect x="${cx-38}" y="${y-76}" width="76" height="80" fill="#fff" fill-opacity="0" pointer-events="all" style="cursor:pointer" onclick="r1100дом(${i})"/>`; });
+    тело = тело.replace('<rect x="4"','<rect x="4"') + метка(168,2,все?'химия — везде!':'найдено: '+найдено+' из 8 — нажимай на вещи',все?ЗЕ:ЗЛ,{кегль:10});
+    return ЖУРНАЛ(s) + ШАПКА('Химия вокруг нас','Шкафчик дома') +
+      `<div class="pic тёмная"><svg viewBox="0 0 336 ${Н}" preserveAspectRatio="xMidYMid meet">${L_().defs()}${ОПРЕДЕЛЕНИЯ}${ГР}${тело}</svg></div>` +
+      (к!=null ? A(4,'карт','<span class="метка">'+ДОМ[к].имя+'</span><div class="текст">'+ДОМ[к].факт+'</div>') : СКАЗ('Исследуй','Химия живёт не только в лаборатории. Нажимай на вещи в шкафчике — у каждой своя химия.')) +
+      (все ? ПРАВИЛО('Еда, лекарства, мыло, батарейки — всё это <b>вещества</b> и <b>реакции</b>. Химия — везде.') : '');
   }
 
   /* 2. Тела и вещества */
@@ -557,7 +683,7 @@
     const Н=262, y0=232, у=y0-16, Л=L_(), к=s.и5==null?null:s.и5, вид=s.вид5||{}, все=ИСТОРИЯ.every((x,i)=>вид[i]), в=s.ответ5, ок=в===2;
     const xs=[40,104,168,232,296];
     const лента = `<path d="M20 ${у+4} H316" stroke="#c89a2a" stroke-width="3"/>` + ИСТОРИЯ.map((x,i)=>`<circle cx="${xs[i]}" cy="${у+4}" r="${к===i?9:6}" fill="${вид[i]?'#ffd76a':'#3a4048'}" stroke="#ffd76a" stroke-width="2" style="cursor:pointer" onclick="r1100и(${i})" pointer-events="all"/>` + тА(xs[i],у+24,x.год.replace('7000 лет назад','−5000').replace('Средние века','ср. века'),9,вид[i]?'#ffd76a':'#9aa3ad')).join('');
-    const рис = к==null ? тА(168,110,'нажми на точку ленты',13,'#9aa3ad') : рисИстории(ИСТОРИЯ[к].вид,168,у-22) + метка(168,4,ИСТОРИЯ[к].год+' · '+ИСТОРИЯ[к].кто,ЗЛ,{кегль:11});
+    const рис = к==null ? тА(168,110,'нажми на точку ленты',13,'#9aa3ad') : рисИстории(ИСТОРИЯ[к].вид,168,у-40) + метка(168,4,ИСТОРИЯ[к].год+' · '+ИСТОРИЯ[к].кто,ЗЛ,{кегль:11});
     return ЖУРНАЛ(s) + ШАПКА('Шаг 4','Как появилась химия') +
       `<div class="pic тёмная">${свгЖ(L_().студия(Н,y0)+рис+лента,Н)}</div>` +
       `<div class="ряд мелко" data-anim style="--i:3;grid-template-columns:repeat(5,minmax(0,1fr))">${ИСТОРИЯ.map((x,i)=>BTN(3,(к===i?'вкл':'')+(вид[i]?' был':''),x.год.replace('7000 лет назад','−5000').replace('Средние века','ср. века'),'r1100и('+i+')')).join('')}</div>` +
@@ -569,9 +695,11 @@
   }
 
   /* 6. Первый опыт — вулкан */
-  const пена = (x,y,ш) => Array.from({length:26},(_,k)=>{ const px=x-ш/2+((k*31)%ш), py=y-((k*17)%26), r=4+(k%4)*2;
-    return `<circle cx="${px}" cy="${py}" r="${r}" fill="${k%3?'#ff7a8a':'#ffb0bc'}" opacity=".92">${ДВ()?`<animate attributeName="cy" values="${py+10};${py-4};${py+10}" dur="${(1.4+(k%5)*0.3).toFixed(1)}s" repeatCount="indefinite"/>`:''}</circle>`; }).join('') +
-    [-1,1].map(с=>`<path d="M${x+с*ш*0.42} ${y} Q${x+с*(ш*0.62)} ${y+20} ${x+с*(ш*0.56)} ${y+70}" stroke="#ff8a9a" stroke-width="12" fill="none" stroke-linecap="round" opacity=".9"/>`).join('');
+  const пена = (x,y,ш) => [-1,1].map(с=>`<path d="M${x+с*ш*0.42} ${y+4} Q${x+с*(ш*0.64)} ${y+24} ${x+с*(ш*0.58)} ${y+96}" stroke="url(#c1100-лава)" stroke-width="13" fill="none" stroke-linecap="round" opacity=".95"/><path d="M${x+с*ш*0.42-с*3} ${y+6} Q${x+с*(ш*0.62)-с*3} ${y+26} ${x+с*(ш*0.56)-с*3} ${y+90}" stroke="#ffd0da" stroke-width="2" fill="none" opacity=".7"/>`).join('') +
+    `<ellipse cx="${x}" cy="${y+100}" rx="${ш*0.8}" ry="6" fill="#d83a58" opacity=".85"/>` +
+    Array.from({length:30},(_,k)=>{ const px=x-ш/2+((k*31)%ш), py=y-((k*17)%30), r=4+(k%4)*2.2;
+      return `<g>${ДВ()?`<animateTransform attributeName="transform" type="translate" values="0 8;0 -4;0 8" dur="${(1.4+(k%5)*0.3).toFixed(1)}s" repeatCount="indefinite"/>`:''}<circle cx="${px}" cy="${py}" r="${r}" fill="url(#c1100-пена)"/><circle cx="${px-r*0.35}" cy="${py-r*0.35}" r="${r*0.28}" fill="#fff" opacity=".85"/></g>`; }).join('') +
+    Array.from({length:8},(_,k)=>`<circle cx="${x-30+k*9}" cy="${y-34-(k%3)*8}" r="${1.6+(k%2)}" fill="#ff8aa0">${ДВ()?`<animate attributeName="cy" values="${y-20};${y-56-(k%3)*10};${y-20}" dur="${(1+(k%3)*0.3).toFixed(1)}s" repeatCount="indefinite"/>`:''}</circle>`).join('');
   function F6(s){
     const Н=272, y0=226, у=y0+14, Л=L_(), ш=Math.min(s.о6||0,ШАГИ6.length), отз=s.отз6, готово=ш>=ШАГИ6.length, в=s.ответ6, ок=в===0;
     const поднос = `<rect x="78" y="${у-6}" width="180" height="6" rx="3" fill="#c8ccd2"/><path d="M78 ${у-6} q-6 0 -6 -6 M258 ${у-6} q6 0 6 -6" stroke="#c8ccd2" stroke-width="3" fill="none"/>`;
@@ -700,6 +828,8 @@
     src: 'Химия · 5–6 класс · Введение', subj: 'chem',
     explain: [
       'Карточка: что изучает химия.',
+      'Чудо-опыт: химический светофор.',
+      'Химия вокруг нас: шкафчик дома.',
       'Тела и вещества: из чего сделаны предметы.',
       'Детектив: соль или сахар.',
       'Приборы химика.',
@@ -725,18 +855,22 @@
     const s = S();
     const step = Math.max(0, Math.min(L1100.explain.length-1, (typeof LV!=='undefined'&&LV.step)||0));
     const f = step+1;
-    const Ф=[F1,F2,F3,F4,F5,F6,F7,F8,F9];
-    const сцена0 = f<=9 ? Ф[f-1](s) : тренажёр(s,'т'+(f-9),f-9);
-    const ЗАГОЛОВКИ={1:'Первый урок химии',2:'Тела и вещества',3:'Детектив',4:'Приборы химика',5:'История химии',6:'Первый опыт',7:'Вывод',8:'Проверка',9:'Практика',
-      10:'Тренажёр 1',11:'Тренажёр 2',12:'Тренажёр 3'};
+    const Ф=[F1,FA,FB,F2,F3,F4,F5,F6,F7,F8,F9];
+    const сцена0 = f<=11 ? Ф[f-1](s) : тренажёр(s,'т'+(f-11),f-11);
+    const ЗАГОЛОВКИ={1:'Первый урок химии',2:'Чудо-опыт',3:'Химия дома',4:'Тела и вещества',5:'Детектив',6:'Приборы химика',7:'История химии',8:'Первый опыт',9:'Вывод',10:'Проверка',11:'Практика',
+      12:'Тренажёр 1',13:'Тренажёр 2',14:'Тренажёр 3'};
     el.innerHTML = `<div class="s6 l1100n" data-frame="${f}"><h2>${ЗАГОЛОВКИ[f]||'Что такое химия'}</h2>${сцена0}</div>`;
   }
 
   /* ================= ОБРАБОТЧИКИ ================= */
   window.r1100Отв=(f,к)=>{ const s=S(); s['ответ'+f]=к; chRender(0); };
   window.r1100вк=(i)=>{ const s=S(); s.вк1=i; const в=Object.assign({0:true},s.видвк1||{}); в[i]=true; s.видвк1=в; chRender(0); };
+  window.r1100ф=(что)=>{ const s=S(); let ф=s.ф0||0;
+    if(что==='тряс'){ ф=1; s.тряс0=true; } else { s.тряс0=false; ф = ф===1?2 : ф===2?3 : ф; }
+    s.ф0=ф; const в=Object.assign({0:true},s.видф0||{}); в[ф]=true; s.видф0=в; chRender(0); };
+  window.r1100дом=(i)=>{ const s=S(); if(!ДОМ[i]) return; s.д0=i; const в=Object.assign({},s.видд0||{}); в[i]=true; s.видд0=в; chRender(0); };
   window.r1100т=(j)=>{ const s=S(); if(s.ок2) return; const n=s.тел2||0, Т=ТЕЛА[n];
-    if(j===Т.в){ s.ок2=true; s.отз2={ок:true,т:Т.т+' — тело, '+Т.вар[Т.в]+' — вещество, из которого оно сделано.'}; }
+    if(j===Т.в){ s.ок2=true; s.отз2={ок:true,т:Т.т+' — тело, '+Т.вар[Т.в]+' — вещество, из которого оно сделано. Ещё из этого вещества: '+ЕЩЁ[Т.вар[Т.в]]+'.'}; }
     else s.отз2={ок:false,j:j,т:'Нет: «'+Т.т.toLowerCase()+'» не делают из вещества «'+Т.вар[j]+'». Присмотрись к рисунку.'};
     chRender(0); };
   window.r1100тдальше=()=>{ const s=S(); if(!s.ок2||(s.тел2||0)>=ТЕЛА.length-1) return; s.тел2=(s.тел2||0)+1; s.ок2=false; s.отз2=null; chRender(0); };

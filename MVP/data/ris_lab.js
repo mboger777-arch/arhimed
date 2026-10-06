@@ -216,10 +216,10 @@
     const yж=-6-(52*ур);
     const шир=(yy)=>10+20*Math.min(1,(-yy-6)/52<0?0:1-(-yy-6)/52);
     return `<g transform="translate(${f(x)} ${f(y)}) scale(${м})">
-      <ellipse cx="4" cy="1" rx="34" ry="3.6" fill="#000" opacity=".4" filter="url(#рл-мягко)"/>
+      <ellipse cx="4" cy="1" rx="34" ry="3.6" fill="#000" opacity=".4" filter="url(#рл-мягко)"/><ellipse cx="8" cy="2.4" rx="26" ry="3" fill="url(#рл-каустика)"/>
       ${ур>0?`<ellipse cx="6" cy="2" rx="30" ry="4" fill="${ц}" opacity=".6" filter="url(#рл-мягко)"/>
         <clipPath id="${кл}"><path d="${форма} Z"/></clipPath>
-        <g clip-path="url(#${кл})"><rect x="-34" y="${f(yж)}" width="68" height="${f(-yж+2)}" fill="${ц}"/><rect x="-34" y="${f(yж)}" width="68" height="${f(-yж+2)}" fill="url(#рл-жидкость)"/></g>
+        <g clip-path="url(#${кл})"><rect x="-34" y="${f(yж)}" width="68" height="${f(-yж+2)}" fill="${ц}">${о.переливы&&ДВИЖ?`<animate attributeName="fill" values="${о.переливы.concat([о.переливы[0]]).join(';')}" dur="${о.переливыСек||8}s" repeatCount="indefinite"/>`:''}</rect><rect x="-34" y="${f(yж)}" width="68" height="${f(-yж+2)}" fill="url(#рл-жидкость)"/><rect x="-34" y="${f(yж)}" width="68" height="${f(-yж+2)}" fill="url(#рл-глубина)"/><rect x="-34" y="-5" width="68" height="5" fill="url(#рл-толща)"/></g>
         <ellipse cx="0" cy="${f(yж)}" rx="${f(шир(yж)-1.5)}" ry="2.4" fill="#fff" opacity=".3"/>`:''}
       ${о.осадок?`<g clip-path="url(#${кл})"><path d="M-30 -4 Q-15 ${f(-6-о.осадок.h)} 0 ${f(-5-о.осадок.h)} Q15 ${f(-6-о.осадок.h)} 30 -4 V2 H-30 Z" fill="${о.осадок.цвет}"/>
         ${Array.from({length:26},(_,k)=>{ const px=-24+((k*37)%48), py=-8-((k*23)%Math.max(8,52*ур-8)); return `<circle cx="${px}" cy="${py}" r="${f(1+(k%3)*0.5)}" fill="${о.осадок.цвет}" opacity=".85">${ДВИЖ&&о.осадок.падает?`<animate attributeName="cy" values="${py};-6" dur="${f(2+(k%5)*0.6)}s" repeatCount="indefinite"/>`:''}</circle>`; }).join('')}</g>`:''}
