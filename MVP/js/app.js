@@ -26,6 +26,8 @@ function swipeCard(dir){
 function initSwipe(){
   document.addEventListener('touchstart',e=>{
     if(e.touches.length!==1){ _swipe.on=false; return; }
+    /* ползунки и элементы с data-noswipe тянут пальцем — это не свайп карточки */
+    if(e.target&&e.target.closest&&e.target.closest('input[type=range],[data-noswipe]')){ _swipe.on=false; return; }
     const t=e.touches[0]; _swipe.x=t.clientX; _swipe.y=t.clientY; _swipe.on=true; _swipe.just=false;
   },{passive:true});
   document.addEventListener('touchend',e=>{
