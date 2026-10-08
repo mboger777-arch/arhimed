@@ -38,7 +38,7 @@ web
 
 - Прод: `https://123.teramont.pro/MVP/`, systemd-сервис `arhimed` в `/opt/arhimed`,
   код разворачивается из GitHub через `deploy/deploy.py`.
-- Витрина: `https://s5hyhbpftv-alt.github.io/arhimed/`.
+- Витрина: `https://alenamissia-source.github.io/arhimed/`.
 - Ритуал версии обязателен: `?v=NNN` в `MVP/index.html` и `MVP/parent/index.html`
   плюс `CACHE='arhimed-mvp-vNNN'` в `MVP/sw.js`. Без него браузер отдаёт старый код.
 - Рабочая копия проекта — `~/Documents/DPsek`; в git попадает только приложение

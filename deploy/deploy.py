@@ -22,7 +22,7 @@ import sys
 import urllib.parse
 from pathlib import Path
 
-REPO = os.environ.get('ARH_REPO', 's5hyhbpftv-alt/arhimed')
+REPO = os.environ.get('ARH_REPO', 'alenamissia-source/arhimed')
 BRANCH = os.environ.get('ARH_BRANCH', 'main')
 SITE = os.environ.get('ARH_SITE', 'https://123.teramont.pro/MVP/')
 SERVICE = os.environ.get('ARH_SERVICE', 'arhimed')

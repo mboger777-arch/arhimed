@@ -5,7 +5,7 @@
 > Текущее состояние и очередь задач — в `deploy/СОСТОЯНИЕ.md`.
 
 Приложение живёт на сервере в `/opt/arhimed`, код берётся **из GitHub** (ветка `main`
-репозитория `s5hyhbpftv-alt/arhimed`). Ничего вручную на сервер копировать не нужно —
+репозитория `alenamissia-source/arhimed`). Ничего вручную на сервер копировать не нужно —
 достаточно запушить изменения и выполнить выкладку.
 
 ## Что должно быть на сервере
@@ -48,7 +48,7 @@ PYTHONPATH=.py-libs python3 deploy/deploy.py
 
 | Переменная | По умолчанию | Смысл |
 |---|---|---|
-| `ARH_REPO` | `s5hyhbpftv-alt/arhimed` | репозиторий-источник |
+| `ARH_REPO` | `alenamissia-source/arhimed` | репозиторий-источник |
 | `ARH_BRANCH` | `main` | ветка |
 | `ARH_SITE` | `https://123.teramont.pro/MVP/` | адрес для проверки |
 | `ARH_SERVICE` | `arhimed` | имя systemd-сервиса |

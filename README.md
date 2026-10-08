@@ -6,7 +6,7 @@
 
 - **Приложение ученика:** https://123.teramont.pro/MVP/
 - **Кабинет родителя:** https://123.teramont.pro/MVP/parent/
-- **Витрина проекта:** https://s5hyhbpftv-alt.github.io/arhimed/
+- **Витрина проекта:** https://alenamissia-source.github.io/arhimed/
 
 ## Что в приложении
 
