@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Выкладка АРХИМЕД MVP на сервер прямо из GitHub.
+"""Выкладка АРХИМЕД MVP на сервер прямо с этого компьютера, без GitHub.
 
 Пароли и адрес сервера НЕ хранятся в репозитории. Скрипт берёт их по порядку:
   1) переменные окружения: ARH_HOST, ARH_USER, ARH_PASS
@@ -8,7 +8,8 @@
   3) файл ~/.arhimed_deploy (тот же формат)
 
 Что делает скрипт:
-  * скачивает tar.gz ветки (по умолчанию main) с GitHub;
+  * спрашивает у сервера, какой коммит у него развёрнут, и отправляет по SSH
+    только новые коммиты локальной ветки (git bundle), а не весь репозиторий;
   * разворачивает новый код в /opt, сохраняя ключ_яндекса.txt и venv;
   * перезапускает systemd-сервис;
   * проверяет, что сайт отвечает 200 и содержит ожидаемую версию (v=NNN),
@@ -18,11 +19,11 @@
 """
 import os
 import re
+import subprocess
 import sys
 import urllib.parse
 from pathlib import Path
 
-REPO = os.environ.get('ARH_REPO', 'alenamissia-source/arhimed')
 BRANCH = os.environ.get('ARH_BRANCH', 'main')
 SITE = os.environ.get('ARH_SITE', 'https://123.teramont.pro/MVP/')
 SERVICE = os.environ.get('ARH_SERVICE', 'arhimed')
@@ -35,8 +36,11 @@ SITE_PARENT = SITE + 'parent/'
 SITE_PARENT_OLD = SITE + urllib.parse.quote('родитель') + '/'
 SITE_API = SITE.rsplit('/MVP/', 1)[0] + '/api/kid'
 DATADIR = f'{ROOT}/{APP}-data'
+SRC = f'{ROOT}/{APP}-src'
+BUNDLE = f'/tmp/{APP}-deploy.bundle'
 
 HERE = Path(__file__).resolve().parent
+REPO_DIR = HERE.parent
 ENV_FILE = HERE / 'deploy.local.env'
 HOME_FILE = Path.home() / '.arhimed_deploy'
 
@@ -87,29 +91,54 @@ def expected_version():
     return marks[0] if marks else None
 
 
-def remote_script():
+def git(*args):
+    return subprocess.run(['git', '-C', str(REPO_DIR), *args], check=True,
+                          capture_output=True, text=True).stdout.strip()
+
+
+def make_bundle(server_head, local_head, path):
+    """Пакет с коммитами, которых нет на сервере. Если серверного коммита
+    нет в локальной истории (или клона ещё нет), пакет будет полным."""
+    known = server_head and subprocess.run(
+        ['git', '-C', str(REPO_DIR), 'merge-base', '--is-ancestor', server_head, local_head],
+        capture_output=True).returncode == 0
+    rng = f'{server_head}..{BRANCH}' if known else BRANCH
+    git('bundle', 'create', str(path), rng)
+    return 'только новые коммиты' if known else 'полный пакет'
+
+
+def run(client, cmd, timeout=900):
+    stdin, stdout, stderr = client.exec_command(cmd, timeout=timeout)
+    out = stdout.read().decode('utf-8', 'replace')
+    err = stderr.read().decode('utf-8', 'replace')
+    return stdout.channel.recv_exit_status(), out, err
+
+
+def remote_script(local_head):
     """Инкрементальная выкладка: на сервере живёт постоянный git-клон,
-    поэтому тянется только то, что изменилось, а не весь архив с видео."""
+    в него приезжают только новые коммиты из пакета, присланного с этого компьютера."""
     return f'''
 set -e
 cd {ROOT}
 START=$(date +%s)
 
-# 1) постоянный клон: забираем только новые объекты
-if [ -d {ROOT}/{APP}-src/.git ]; then
-  echo "--- обновляю клон (только изменения):"
-  git -C {ROOT}/{APP}-src fetch --depth 1 origin {BRANCH} -q
-  git -C {ROOT}/{APP}-src reset --hard FETCH_HEAD -q
-else
-  echo "--- первый раз: делаю клон репозитория"
-  rm -rf {ROOT}/{APP}-src
-  git clone --depth 1 -q https://github.com/{REPO}.git {ROOT}/{APP}-src
+# 1) постоянный клон: подкладываем присланный пакет с новыми коммитами
+if [ ! -d {SRC}/.git ]; then
+  echo "--- первый раз: создаю клон"
+  rm -rf {SRC}
+  git init -q {SRC}
 fi
-echo "--- коммит на сервере: $(git -C {ROOT}/{APP}-src rev-parse --short HEAD)"
+if [ -f {BUNDLE} ]; then
+  echo "--- принимаю пакет с этого компьютера:"
+  git -C {SRC} fetch -q {BUNDLE} {BRANCH}
+  rm -f {BUNDLE}
+fi
+git -C {SRC} reset --hard -q {local_head}
+echo "--- коммит на сервере: $(git -C {SRC} rev-parse --short HEAD)"
 
 # 2) собираем новую версию из клона: hardlinks, без копирования мегабайтов
 rm -rf {ROOT}/{APP}-new
-cp -al {ROOT}/{APP}-src {ROOT}/{APP}-new
+cp -al {SRC} {ROOT}/{APP}-new
 
 # 3) ключ и окружение переносим отдельно (они живут только на сервере)
 cp {ROOT}/{APP}/{KEYFILE} {ROOT}/{APP}-new/{KEYFILE} 2>/dev/null || true
@@ -162,6 +191,12 @@ def main():
         sys.exit(3)
 
     host, user, pwd = credentials()
+    local_head = git('rev-parse', BRANCH)
+    print(f'Выкладываю ветку {BRANCH}: {local_head[:7]} {git("log", "-1", "--format=%s", BRANCH)}')
+    if git('rev-parse', 'HEAD') != local_head:
+        print(f'ВНИМАНИЕ: сейчас открыта не ветка {BRANCH}, проверка версии может не сойтись')
+    if git('status', '--porcelain', '--untracked-files=no'):
+        print('ВНИМАНИЕ: есть незакоммиченные правки, на сервер уедет только закоммиченное')
     want = expected_version()
     if want:
         print(f'Ожидаемая версия в index.html: v{want}')
@@ -169,10 +204,21 @@ def main():
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(host, username=user, password=pwd, timeout=30)
-    stdin, stdout, stderr = client.exec_command(remote_script(), timeout=900)
-    out = stdout.read().decode('utf-8', 'replace')
-    err = stderr.read().decode('utf-8', 'replace')
-    code = stdout.channel.recv_exit_status()
+
+    _, server_head, _ = run(client, f'git -C {SRC} rev-parse HEAD 2>/dev/null || true', 60)
+    server_head = server_head.strip()
+    if server_head != local_head:
+        bundle = REPO_DIR / '.git' / 'deploy.bundle'
+        kind = make_bundle(server_head, local_head, bundle)
+        print(f'Отправляю на сервер {kind}: {bundle.stat().st_size / 1e6:.1f} МБ')
+        sftp = client.open_sftp()
+        sftp.put(str(bundle), BUNDLE)
+        sftp.close()
+        bundle.unlink()
+    else:
+        print('Этот коммит уже лежит на сервере, переразворачиваю его')
+
+    code, out, err = run(client, remote_script(local_head))
     client.close()
 
     print('EXIT:', code)
