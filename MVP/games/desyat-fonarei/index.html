@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Десять фонарей">
+<meta name="theme-color" content="#2b1a3a">
+<meta name="format-detection" content="telephone=no">
+<title>Десять фонарей — платформер</title>
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{
+  --sat:env(safe-area-inset-top,0px);
+  --sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px);
+  --sar:env(safe-area-inset-right,0px);
+}
+html,body{
+  margin:0;padding:0;width:100%;height:100%;height:100dvh;
+  background:#2b1a3a;overflow:hidden;touch-action:none;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  overscroll-behavior:none;position:fixed;inset:0;
+  -webkit-text-size-adjust:100%;
+}
+canvas#game{
+  display:block;position:fixed;left:0;top:0;width:100%;height:100%;
+  touch-action:none;outline:none;background:#2b1a3a;
+}
+#pre{position:fixed;left:-9999px;top:0;font:400 20px Pangolin;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="pre">Десять фонарей 0123456789</div>
+<script src="js/lines.js"></script>
+<script src="js/voice_manifest.js"></script>
+<script src="js/core.js"></script>
+<script src="js/world.js"></script>
+<script src="js/extras.js"></script>
+<script src="js/play.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/bakery.js"></script>
+<script src="js/scenes.js"></script>
+<script src="../back_to_lesson.js"></script>
+</body>
+</html>

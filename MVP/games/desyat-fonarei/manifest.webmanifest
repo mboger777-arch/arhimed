@@ -1,0 +1,18 @@
+{
+  "name": "Десять фонарей",
+  "short_name": "Фонари",
+  "description": "Платформер про Искру, Бублика, Щёлка и Деда Моста: сосчитай до десяти и зажги фонари.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "landscape",
+  "background_color": "#2b1a3a",
+  "theme_color": "#2b1a3a",
+  "lang": "ru",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

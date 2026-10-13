@@ -1,7 +1,7 @@
 /* АРХИМЕД MVP · service worker
    HTML/JS всегда с сети. В Cache API не кладём код — иначе залипает старый урок.
    Картинки можно из кэша. */
-const CACHE='arhimed-mvp-v918';
+const CACHE='arhimed-mvp-v919';
 /* В кэш кладём только то, что реально есть в репозитории.
    Раньше здесь был путь вне MVP (../МОБ_ПРИЛОЖЕНИЕ/...), его на сервере нет —
    addAll падал, и service worker вообще не устанавливался. */
@@ -62,6 +62,11 @@ function isCode(url){
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET') return;
   const req=e.request;
+  /* Игры к урокам (MVP/games/) воркер не трогает: это сотни картинок и файлов
+     озвучки, которые игра грузит разом. Через netFirst с обрывом часть из них
+     получала 504, и игра падала на undefined-картинке. Браузер грузит их сам,
+     со своим HTTP-кэшем, — как на GitHub Pages, где игры и проверены. */
+  if(req.url.startsWith(self.registration.scope+'games/')) return;
 
   /* КОД (js/css/json) ИДЁТ БЕЗ ТАЙМАУТА — это важно.
      Раньше на него стоял netFirst с обрывом: сначала 2,5 с, потом 8 с. Но у
