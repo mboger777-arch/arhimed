@@ -68,6 +68,8 @@
     <radialGradient id="сч-тарелка" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#eef3f7"/><stop offset="1" stop-color="#b9c6d2"/></radialGradient>
     <linearGradient id="сч-доска" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d49a5e"/><stop offset="1" stop-color="#9a6030"/></linearGradient>
     <radialGradient id="сч-табло" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff9e6"/><stop offset="1" stop-color="#ffd76a"/></radialGradient>
+    <linearGradient id="сч-кольцо" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0a464"/><stop offset=".5" stop-color="#b9783f"/><stop offset="1" stop-color="#7f4a20"/></linearGradient>
+    <radialGradient id="сч-окно" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#fffdf3"/><stop offset=".7" stop-color="#fff0c8"/><stop offset="1" stop-color="#f3d58e"/></radialGradient>
     <linearGradient id="сч-плед" x1="0" x2="1"><stop offset="0" stop-color="#e85a4f"/><stop offset="1" stop-color="#c63d34"/></linearGradient>
   </defs>`;
 
@@ -144,9 +146,12 @@
   }
   function камень(x, y, n, вкл, клик, верно){
     return `<g transform="translate(${x},${y})" ${клик ? `class="цель" role="button" tabindex="0" onclick="${клик}"` : ''}>
-      <ellipse cx="0" cy="4" rx="15" ry="7" fill="rgba(40,25,10,.3)"/>
-      <ellipse cx="0" cy="0" rx="14" ry="8" fill="url(#сч-камень)" stroke="${верно ? '#2f7a46' : вкл ? '#d9a441' : '#7a7064'}" stroke-width="${верно || вкл ? 3 : 1.4}"/>
-      <text y="5" text-anchor="middle" class="камень-ч">${n}</text>
+      <ellipse cx="0" cy="5" rx="16" ry="7.5" fill="rgba(40,25,10,.32)"/>
+      <path d="M-15,1 C-15,-7 -8,-10 0,-10 C9,-10 15,-7 15,0 C15,6 9,9 0,9 C-9,9 -15,7 -15,1 Z" fill="url(#сч-камень)" stroke="${верно ? '#2f7a46' : вкл ? '#d9a441' : '#7a7064'}" stroke-width="${верно || вкл ? 3 : 1.4}"/>
+      <path d="M-9,-6 C-4,-8 4,-8 8,-6" stroke="#fff" stroke-width="2" fill="none" opacity=".7" stroke-linecap="round"/>
+      <path d="M6,4 l3,2 M-10,3 l-2,2" stroke="#9a9082" stroke-width="1" opacity=".7"/>
+      ${вкл ? '<ellipse cx="0" cy="0" rx="19" ry="11" fill="none" stroke="#ffd76a" stroke-width="2" opacity=".8" class="мерцает"/>' : ''}
+      <text y="5" text-anchor="middle" class="камень-ч ${вкл ? 'вкл' : ''}">${n}</text>
       ${клик ? '<rect x="-15" y="-26" width="30" height="40" fill="transparent"/>' : ''}
     </g>`;
   }
@@ -162,19 +167,37 @@
       <rect x="${x + 8}" y="${y + 8}" width="${w - 16}" height="${h - 16}" rx="10" fill="#f6e4c0" stroke="#c9a06a" stroke-width="1.4"/>`;
   }
   const корзина = (x, y, w) => `<image href="${ИМГ}basket.webp" x="${x}" y="${y}" width="${w}" height="${w * 1.034}"/>`;
+  /* табло-медальон: деревянное кольцо, кремовое окошко, листочки сверху, цифра с белой обводкой */
   const табло = (x, y, n, хлоп, подпись) => `<g transform="translate(${x},${y})"><g class="${хлоп ? 'хлоп' : ''}">
-      <circle r="27" cy="3" fill="rgba(60,30,5,.3)"/><circle r="26" fill="url(#сч-табло)" stroke="#a3762a" stroke-width="2.6"/>
-      <text y="11" text-anchor="middle" class="табло-ч">${n}</text></g>
+      <circle r="31" cy="4" fill="rgba(60,30,5,.32)"/>
+      <circle r="30" fill="url(#сч-кольцо)" stroke="#5b3416" stroke-width="2"/>
+      <circle r="30" fill="none" stroke="#e8b47a" stroke-width="1.2" stroke-dasharray="2 5" opacity=".6"/>
+      <circle r="22" fill="url(#сч-окно)" stroke="#8a5a2a" stroke-width="1.6"/>
+      <ellipse cx="-7" cy="-11" rx="10" ry="4.5" fill="#fff" opacity=".7"/>
+      <path d="M-4,-29 C-14,-40 -24,-34 -20,-26 C-14,-24 -8,-25 -4,-29 Z" fill="url(#сч-лист)" stroke="#2f6a20" stroke-width=".9"/>
+      <path d="M4,-29 C14,-40 24,-34 20,-26 C14,-24 8,-25 4,-29 Z" fill="url(#сч-лист)" stroke="#2f6a20" stroke-width=".9"/>
+      <circle cy="-29" r="4.2" fill="url(#сч-ябл-к)" stroke="#7a0e0a" stroke-width=".8"/>
+      <text y="10" text-anchor="middle" class="табло-ч">${n}</text></g>
       ${подпись ? `<text y="44" text-anchor="middle" class="подпись-б">${подпись}</text>` : ''}</g>`;
   /* ширина плашки — по длине текста (кегль 24 Pangolin ≈ 12 единиц на знак) */
-  const плашка = (x, y, текст, цвет) => { const ш = Math.min(340, Math.max(148, текст.length * 12.5 + 34)); return `<g transform="translate(${x},${y})"><g class="хлоп">
-      <rect x="${-ш / 2}" y="-24" width="${ш}" height="44" rx="14" fill="#fff6e4" stroke="${цвет || '#d9a441'}" stroke-width="4"/>
-      <text y="9" text-anchor="middle" class="плашка-т">${текст}</text></g></g>`; };
+  /* плашка-вывеска: деревянная рама на верёвочках, кремовое окно, цветная кромка по смыслу */
+  const плашка = (x, y, текст, цвет) => { const ш = Math.min(340, Math.max(160, текст.length * 12.5 + 44)); return `<g transform="translate(${x},${y})"><g class="хлоп">
+      <path d="M${-ш / 2 + 26},-40 L${-ш / 2 + 30},-26 M${ш / 2 - 26},-40 L${ш / 2 - 30},-26" stroke="#8a6a3a" stroke-width="2.4" stroke-dasharray="3 2"/>
+      <rect x="${-ш / 2 + 2}" y="-24" width="${ш}" height="50" rx="14" fill="rgba(40,20,5,.3)"/>
+      <rect x="${-ш / 2}" y="-28" width="${ш}" height="50" rx="14" fill="url(#сч-кольцо)" stroke="#5b3416" stroke-width="2.2"/>
+      <rect x="${-ш / 2 + 7}" y="-21" width="${ш - 14}" height="36" rx="10" fill="url(#сч-окно)" stroke="${цвет || '#d9a441'}" stroke-width="3"/>
+      <rect x="${-ш / 2 + 14}" y="-18" width="${ш - 28}" height="8" rx="4" fill="#fff" opacity=".6"/>
+      ${[-1, 1].map(z => `<circle cx="${z * (ш / 2 - 4)}" cy="-3" r="2.4" fill="#5b3416"/>`).join('')}
+      <text y="7" text-anchor="middle" class="плашка-т">${текст}</text></g></g>`; };
 
   /* ═══════════════════ ОБЩИЕ ЧАСТИ ═══════════════════ */
+  /* запись примера — деревянная вывеска на верёвочках: числа в жетонах, знаки в цветных кружках,
+     неизвестное — светящееся окошко «?», ответ — зелёный жетон, который выпрыгивает */
   function запись(а, знак, б, итог){
-    const яч = (v, кл) => `<span class="яч ${кл || ''}">${v == null ? '?' : v}</span>`;
-    return `<div class="запись">${яч(а)}<span class="зн">${знак}</span>${яч(б)}<span class="зн">=</span>${яч(итог, итог == null ? 'пусто' : 'итог')}</div>`;
+    const яч = (v, кл) => `<span class="яч ${кл || ''}"><i>${v == null ? '?' : v}</i></span>`;
+    const зн = (z) => `<span class="зн ${z === '+' ? 'плюс' : z === '=' ? 'равно' : 'минус'}"><i>${z}</i></span>`;
+    return `<div class="вывеска"><span class="верёвка"></span><span class="верёвка"></span>
+      <div class="запись" aria-label="${а} ${знак} ${б} = ${итог == null ? 'сколько?' : итог}">${яч(а)}${зн(знак)}${яч(б)}${зн('=')}${яч(итог, итог == null ? 'пусто' : 'итог')}</div></div>`;
   }
   /* ответы: st.о[ключ] — верный выбран, st.м[ключ] — промахи */
   function ответы(i, ключ, варианты, верный, st, разборы){
@@ -182,7 +205,7 @@
     const кн = варианты.map(n => {
       const кл = отв === n ? ' верно' : (мимо.includes(n) ? ' мимо' : '');
       return `<button type="button" class="число${кл}" ${отв != null || мимо.includes(n) ? 'disabled' : ''}
-        onclick="СЧ29.ответ(${i},'${ключ}',${typeof n === 'string' ? `'${n}'` : n},${typeof верный === 'string' ? `'${верный}'` : верный})">${n}</button>`;
+        onclick="СЧ29.ответ(${i},'${ключ}',${typeof n === 'string' ? `'${n}'` : n},${typeof верный === 'string' ? `'${верный}'` : верный})"><span class="окно">${n}</span></button>`;
     }).join('');
     const посл = мимо[мимо.length - 1];
     const разбор = отв == null && мимо.length ? `<p class="разбор">${(разборы && разборы[посл]) || 'Посчитай ещё раз — по одному, касаясь пальцем.'}</p>` : '';
@@ -205,16 +228,21 @@
     рисуй(i, st){
       const н = st.взят.length;
       const нов = st.нов && свежо(st.нов) ? st.нов : null;
-      const лента = Array.from({length: 10}, (_, k) => `<g transform="translate(${24 + k * 21},276)">
-          <circle r="10" fill="${k < н ? '#ffd76a' : 'rgba(255,255,255,.75)'}" stroke="${k < н ? '#a3762a' : '#9a9082'}" stroke-width="1.6"/>
-          <text y="5" text-anchor="middle" class="лента-ч">${k + 1}</text></g>`).join('');
+      const лента = Array.from({length: 10}, (_, k) => k < н
+        ? `<g transform="translate(${24 + k * 21},276)"><g class="${k === н - 1 ? 'хлоп' : ''}">
+            <path d="M0,-8 C-5,-12 -12,-9 -11,0 C-10,8 -4,11 0,9 C4,11 10,8 11,0 C12,-9 5,-12 0,-8 Z" fill="url(#сч-ябл-к)" stroke="#7a0e0a" stroke-width="1"/>
+            <path d="M1,-9 C4,-13 8,-12 8,-10 C5,-8 3,-8 1,-9 Z" fill="url(#сч-лист)"/>
+            <text y="5" text-anchor="middle" class="лента-ч горит">${k + 1}</text></g></g>`
+        : `<g transform="translate(${24 + k * 21},276)"><circle r="10" fill="url(#сч-окно)" stroke="#b08a5a" stroke-width="1.4"/>
+            <text y="5" text-anchor="middle" class="лента-ч">${k + 1}</text></g>`).join('');
       const тело = `${яблоня(132)}
         ${ЯБЛОНЯ.map(([x, y], k) => st.взят.includes(k) ? '' : вещь('к', x, y, 1.05, null, `СЧ29.снять(${i},${k})`, 'качается')).join('')}
         ${герой('пушок', 318, 196, 150, 'дышит')}
         ${корзина(244, 168, 100)}
         ${st.взят.map((k, j) => { const [x, y] = В_КОРЗИНЕ[j]; return вещь('к', x, y, .85, нов && нов.j === j ? ЯБЛОНЯ[k] : null); }).join('')}
         ${н ? табло(212, 232, н, нов != null) : ''}
-        <rect x="10" y="262" width="222" height="28" rx="14" fill="rgba(255,250,235,.7)"/>${лента}`;
+        <rect x="8" y="261" width="226" height="30" rx="15" fill="url(#сч-кольцо)" stroke="#5b3416" stroke-width="1.6"/>
+        <rect x="12" y="264" width="218" height="24" rx="12" fill="#f6e4c0" opacity=".55"/>${лента}`;
       return сцена('сад', тело, 'Яблоня, корзина и зайчонок Пушок') +
         (н === 10 ? готово('Десять! Ты досчитал до десяти — и каждое число загорелось на ленте.') : '');
     },
@@ -599,26 +627,74 @@
   @keyframes сч-парит{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
   @keyframes сч-мерцать{0%,100%{opacity:.55}50%{opacity:1}}
   #lvis .${К} svg text{font-family:'Pangolin29','Comic Sans MS',Georgia,serif}
-  #lvis .${К} .табло-ч{font-size:30px;fill:#5a2a08}
-  #lvis .${К} .лента-ч{font-size:13px;fill:#4a2a0c}
-  #lvis .${К} .камень-ч{font-size:15px;fill:#3a2a1a}
+  #lvis .${К} .табло-ч{font-size:30px;fill:#5a2a08;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+  #lvis .${К} .лента-ч{font-size:13px;fill:#6a4a2a}
+  #lvis .${К} .лента-ч.горит{fill:#fff;font-size:13px;paint-order:stroke;stroke:#7a0e0a;stroke-width:2.5px}
+  #lvis .${К} .камень-ч{font-size:16px;fill:#4a3a2a;paint-order:stroke;stroke:#fff;stroke-width:2.6px;stroke-linejoin:round}
+  #lvis .${К} .камень-ч.вкл{fill:#a3600a;font-size:18px}
   #lvis .${К} .подпись-б{font-size:17px;fill:#fff;paint-order:stroke;stroke:#3a200c;stroke-width:4px;stroke-linejoin:round}
-  #lvis .${К} .плашка-т{font-size:24px;fill:#4a2a0c}
+  #lvis .${К} .плашка-т{font-size:24px;fill:#5a2a08;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
   #lvis .${К} .крупно{font-size:26px;fill:#5a2a08}
   #lvis .${К} .крупно-б{font-size:30px;fill:#fff;paint-order:stroke;stroke:#3a200c;stroke-width:5px;stroke-linejoin:round}
   #lvis .${К} .вопрос{font-size:18px;fill:#5a2a08}
-  #lvis .${К} .запись{display:flex;align-items:center;justify-content:center;gap:8px;align-self:center;background:var(--лист);
-    border:2.5px solid var(--контур);border-radius:16px;padding:8px 14px;box-shadow:0 3px 0 rgba(74,42,16,.2)}
-  #lvis .${К} .яч{min-width:40px;text-align:center;font-size:32px;line-height:1}
-  #lvis .${К} .яч.пусто{border:2.5px dashed #a3762a;border-radius:10px;color:#a3762a;padding:2px 6px}
-  #lvis .${К} .яч.итог{color:var(--верно)}
-  #lvis .${К} .зн{font-size:28px;color:#7a5a3a}
-  #lvis .${К} .числа{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-  #lvis .${К} .число{appearance:none;min-width:68px;min-height:64px;padding:0 12px;font-family:inherit;font-size:32px;color:var(--чернила);
-    background:linear-gradient(180deg,#fffdf4,#ffe9b8);border:3px solid var(--контур);border-radius:16px;cursor:pointer;box-shadow:0 5px 0 rgba(74,42,16,.35)}
-  #lvis .${К} .число:active{transform:translateY(5px);box-shadow:none}
-  #lvis .${К} .число.верно{background:#c4ebcf;border-color:var(--верно);color:var(--верно)}
-  #lvis .${К} .число.мимо{background:#f6d2c8;border-color:var(--мимо);color:var(--мимо);opacity:.8}
+  /* ── вывеска с примером ── */
+  #lvis .${К} .вывеска{position:relative;align-self:center;padding-top:16px}
+  #lvis .${К} .верёвка{position:absolute;top:0;width:3px;height:22px;background:repeating-linear-gradient(180deg,#c9a46a 0 4px,#8a6a3a 4px 7px);border-radius:2px}
+  #lvis .${К} .верёвка:first-child{left:22%}
+  #lvis .${К} .верёвка:nth-child(2){right:22%}
+  #lvis .${К} .запись{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:10px 14px;border-radius:18px;border:3px solid #5b3416;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 3px,rgba(0,0,0,.05) 3px 9px),
+      linear-gradient(180deg,#dba566 0%,#bd7d42 55%,#94582a 100%);
+    box-shadow:0 6px 0 #5b3416,0 10px 16px rgba(30,15,5,.35),inset 0 2px 0 rgba(255,255,255,.35)}
+  #lvis .${К} .запись::before,#lvis .${К} .запись::after{content:'';position:absolute;top:8px;width:7px;height:7px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%,#f3e2c4,#6b4a2a 70%);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+  #lvis .${К} .запись::before{left:8px}
+  #lvis .${К} .запись::after{right:8px}
+  #lvis .${К} .яч{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;
+    background:radial-gradient(circle at 50% 30%,#fffdf3 0%,#fff0c8 60%,#f0cf86 100%);
+    border:3px solid #6b3f1e;box-shadow:inset 0 -4px 0 rgba(160,100,30,.25),inset 0 3px 6px #fff,0 3px 0 rgba(60,30,5,.35);position:relative}
+  #lvis .${К} .яч::after{content:'';position:absolute;left:12px;top:7px;width:22px;height:9px;border-radius:50%;background:rgba(255,255,255,.75)}
+  #lvis .${К} .яч i{font-style:normal;font-size:32px;line-height:1;color:#5a2a08;text-shadow:0 2px 0 #fff,0 3px 5px rgba(90,42,8,.25);position:relative;z-index:1}
+  #lvis .${К} .яч.пусто{background:radial-gradient(circle at 50% 35%,#fffbe0,#ffe27a);border:3px dashed #c98a1a;
+    animation:сч-окно 1.4s ease-in-out infinite}
+  #lvis .${К} .яч.пусто i{color:#b8740a}
+  #lvis .${К} .яч.итог{background:radial-gradient(circle at 50% 30%,#f2fff0,#bdeec6 60%,#7fd08f);border-color:#2f7a46;
+    animation:сч-выпрыг .5s cubic-bezier(.3,1.6,.5,1) both}
+  #lvis .${К} .яч.итог i{color:#1d6a34}
+  #lvis .${К} .зн{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;
+    border:2.5px solid rgba(0,0,0,.35);box-shadow:inset 0 3px 4px rgba(255,255,255,.55),0 2px 0 rgba(0,0,0,.3)}
+  #lvis .${К} .зн i{font-style:normal;font-size:28px;line-height:1;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.3);margin-top:-2px}
+  #lvis .${К} .зн.плюс{background:radial-gradient(circle at 40% 30%,#9be27a,#3f9a2e)}
+  #lvis .${К} .зн.минус{background:radial-gradient(circle at 40% 30%,#ff9a7a,#d0432a)}
+  #lvis .${К} .зн.равно{background:radial-gradient(circle at 40% 30%,#ffe07a,#d99a1a)}
+  @keyframes сч-окно{0%,100%{box-shadow:0 0 0 0 rgba(255,215,90,.0),inset 0 3px 6px #fff}50%{box-shadow:0 0 0 7px rgba(255,215,90,.45),inset 0 3px 6px #fff}}
+  @keyframes сч-выпрыг{0%{transform:scale(.3)}70%{transform:scale(1.18)}100%{transform:scale(1)}}
+  /* ── кнопки-ответы: деревянная табличка, кремовое окошко, объёмная цифра, блик ── */
+  #lvis .${К} .числа{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding-top:4px}
+  #lvis .${К} .число{appearance:none;position:relative;min-width:76px;min-height:76px;padding:6px;font-family:inherit;cursor:pointer;
+    border:3px solid #5b3416;border-radius:20px;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 3px,rgba(0,0,0,.05) 3px 8px),linear-gradient(180deg,#dba566,#a8682f);
+    box-shadow:0 7px 0 #5b3416,0 10px 14px rgba(30,15,5,.35),inset 0 2px 0 rgba(255,255,255,.4);
+    transition:transform .1s ease,box-shadow .1s ease}
+  #lvis .${К} .число .окно{display:flex;align-items:center;justify-content:center;min-width:58px;height:58px;padding:0 8px;border-radius:14px;position:relative;
+    background:radial-gradient(120% 90% at 50% 15%,#fffdf3 0%,#fff1c9 60%,#f3d58e 100%);
+    box-shadow:inset 0 -5px 0 rgba(170,110,30,.22),inset 0 3px 6px #fff,0 0 0 2px rgba(91,52,22,.35);
+    font-size:36px;line-height:1;color:#5a2a08;text-shadow:0 2px 0 #fff,0 4px 6px rgba(90,42,8,.25)}
+  #lvis .${К} .число .окно::after{content:'';position:absolute;left:9px;right:9px;top:5px;height:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0))}
+  #lvis .${К} .число:active{transform:translateY(6px);box-shadow:0 1px 0 #5b3416,0 3px 6px rgba(30,15,5,.3),inset 0 2px 0 rgba(255,255,255,.4)}
+  #lvis .${К} .число.верно{background:linear-gradient(180deg,#8fd46a,#3f8a2e);border-color:#2a5a1e;box-shadow:0 7px 0 #2a5a1e,0 0 0 5px rgba(140,220,110,.45),0 10px 14px rgba(30,15,5,.3);
+    animation:сч-радость-кн .6s ease-out}
+  #lvis .${К} .число.верно .окно{background:radial-gradient(120% 90% at 50% 15%,#f4fff0,#c7f0cc 65%,#86d49a);color:#1d6a34}
+  #lvis .${К} .число.верно::after{content:'★';position:absolute;right:-10px;top:-12px;font-size:26px;color:#ffc93a;text-shadow:0 2px 0 #a3762a,0 0 6px #fff}
+  #lvis .${К} .число.мимо{background:linear-gradient(180deg,#e89a86,#b4553e);border-color:#7a2a18;box-shadow:0 7px 0 #7a2a18,0 10px 14px rgba(30,15,5,.25);
+    animation:сч-дрожь .4s ease-in-out;cursor:default}
+  #lvis .${К} .число.мимо .окно{background:radial-gradient(120% 90% at 50% 15%,#fff3ef,#f7d3c8);color:#b23a22;opacity:.85}
+  #lvis .${К} .число.мимо::after{content:'✗';position:absolute;right:-8px;top:-10px;width:24px;height:24px;border-radius:50%;background:#c2412b;color:#fff;
+    font-size:15px;line-height:24px;text-align:center;box-shadow:0 2px 0 #7a2a18}
+  #lvis .${К} .число:disabled:not(.верно):not(.мимо){opacity:.55}
+  @keyframes сч-радость-кн{0%{transform:scale(1)}35%{transform:scale(1.15) translateY(-6px)}100%{transform:scale(1)}}
+  @keyframes сч-дрожь{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
   #lvis .${К} .разбор{margin:0;font-size:18px;line-height:1.35;background:#fde3d9;border:2.5px solid var(--мимо);border-radius:14px;padding:10px 12px;color:#6a1e10}
   #lvis .${К} .задание{margin:0;font-size:19px;line-height:1.35;text-align:center;background:var(--лист);border:2px solid #d9b98a;border-radius:14px;padding:8px 12px}
   #lvis .${К} .готово{display:flex;gap:8px;align-items:center;margin:0;font-size:19px;line-height:1.3;background:#c4ebcf;
@@ -629,14 +705,20 @@
     border-radius:16px;background:linear-gradient(180deg,#ffe58a,#f4b73c);color:#4a2a0c;cursor:pointer;box-shadow:0 5px 0 #8a4f14}
   #lvis .${К} .дальше-кн:active{transform:translateY(5px);box-shadow:none}
   #lvis .${К} .чипы{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  #lvis .${К} .чип{text-align:center;font-size:19px;padding:8px 4px;border-radius:12px;background:rgba(255,246,228,.5);border:2.5px dashed #a3762a;color:#a3762a}
-  #lvis .${К} .чип.есть{background:#c4ebcf;border:2.5px solid var(--верно);color:#1d5a32}
-  #lvis .${К} .карты{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  #lvis .${К} .карта{text-align:center;font-size:24px;padding:8px;border-radius:14px;background:var(--лист);border:2.5px solid #d9b98a;opacity:.75}
-  #lvis .${К} .карта.сейчас{opacity:1;border:3px solid #f0b23a;box-shadow:0 0 0 4px rgba(240,178,58,.3)}
-  #lvis .${К} .карта.решена{opacity:1;background:#c4ebcf;border-color:var(--верно)}
-  #lvis .${К} .карта b{font-weight:normal;color:#a3762a}
-  #lvis .${К} .карта.решена b{color:var(--верно)}
+  #lvis .${К} .чип{position:relative;text-align:center;font-size:20px;padding:10px 4px;border-radius:14px;color:#b8740a;
+    background:radial-gradient(circle at 50% 30%,#fffbe0,#ffefb0);border:2.5px dashed #c98a1a}
+  #lvis .${К} .чип.есть{color:#1d6a34;border:3px solid #2f7a46;background:radial-gradient(120% 90% at 50% 15%,#f4fff0,#c7f0cc 65%,#9adca8);
+    box-shadow:0 4px 0 #2a5a1e,inset 0 2px 4px #fff;animation:сч-выпрыг .45s cubic-bezier(.3,1.6,.5,1) both}
+  #lvis .${К} .карты{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  #lvis .${К} .карта{position:relative;text-align:center;font-size:25px;padding:10px 8px;border-radius:16px;color:#5a2a08;opacity:.7;
+    border:3px solid #5b3416;background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 3px,rgba(0,0,0,.05) 3px 8px),linear-gradient(180deg,#e8bf86,#c98f52);
+    box-shadow:0 5px 0 #5b3416,inset 0 2px 0 rgba(255,255,255,.4)}
+  #lvis .${К} .карта b{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;border-radius:50%;font-weight:normal;
+    background:radial-gradient(circle at 50% 35%,#fffbe0,#ffe27a);border:2.5px dashed #c98a1a;color:#b8740a}
+  #lvis .${К} .карта.сейчас{opacity:1;box-shadow:0 5px 0 #5b3416,0 0 0 5px rgba(255,201,58,.55)}
+  #lvis .${К} .карта.сейчас b{animation:сч-окно 1.4s ease-in-out infinite}
+  #lvis .${К} .карта.решена{opacity:1}
+  #lvis .${К} .карта.решена b{border:2.5px solid #2f7a46;color:#1d6a34;background:radial-gradient(circle at 50% 30%,#f4fff0,#9adca8)}
   #lvis .${К} .правило{display:flex;gap:10px;align-items:center;background:var(--лист);border:2.5px solid var(--контур);border-radius:16px;padding:8px 12px}
   #lvis .${К} .правило img{width:44px;height:52px;object-fit:contain;flex:none}
   #lvis .${К} .правило p{margin:0;font-size:18px;line-height:1.3}
@@ -644,7 +726,10 @@
   #lvis .${К} .что-делать{margin:0;font-size:18px;text-align:center;color:#f2ead6;background:rgba(42,29,16,.5);border-radius:12px;padding:8px 12px}
   @media (max-width:370px){
     #lvis .${К} .реплика p{font-size:17px}
-    #lvis .${К} .число{min-width:58px;font-size:28px}
+    #lvis .${К} .число{min-width:66px;min-height:66px;padding:5px}
+    #lvis .${К} .число .окно{min-width:50px;height:50px;font-size:30px}
+    #lvis .${К} .яч{width:48px;height:48px}
+    #lvis .${К} .яч i{font-size:28px}
     #lvis .${К} .чипы{grid-template-columns:repeat(2,1fr)}
   }
   @media (prefers-reduced-motion:reduce){#lvis .${К} *{animation:none !important;transition:none !important}}
