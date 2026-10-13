@@ -37,8 +37,9 @@ web
 ## Operating Context
 
 - Прод: `https://123.teramont.pro/MVP/`, systemd-сервис `arhimed` в `/opt/arhimed`,
-  код разворачивается из GitHub через `deploy/deploy.py`.
-- Витрина: `https://alenamissia-source.github.io/arhimed/`.
+  код уезжает с рабочего Mac по SSH через `deploy/deploy.py` (от GitHub выкладка не зависит).
+- Код: `https://github.com/mboger777-arch/arhimed` (с 13.10.2026; прежний аккаунт заблокирован).
+- Витрина: `https://mboger777-arch.github.io/arhimed/`.
 - Ритуал версии обязателен: `?v=NNN` в `MVP/index.html` и `MVP/parent/index.html`
   плюс `CACHE='arhimed-mvp-vNNN'` в `MVP/sw.js`. Без него браузер отдаёт старый код.
 - Рабочая копия проекта — `~/Documents/DPsek`; в git попадает только приложение
