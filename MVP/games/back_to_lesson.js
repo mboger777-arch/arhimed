@@ -33,4 +33,18 @@
   /* в вертикальном положении игра просит повернуть телефон — кнопка нужна и там */
   function вертикально(){ return innerHeight > innerWidth; }
   setInterval(() => { b.style.display = (заставка() || вертикально()) ? 'block' : 'none'; }, 250);
+
+  /* Вход ученика (MVP/js/kid.js: arh_kid_unlocked) держится 3 минуты паузы, а пока приложение
+     на экране — продлевается. Игра — часть приложения: пока она видна, продлеваем так же,
+     иначе после долгой игры «← В урок» встречал бы окном PIN. Продлеваем только уже открытый
+     вход и только на той же вкладке (sessionStorage) — новый вход здесь не создаётся. */
+  const ВХОД = 'arh_kid_unlocked', ДЕРЖИТСЯ = 180000;
+  setInterval(() => {
+    try {
+      if (document.hidden) return;
+      const s = JSON.parse(sessionStorage.getItem(ВХОД) || 'null');
+      const прошло = s ? Date.now() - (s.ts || 0) : Infinity;
+      if (прошло > 20000 && прошло < ДЕРЖИТСЯ) { s.ts = Date.now(); sessionStorage.setItem(ВХОД, JSON.stringify(s)); }
+    } catch (e) { }
+  }, 10000);
 })();

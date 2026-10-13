@@ -13,7 +13,7 @@ with sync_playwright() as p:
         ctx=b.new_context(viewport={'width':W,'height':H}, has_touch=True, is_mobile=True, device_scale_factor=2)
         pg=ctx.new_page(); err=[]; pg.on('pageerror', lambda e, pg=pg: err.append(pg.url.split('/')[-2]+': '+str(e)[:90]))
         for id,g in [(253,'desyat-fonarei'),(255,'vesy-znaki'),(60,'chasy'),(30,'sto-monetok'),(314,'sad-umnozheniya')]:
-            pg.goto(BASE+'index.html#lesson-'+str(id)); pg.wait_for_timeout(3500)
+            pg.goto(BASE+'index.html#lesson-'+str(id), timeout=90000); pg.wait_for_timeout(3500 if '127.0.0.1' in BASE else 8000)
             pg.evaluate("()=>document.getElementById('pinPadOverlay')?.remove()")
             sel = '.игра-чип' if id==314 else '.игра-плашка'
             ok_btn = pg.locator(sel).count()
@@ -23,9 +23,9 @@ with sync_playwright() as p:
             vis = back.is_visible()
             back.dispatch_event('click')
             lv = None
-            for _ in range(16):
+            for _ in range(40):          # прод перезагружает страницу с ?b=<версия> — ждём до 20 с
                 pg.wait_for_timeout(500)
-                try: lv = pg.evaluate("()=>typeof LV!=='undefined'&&LV?LV.id:null")
+                try: lv = pg.evaluate("()=>typeof LV!=='undefined'&&LV&&document.querySelector('#screen h2, .comic-ov')?LV.id:null")
                 except Exception: lv = None
                 if lv: break
             u2 = pg.url
