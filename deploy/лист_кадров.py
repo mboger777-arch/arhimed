@@ -63,7 +63,7 @@ with sync_playwright() as p:
                     [урок, класс, k, ст])
         pg.wait_for_timeout(ждать)
         замеры.append(pg.evaluate("""()=>{ const r=document.querySelector('#lvis');
-          return {nan:/NaN|undefined/.test(r?r.innerHTML:''), w:document.documentElement.scrollWidth, пусто:!(r&&r.querySelector('.s6'))}; }"""))
+          return {nan:/NaN(?![OО])|undefined/.test(r?r.innerHTML:''), w:document.documentElement.scrollWidth, пусто:!(r&&r.querySelector('.s6'))}; }"""))
         el = pg.query_selector('#lvis .s6') or pg.query_selector('#lvis')
         кадры.append(Image.open(io.BytesIO(el.screenshot())))
     W = max(i.width for i in кадры)
