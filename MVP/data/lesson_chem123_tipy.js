@@ -407,6 +407,16 @@
       <radialGradient id="c123-кап" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff6a3a" stop-opacity=".55"/><stop offset="1" stop-color="#ff6a3a" stop-opacity="0"/></radialGradient>
       <radialGradient id="c123-кочан" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#c88ae0"/><stop offset=".45" stop-color="#7a2a9a"/><stop offset="1" stop-color="#2e0840"/></radialGradient>
       <linearGradient id="c123-волокно" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#000"/><stop offset=".5" stop-color="#fff"/><stop offset=".75" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>
+      <linearGradient id="c123-стена" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262c33"/><stop offset=".7" stop-color="#1c2127"/><stop offset="1" stop-color="#14181c"/></linearGradient>
+      <radialGradient id="c123-виньетка" cx=".5" cy=".42" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient>
+      <linearGradient id="c123-столешница" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26302d"/><stop offset=".25" stop-color="#151c1a"/><stop offset="1" stop-color="#0c100f"/></linearGradient>
+      <linearGradient id="c123-шкаф" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f35"/><stop offset="1" stop-color="#15181c"/></linearGradient>
+      <linearGradient id="c123-хромГ2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a636d"/><stop offset=".4" stop-color="#e8ecf0"/><stop offset="1" stop-color="#3a424c"/></linearGradient>
+      <linearGradient id="c123-тягаФон" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a323a"/><stop offset="1" stop-color="#1a2026"/></linearGradient>
+      <linearGradient id="c123-лучЛампы" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8e0" stop-opacity=".35"/><stop offset="1" stop-color="#fff8e0" stop-opacity="0"/></linearGradient>
+      <linearGradient id="c123-плитка" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e353d"/><stop offset="1" stop-color="#1a1f24"/></linearGradient>
+      <linearGradient id="c123-луч" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6c8" stop-opacity=".8"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></linearGradient>
+      <linearGradient id="c123-корпусФ" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a525c"/><stop offset=".4" stop-color="#2a3038"/><stop offset="1" stop-color="#14171b"/></linearGradient>
       <linearGradient id="c123-фарфор" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8c4b8"/><stop offset=".3" stop-color="#ffffff"/><stop offset=".6" stop-color="#ece9e0"/><stop offset="1" stop-color="#a8a498"/></linearGradient>
       <linearGradient id="c123-фарфорП" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d8d4c8"/><stop offset=".4" stop-color="#ffffff"/><stop offset="1" stop-color="#b8b4a8"/></linearGradient>
       <linearGradient id="c123-магнит" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a1408"/><stop offset=".3" stop-color="#ff5a3a"/><stop offset=".55" stop-color="#e8402a"/><stop offset="1" stop-color="#7a1008"/></linearGradient>
@@ -422,7 +432,7 @@
     </defs>`;
   const L_ = () => window.РЛ;
   const ДВ = () => L_().ДВИЖ;
-  const сцена = (Н,y0,предметы,поверх) => { const Л=L_(); return Л.студия(Н,y0)+Л.отражение(предметы,y0,Н-y0)+предметы+(поверх||''); };
+  const сцена = (Н,y0,предметы,поверх) => { const Л=L_(); return фон(Н,y0)+Л.отражение(предметы,y0,Н-y0)+предметы+(поверх||''); };
   const свгЛ = (тело,высота) => `<svg viewBox="0 0 336 ${высота}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${L_().defs()}${ОПРЕДЕЛЕНИЯ}${тело}</svg>`;
   const метка = (cx,y,t0,цвет,опц) => { const о=опц||{}, к=о.кегль||12, ш=String(t0).length*к*0.58+20, в=к+11;
     const x=Math.min(336-ш/2-4, Math.max(ш/2+4, cx));
@@ -881,23 +891,88 @@
     s+=`<path d="M${cx-r+36} ${cy-r} V${cy+r}" stroke="#9aa3ad" stroke-width=".6" stroke-dasharray="2 3" opacity=".6"/>`;
     return s+`</g><circle cx="${cx}" cy="${cy}" r="${r+2.5}" fill="none" stroke="url(#рл-сталь)" stroke-width="6"/>${тА(cx-r+20,cy+r-6,'Fe',7,'#c8ced6')}${тА(cx+r*0.45,cy+r-6,'раствор',7,'#c8ced6')}`; };
 
+  /* ================= ОКРУЖЕНИЕ И БОГАТЫЕ СЦЕНЫ (вторая прорисовка 123) ================= */
+  /* фон лаборатории: стена из тёмной плитки, мягкий свет, столешница с кромкой и шкафами */
+  const фон = (Н,y0) => { let плитка=''; for(let y=0,р=0;y<y0;y+=22,р++){ плитка+=`<path d="M0 ${y} H336" stroke="#fff" stroke-opacity=".045"/>`;
+      for(let x=(р%2?0:16);x<336;x+=32) плитка+=`<path d="M${x} ${y} V${Math.min(y0,y+22)}" stroke="#fff" stroke-opacity=".035"/>`; }
+    const шкафы = Н-y0>34 ? `<rect x="0" y="${y0+18}" width="336" height="${Н-y0-18}" fill="url(#c123-шкаф)"/>${[0,1,2,3].map(i=>`<rect x="${6+i*84}" y="${y0+24}" width="76" height="${Н-y0-28}" rx="3" fill="none" stroke="#fff" stroke-opacity=".06"/><rect x="${38+i*84}" y="${y0+30}" width="12" height="3" rx="1.5" fill="url(#c123-хромМ)" opacity=".7"/>`).join('')}` : '';
+    return `<rect width="336" height="${Н}" fill="url(#c123-стена)"/>${плитка}
+      <ellipse cx="168" cy="${ф1(y0*0.35)}" rx="230" ry="${ф1(y0*0.75)}" fill="url(#рл-прожектор)"/>
+      <rect x="0" y="${y0}" width="336" height="${Н-y0}" fill="url(#c123-столешница)"/>
+      <rect x="0" y="${y0}" width="336" height="1.4" fill="#9aa6a0" opacity=".45"/><rect x="0" y="${y0+16}" width="336" height="2.2" fill="url(#c123-хромГ2)"/>
+      ${шкафы}<rect width="336" height="${Н}" fill="url(#c123-виньетка)" pointer-events="none"/>`; };
+  /* вытяжной шкаф: рама, задняя стенка, светильник, поднятая стеклянная створка */
+  const тяга = (x1,y1,x2,y2) => `<g>
+      <rect x="${x1}" y="${y1}" width="${x2-x1}" height="${y2-y1}" rx="4" fill="#161b20" stroke="#4a525c" stroke-width="3"/>
+      <rect x="${x1+6}" y="${y1+6}" width="${x2-x1-12}" height="${y2-y1-6}" fill="url(#c123-тягаФон)"/>
+      <rect x="${x1+12}" y="${y1+9}" width="${x2-x1-24}" height="5" rx="2.5" fill="#fff8e0" opacity=".9"/><rect x="${x1+12}" y="${y1+9}" width="${x2-x1-24}" height="22" fill="url(#c123-лучЛампы)"/>
+      ${Array.from({length:6},(_,i)=>`<rect x="${x1+16+i*((x2-x1-32)/6)}" y="${y1+24}" width="${(x2-x1-32)/6-6}" height="3" rx="1.5" fill="#0a0d10"/>`).join('')}
+      <rect x="${x1+4}" y="${y1+34}" width="${x2-x1-8}" height="34" fill="rgba(200,225,240,.10)" stroke="#8fa8b8" stroke-opacity=".5"/>
+      <path d="M${x1+20} ${y1+64} L${x1+44} ${y1+38} M${x1+30} ${y1+66} L${x1+56} ${y1+38}" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
+      <rect x="${x1+4}" y="${y1+66}" width="${x2-x1-8}" height="5" rx="2" fill="url(#c123-хромГ2)"/>
+      <circle cx="${x2-14}" cy="${y1+48}" r="2.6" fill="#3aff7a"/><circle cx="${x2-14}" cy="${y1+48}" r="5" fill="#3aff7a" opacity=".25"/>${тА(x2-24,y1+51,'ТЯГА',6,'#8fd1a8','end')}</g>`;
+  /* лабораторный журнал: лист в клетку с записью */
+  const журналЛист = (x,y,ш,строки,опц) => { const о=опц||{}, в=18+строки.length*14; let клетка='';
+    for(let i=1;i<в/8;i++) клетка+=`<path d="M${x} ${y+i*8} H${x+ш}" stroke="#7aa0c8" stroke-opacity=".25" stroke-width=".5"/>`;
+    for(let i=1;i<ш/8;i++) клетка+=`<path d="M${x+i*8} ${y} V${y+в}" stroke="#7aa0c8" stroke-opacity=".25" stroke-width=".5"/>`;
+    return `<g filter="url(#c123-тень)" transform="rotate(${о.поворот==null?-3:о.поворот} ${x+ш/2} ${y+в/2})"><rect x="${x}" y="${y}" width="${ш}" height="${в}" rx="1.5" fill="#fbfaf4"/>${клетка}
+      <path d="M${x+12} ${y} V${y+в}" stroke="#e88a8a" stroke-width=".8"/>
+      ${строки.map((t0,i)=>`<text x="${x+16}" y="${y+15+i*14}" font-size="${i?9:10}" font-weight="${i?'normal':'bold'}" fill="${i?'#1a3a7a':'#2e2416'}" font-family="'Segoe Print','Comic Sans MS',cursive">${esc(t0)}</text>`).join('')}</g>`; };
+  /* лабораторный таймер со стрелкой */
+  const таймер = (x,y,r,мин,макс) => { const a=рад(-90+360*Math.min(1,мин/макс)); let риски='';
+    for(let i=0;i<30;i++){ const b=рад(-90+i*12), д=i%5?r*0.12:r*0.22; риски+=`<path d="M${ф1(x+Math.cos(b)*(r-2))} ${ф1(y+Math.sin(b)*(r-2))} L${ф1(x+Math.cos(b)*(r-2-д))} ${ф1(y+Math.sin(b)*(r-2-д))}" stroke="#2a3038" stroke-width="${i%5?0.7:1.3}"/>`; }
+    return `<g><ellipse cx="${x+3}" cy="${y+r+3}" rx="${r}" ry="3" fill="#000" opacity=".45" filter="url(#рл-мягко)"/>
+      <rect x="${x-4}" y="${y-r-9}" width="8" height="7" rx="1.5" fill="url(#c123-хромМ)"/><rect x="${x+r*0.55}" y="${y-r-3}" width="6" height="6" rx="1.5" fill="#c8402a" transform="rotate(40 ${x+r*0.6} ${y-r})"/>
+      <circle cx="${x}" cy="${y}" r="${r+3}" fill="url(#c123-хромМ)"/><circle cx="${x}" cy="${y}" r="${r}" fill="#f8f8f2"/>${риски}
+      ${[0,5,10,15,20,25].map(m=>{ const b=рад(-90+m*12); return тА(ф1(x+Math.cos(b)*r*0.62),ф1(y+Math.sin(b)*r*0.62+2.5),m,ф1(r*0.2),'#2a3038'); }).join('')}
+      <path d="M${x} ${y} L${ф1(x+Math.cos(a)*r*0.8)} ${ф1(y+Math.sin(a)*r*0.8)}" stroke="#c8402a" stroke-width="1.6" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="2.4" fill="#c8402a"/>
+      <ellipse cx="${ф1(x-r*0.35)}" cy="${ф1(y-r*0.45)}" rx="${ф1(r*0.4)}" ry="${ф1(r*0.15)}" transform="rotate(-30 ${ф1(x-r*0.35)} ${ф1(y-r*0.45)})" fill="#fff" opacity=".6"/></g>`; };
+  /* минерал малахит: полосатый срез с полировкой */
+  const малахит = (x,y,r) => { let полосы=''; for(let k=0;k<7;k++){ const s0=1-k*0.13; let d=''; for(let i=0;i<=40;i++){ const t=i/40*Math.PI*2, в=1+0.06*Math.sin(t*5+k);
+        d+=(i?'L':'M')+ф1(x-r*0.15+Math.cos(t)*r*s0*в)+' '+ф1(y-r*0.45+Math.sin(t)*r*0.42*s0*в)+' '; }
+      полосы+=`<path d="${d}Z" fill="${['#0e4a2a','#1a6a3a','#2a8a4a','#3aa86a','#5ac88a','#2a8a4a','#7ad8a0'][k]}"/>`; }
+    return `<g><ellipse cx="${x+3}" cy="${y+1}" rx="${r*1.1}" ry="4" fill="#000" opacity=".5" filter="url(#рл-мягко)"/>
+      <path d="M${x-r*1.05} ${y} Q${x-r*1.1} ${y-r*0.5} ${x-r*0.5} ${y-r*0.62} Q${x+r*0.3} ${y-r*0.8} ${x+r} ${y-r*0.4} Q${x+r*1.1} ${y-r*0.1} ${x+r*0.9} ${y} Z" fill="#0a3a1e"/>
+      ${полосы}<ellipse cx="${x-r*0.45}" cy="${y-r*0.62}" rx="${r*0.35}" ry="${r*0.1}" fill="#fff" opacity=".35"/></g>`; };
+  /* фонарик и луч (эффект Тиндаля) */
+  const фонарик = (x,y,дл,мутно,xL,xR,yy) => `<g>
+      <path d="M${x+10} ${y-6} L${xR} ${yy-14} L${xR} ${yy+14} L${x+10} ${y+6} Z" fill="url(#c123-луч)" opacity=".55"/>
+      ${мутно>0?`<path d="M${xL} ${yy-9} L${xR-4} ${yy-12} L${xR-4} ${yy+12} L${xL} ${yy+9} Z" fill="#fff6d0" opacity="${ф1(Math.min(.75,мутно*0.7))}"/>`:''}
+      <rect x="${x-дл}" y="${y-6}" width="${дл}" height="12" rx="4" fill="url(#c123-корпусФ)"/><rect x="${x-4}" y="${y-8}" width="14" height="16" rx="3" fill="url(#c123-хромМ)"/>
+      <ellipse cx="${x+10}" cy="${y}" rx="2" ry="7" fill="#fff8d8"/><rect x="${x-дл+10}" y="${y-8}" width="8" height="3" rx="1" fill="#c8402a"/></g>`;
+  /* выноска со стрелкой */
+  const выноска = (x1,y1,x2,y2,текст,цв) => `<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${цв||GOLD}" stroke-width="1.1"/><circle cx="${x2}" cy="${y2}" r="2.4" fill="${цв||GOLD}"/>` + метка(x1,y1-10,текст,цв===GREEN?ЗЕ:ЗЛ,{кегль:9});
+
+  /* лист журнала с уравнением: бумага в клетку, поля, крупная запись */
+  const карточкаУр = (x,y,ш,в,текст,кегль) => { let кл=''; for(let i=1;i<в/9;i++) кл+=`<path d="M${x} ${y+i*9} H${x+ш}" stroke="#7aa0c8" stroke-opacity=".22" stroke-width=".5"/>`;
+    for(let i=1;i<ш/9;i++) кл+=`<path d="M${x+i*9} ${y} V${y+в}" stroke="#7aa0c8" stroke-opacity=".22" stroke-width=".5"/>`;
+    return `<g filter="url(#c123-тень)"><rect x="${x}" y="${y}" width="${ш}" height="${в}" rx="2" fill="#fbfaf4"/></g>${кл}<path d="M${x+16} ${y} V${y+в}" stroke="#e88a8a" stroke-width=".9"/>
+      <rect x="${x+ш/2-22}" y="${y-5}" width="44" height="10" rx="2" fill="#e8dcc0" opacity=".85"/>
+      <text x="${x+ш/2+8}" y="${y+в/2+кегль*0.36}" text-anchor="middle" font-size="${кегль}" font-weight="bold" fill="#1a2a5a" font-family="${ШР}">${esc(текст)}</text>`; };
+  /* миниатюра опыта для плиток карточки и вывода: (x,y) — левый верх, 156 × 118 */
+  const миниСцена = (т,x,y,ш,в,и) => { const кл='c123-мини'+и; let s='';
+    if(т===0) s = ступка(46,в-12,0.62,3,false) + магнит(116,34,0.62,true,0);
+    else if(т===1){ const слой=`<rect x="-6" y="-30" width="12" height="30" fill="#1c1c1e"/>`; s = L_().спиртовка(42,в-6,0.62,true) + пробиркаН(32,в-40,100,72,слой,{капли:4,пробка:true}) +
+      `<path d="M108 ${в-50} Q124 ${в-66} 134 ${в-60} V${в-30}" stroke="#8fa8b8" stroke-width="3" fill="none" opacity=".75"/>` + L_().пробирка(134,в-6,0.7,{уровень:.6,цвет:'rgba(225,230,236,.85)'}); }
+    else if(т===2) s = L_().стакан(78,в-6,64,84,{уровень:.8,цвет:'rgba(120,190,170,.62)',объём:250,осадок:3}) + `<rect x="40" y="${в-96}" width="76" height="3" rx="1.5" fill="#dceaf4" opacity=".7"/><path d="M78 ${в-94} V${в-76}" stroke="#d8d0b8"/>` + гвоздь(78,в-76,56,0.85,0);
+    else s = L_().стакан(78,в-6,64,80,{уровень:.55,цвет:'rgba(236,240,244,.6)',объём:250}) + `<g>${творог(78,в-12,48,1)}</g>` + L_().пипетка(78,в-74,0.8,true) + капельница(130,в-6,0.9,'#f0f0f0','AgNO₃');
+    return `<g transform="translate(${x} ${y})"><clipPath id="${кл}"><rect width="${ш}" height="${в}" rx="10"/></clipPath>
+      <rect width="${ш}" height="${в}" rx="10" fill="url(#c123-плитка)"/><g clip-path="url(#${кл})">
+        ${Array.from({length:6},(_,i)=>`<path d="M0 ${i*18} H${ш}" stroke="#fff" stroke-opacity=".04"/>`).join('')}
+        <rect x="0" y="${в-8}" width="${ш}" height="8" fill="#0e1412"/><rect x="0" y="${в-8}" width="${ш}" height="1" fill="#9aa6a0" opacity=".4"/>
+        <g transform="scale(${ф1(ш/156)})">${s}</g></g>
+      <rect width="${ш}" height="${в}" rx="10" fill="none" stroke="${['#c8a04a','#3aa86a','#e8885a','#c8ccd4'][т]}" stroke-width="1.6" opacity=".9"/></g>`; };
+
   /* ================= КАДРЫ ================= */
 
   /* 1. Карточка */
   function F1(s){
-    const Н=262, y0=226, Л=L_(), к=s.вк1==null?0:s.вк1, вид=s.видвк1||{0:true}, все=ВКЛАДКИ.every((x,i)=>вид[i]), в=s.ответ1, ок=в===0;
-    const полка = `<rect x="6" y="120" width="324" height="8" rx="2" fill="url(#рл-древесина)"/><rect x="6" y="128" width="324" height="3" fill="#000" opacity=".35"/>
-      <rect x="14" y="131" width="5" height="14" fill="#3a2414"/><rect x="317" y="131" width="5" height="14" fill="#3a2414"/>`;
-    const наПолке = банкаП(34,120,30,40,['#4a5058','#6a737d','#2a2f35','#8a9098'],'Fe') + банкаП(74,120,30,40,['#e8c020','#f2d22a','#ffe86a','#d0a810'],'S') +
-      банкаП(114,120,30,40,['#2a8a5a','#3aa86a','#1a6a3a','#5ac88a'],'малахит') + банкаП(154,120,30,40,['#e8ecf0','#ffffff','#d8dde2'],'NaCl') +
-      капельница(190,120,1,'#f0f0f0','AgNO₃') + капельница(214,120,1,'#3a7ad8','CuSO₄');
-    const пр = ступка(64,y0+10,0.85,0,false) + магнит(150,y0-10,0.8,false,-20) + гвоздь(196,y0+2,40,0,-78) +
-      Л.стакан(262,y0+10,56,68,{уровень:.55,цвет:'rgba(60,140,230,.7)',объём:100}) + Л.спиртовка(316,y0+10,0.7,true);
-    const поверх = полка + наПолке + тА(168,26,'четыре опыта — четыре типа реакций',12,GOLD) +
-      [0,1,2,3].map(i=>`<g transform="translate(${44+i*82} 52)">${тА(0,0,ТИПЫ[i],8.5,'#c8ced6')}</g>`).join('') +
-      [0,1,2,3].map(i=>`<g transform="translate(${44+i*82} 76) scale(.42) translate(${-44-i*82} -76)">${схемаТипа(44+i*82,76,i)}</g>`).join('');
+    const Н=322, y0=314, к=s.вк1==null?0:s.вк1, вид=s.видвк1||{0:true}, все=ВКЛАДКИ.every((x,i)=>вид[i]), в=s.ответ1, ок=в===0;
+    const тело = фон(Н,y0) + тА(168,22,'четыре опыта — четыре типа реакций',12,GOLD) +
+      [0,1,2,3].map(i=>{ const x=10+(i%2)*162, y=34+Math.floor(i/2)*140;
+        return миниСцена(i,x,y,154,108,i) + метка(x+77,y-6,ТИПЫ[i],['#c8a04a','#3aa86a','#e8885a','#c8ccd4'][i],{кегль:9}) + `<g transform="translate(${x+77} ${y+122}) scale(.62) translate(${-x-77} ${-y-122})">${схемаТипа(x+77,y+122,i)}</g>`; }).join('');
     return ЖУРНАЛ(s) + ШАПКА('Карточка работы','Типы химических реакций') +
-      `<div class="pic тёмная">${свгЛ(сцена(Н,y0,пр,поверх),Н)}</div>` +
+      `<div class="pic тёмная">${свгЛ(тело,Н)}</div>` +
       `<div class="вкладки" data-anim style="--i:3">${ВКЛАДКИ.map((x,i)=>`<button type="button" class="${к===i?'вкл':''}${вид[i]?' был':''}${i===4?' опасно':''}" onclick="r123вк(${i})">${x[0]}</button>`).join('')}</div>` +
       A(4,'карт теория'+(к===4?' опасно':''),'<span class="метка">'+ВКЛАДКИ[к][0]+'</span><div class="текст" style="font-size:18px">'+ВКЛАДКИ[к][1]+'</div>') +
       (!все ? СКАЗ('Прочитай','Открой все пять вкладок.') :
@@ -912,23 +987,24 @@
     const Н=292, y0=254, Л=L_(), эт=s.эт2||0, сч=s.сч2||0, магн=!!s.магн2, нагрев=!!s.нагр2, ок=!!s.дело_соединение, в=s.ответ2, отз=s.отз2;
     let пр='', поверх='', пульт='', текст='';
     if(эт<=1){
-      пр = банкаП(36,y0+10,30,42,['#4a5058','#6a737d','#2a2f35'],'Fe','железо 7 г') + банкаП(300,y0+10,30,42,['#e8c020','#f2d22a','#ffe86a'],'S','сера 4 г') +
-        ступка(168,y0+10,1.35,сч,эт===0&&сч>0&&сч<3);
+      пр = банкаП(30,y0+10,30,42,['#4a5058','#6a737d','#2a2f35'],'Fe','железо 7 г') + банкаП(70,y0+10,30,42,['#e8c020','#f2d22a','#ffe86a'],'S','сера 4 г') +
+        ступка(168,y0+10,1.35,сч,эт===0&&сч>0&&сч<3) + Л.весы(284,y0+12,92,{показ:'11.0'}) + Л.часовое(284,Л.весыВерх(y0+12,92),40,'железо',3) + Л.очки(276,y0-92,0.7);
       if(эт===1) поверх = магнит(168,y0-112,1.2,магн,0) + (магн?метка(168,8,'железо в смеси сохранило свойства — его тянет магнит',ЗЕ,{кегль:9}):'');
-      else поверх = метка(168,8,сч>=3?'смесь однородная':'растирание: '+сч+' из 3',сч>=3?ЗЕ:ЗЛ,{кегль:10});
+      else поверх = метка(168,8,сч>=3?'смесь однородная':'растирание: '+сч+' из 3',сч>=3?ЗЕ:ЗЛ,{кегль:10}) + журналЛист(14,34,108,['Опыт 1','Fe — 7 г','S — 4 г','растереть ×3']);
       пульт = эт===0 ? `<div class="ask">${BTN(4,'',сч>=3?'Смесь готова — проверить магнитом →':'Растереть пестиком ('+(сч+1)+' из 3)',сч>=3?"r123эт2(1)":"r123растереть()")}</div>`
         : `<div class="ask">${BTN(4,'',магн?'Насыпать в пробирку и нагреть →':'Поднести магнит к смеси',магн?"r123эт2(2)":"r123магнит()")}</div>`;
       текст = эт===0 ? 'Железные опилки и серу растирают в ступке, пока смесь не станет однородной. Это ещё <b>смесь</b>: каждое вещество в ней прежнее.' : 'Проверим, сохранило ли железо свои свойства в смеси.';
     } else if(эт===2){
-      пр = штативД(40,y0+10,40,138,160) + Л.спиртовка(208,y0+10,1.05,нагрев);
+      пр = тяга(18,10,322,y0+10) + штативД(56,y0+10,84,138,160) + Л.спиртовка(208,y0+10,1.05,нагрев);
       const слой = `<rect x="-6" y="-34" width="12" height="34" fill="url(#c123-смесьFeS)"/>` + (нагрев?`<rect x="-6" y="-34" width="12" height="34" fill="#1a1a1c" opacity="0">${ДВ()?`<animate attributeName="opacity" values="0;0;1" keyTimes="0;.3;1" dur="3.4s" fill="freeze"/>`:''}</rect>`:'');
       поверх = пробиркаН(204,y0-50,-25,96,слой,{раскал:нагрев,бежит:true,длСлоя:34,фронт:0}) +
         (нагрев?`<circle cx="198" cy="${y0-60}" r="22" fill="url(#c123-свечение)">${ДВ()?`<animate attributeName="r" values="14;26;20" dur="1.6s" repeatCount="indefinite"/>`:''}</circle>`:'') +
-        метка(250,8,нагрев?'смесь раскалилась и светится сама':'пробирка в лапке над спиртовкой',нагрев?ЗЛ:'#6a7480',{кегль:10});
+        метка(250,92,нагрев?'смесь раскалилась и светится сама':'опыт — под тягой',нагрев?ЗЛ:'#6a7480',{кегль:10});
       пульт = `<div class="ask">${BTN(4,'',нагрев?'Остудить и снова поднести магнит →':'Зажечь спиртовку и нагреть',нагрев?"r123эт2(3)":"r123нагреть()")}</div>`;
       текст = нагрев ? 'Стоило нагреть край — и раскалённая волна сама побежала по всей смеси: реакция идёт <b>с выделением тепла</b>, спиртовку можно убрать.' : 'Смесь насыпали в пробирку и закрепили в лапке штатива. Нагреем нижнюю часть.';
     } else {
-      пр = `<rect x="128" y="${y0-4}" width="80" height="14" rx="2" fill="#f4f2ec"/>` + крупинки(168,y0-1,32,4,90,['#1a1a1c','#2e2e30','#3a3638','#0e0e10'],15) + Л.часовое(168,y0+10,96,'уголь',0);
+      пр = `<rect x="128" y="${y0-4}" width="80" height="14" rx="2" fill="#f4f2ec"/>` + крупинки(168,y0-1,32,4,90,['#1a1a1c','#2e2e30','#3a3638','#0e0e10'],15) + Л.часовое(168,y0+10,96,'уголь',0) +
+        банкаП(36,y0+10,30,42,['#4a5058','#6a737d','#2a2f35'],'Fe') + журналЛист(14,92,100,['Вывод','не тянет магнит','не жёлтая','= новое вещество FeS'],{поворот:2});
       поверх = магнит(168,y0-92,1.2,false,0) + метка(168,8,'магнит больше не тянет — это новое вещество FeS',КР,{кегль:9}) +
         микро(278,96,50,[['Fe²⁺',3],['S²⁻',3]].map(([и,n])=>[и,n]),3).replace(/S²⁻/g,'S²⁻');
       пульт = ОТВЕТЫ('пара',ТИПЫ,0,в,2);
@@ -958,7 +1034,9 @@
       (газ&&ДВ()?[0,1,2,3,4].map(k=>`<circle cx="${290+(k%3-1)*2.5}" cy="${y0-30}" r="${1.3+(k%3)*0.6}" fill="none" stroke="#fff" stroke-width=".8"><animate attributeName="cy" values="${y0-30};${y0-82}" dur="${(1+k*0.25).toFixed(2)}s" begin="${(k*0.3).toFixed(1)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="${(1+k*0.25).toFixed(2)}s" begin="${(k*0.3).toFixed(1)}s" repeatCount="indefinite"/></circle>`).join(''):'') +
       `<g transform="translate(14 16)"><rect width="118" height="78" rx="6" fill="rgba(10,12,16,.84)" stroke="#3a4048"/>${тА(59,13,'продукты',8.5,'#c8ced6')}
         ${[['чёрный CuO',д>0.95],['капли H₂O',Сн>=4],['CO₂: вода мутнеет',муть>0.6]].map(([t0,есть],j)=>`<circle cx="12" cy="${28+j*17}" r="5" fill="${есть?'#3a9a5a':'none'}" stroke="${есть?'#8fd1a8':'#5a636d'}"/>${есть?тА(12,31+j*17,'✓',7,'#fff'):''}`+тА(22,31+j*17,t0,8,есть?'#eef2f6':'#7a838d','start')).join('')}</g>` +
-      метка(232,8,'нагрев: '+ок1(t)+' мин',ЗЛ,{кегль:10}) + тА(290,y0+30,'известковая вода',7.5,'#c8ced6') + тА(104,y0+30,'малахит',7.5,'#c8ced6');
+      метка(232,8,'нагрев: '+ок1(t)+' мин',ЗЛ,{кегль:10}) + тА(290,y0+30,'известковая вода',7.5,'#c8ced6') + тА(104,y0+30,'малахит',7.5,'#c8ced6') +
+      малахит(206,y0+8,20) + тА(206,y0+30,'минерал',7.5,'#c8ced6') +
+      (t>=8?выноска(150,124,100,y0-60,'CuO — чёрный','#ffd76a')+выноска(214,150,178,y0-50,'капли H₂O','#7fd1ff')+выноска(250,118,288,y0-62,'CO₂ — муть','#8fd1a8'):'');
     return сцена(Н,y0,пр,поверх);
   }
   function F3(s){
@@ -979,7 +1057,7 @@
   /* 4. Замещение: гвоздь в медном купоросе — живая сцена */
   function сцена4(s){
     const Н=292, y0=252, Л=L_(), t=s.t4==null?0:s.t4, д=Math.min(1,t/20), цв=смесьЦв('#3a8ae0','#8ac8a0',д);
-    const пр = Л.стакан(118,y0+10,110,140,{уровень:.8,цвет:ргба(цв,.62+0.1*(1-д)),объём:250,осадок:Math.round(д*4)}) + гвоздь(36,y0+2,46,0,-80) + капельница(214,y0+10,1,'#3a7ad8','CuSO₄');
+    const пр = Л.стакан(118,y0+10,110,140,{уровень:.8,цвет:ргба(цв,.62+0.1*(1-д)),объём:250,осадок:Math.round(д*4)}) + Л.часовое(32,y0+10,52,'песок',0) + гвоздь(32,y0+4,42,0,-84) + капельница(214,y0+10,1,'#3a7ad8','CuSO₄') + таймер(290,y0-26,24,t,30);
     const поверх = `<rect x="52" y="${y0-150}" width="136" height="5" rx="2.5" fill="url(#рл-стекло)" stroke="#a8c4d4" stroke-width=".6"/>
       <path d="M118 ${y0-147} V${y0-94}" stroke="#d8d0b8" stroke-width="1"/>` + гвоздь(118,y0-94,76,д,0) +
       (t>0&&ДВ()?[0,1,2].map(k=>`<circle cx="${118+(k-1)*6}" cy="${y0-60}" r="1.2" fill="#ffb07a"><animate attributeName="cy" values="${y0-90+k*14};${y0-6}" dur="${(3+k).toFixed(1)}s" repeatCount="indefinite"/></circle>`).join(''):'') +
@@ -1004,12 +1082,13 @@
   function F5(s){
     const Н=292, y0=252, Л=L_(), к=Math.min(4,s.кап5||0), в=s.ответ5, ок=!!s.дело_обмен;
     const пр = Л.стакан(118,y0+10,96,124,{уровень:.5,цвет:к?`rgba(236,240,244,${(.35+к*.12).toFixed(2)})`:'rgba(220,235,245,.35)',объём:250,муть:к?к*14:0,мутьЦвет:['#ffffff','#f0f2f4','#dfe2e6']}) +
-      капельница(36,y0+10,1.2,'#f0f0f0','AgNO₃') + банкаП(204,y0+10,30,40,['#e8ecf0','#ffffff','#d8dde2'],'NaCl');
+      капельница(244,y0+10,1.1,'#f0f0f0','AgNO₃') + банкаП(212,y0+10,28,38,['#e8ecf0','#ffffff','#d8dde2'],'NaCl');
     const осадок = к ? `<g>${творог(118,y0+4,70,к/4)}</g>` : '';
-    const поверх = Л.пипетка(118,y0-120,1.1,к<4) + (к&&ДВ()?`<circle cx="118" cy="${y0-118}" r="2.6" fill="#f0f0f0"><animate attributeName="cy" values="${y0-118};${y0-62}" dur=".9s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur=".9s" repeatCount="indefinite"/></circle>`:'') + осадок +
+    const поверх = фонарик(34,y0-30,30,к/4,74,172,y0-30) + Л.пипетка(118,y0-120,1.1,к<4) + (к&&ДВ()?`<circle cx="118" cy="${y0-118}" r="2.6" fill="#f0f0f0"><animate attributeName="cy" values="${y0-118};${y0-62}" dur=".9s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur=".9s" repeatCount="indefinite"/></circle>`:'') + осадок +
       микро(270,98,56,к?[['Na⁺',3],['NO₃⁻',3],['Ag⁺',Math.max(0,3-к)],['Cl⁻',Math.max(0,3-к)]].filter(x=>x[1]>0):[['Na⁺',3],['Cl⁻',3]],5) +
       (к?`<g transform="translate(270 140)">${[0,1,2].slice(0,Math.min(3,к)).map(j=>`<g transform="translate(${(j-1)*16} 0)">${сфера(-4,0,5,'c123-атAg')}${сфера(4,0,5.5,'c123-атCl')}</g>`).join('')}</g>`+тА(270,166,'AgCl — в осадок',8,'#eef2f6'):'') +
-      тА(270,22,'микромир раствора',8.5,'#9aa3ad') + метка(118,8,к?'капель AgNO₃: '+к:'раствор NaCl — прозрачный',ЗЛ,{кегль:10});
+      тА(270,22,'микромир раствора',8.5,'#9aa3ad') + метка(118,8,к?'капель AgNO₃: '+к:'раствор NaCl — прозрачный',ЗЛ,{кегль:10}) +
+      (к?метка(118,y0-84,'луч виден — в растворе взвесь',ЗЕ,{кегль:8}):метка(118,y0-84,'луч не виден — раствор прозрачный','#6a7480',{кегль:8}));
     return ЖУРНАЛ(s) + ШАПКА('Шаг 4','Обмен: белый осадок') +
       `<div class="pic тёмная">${свгЛ(сцена(Н,y0,пр,поверх),Н)}</div>` +
       A(3,'карт задача','<span class="метка">Опыт</span><div class="текст">В стакане — прозрачный раствор поваренной соли. Добавляй по капле раствор нитрата серебра.</div>') +
@@ -1022,26 +1101,35 @@
 
   /* 6. Сортировщик */
   function F6(s){
-    const Н=214, n=Math.min(s.у6||0,УРАВНЕНИЯ.length-1), У=УРАВНЕНИЯ[n], ок=!!s.ок6, отз=s.отз6, готовых=n+(ок?1:0), все=готовых>=УРАВНЕНИЯ.length;
-    const тело = L_().студия(Н,214) + `<rect x="14" y="30" width="308" height="62" rx="10" fill="rgba(10,12,16,.82)" stroke="${ок?GREEN:'#3a4048'}" stroke-width="${ок?1.8:1}"/>` +
-      `<text x="168" y="70" text-anchor="middle" font-size="${У.у.length>26?15:19}" font-weight="bold" fill="#eef2f6" font-family="${ШР}">${esc(У.у)}</text>` +
-      метка(168,4,'уравнение '+(n+1)+' из 10 · слева '+У.сл+', справа '+У.сп,ЗЛ,{кегль:10}) +
-      (ок ? схемаТипа(168,140,У.т) + тА(168,176,СХЕМЫ[У.т]+' — '+ТИПЫ[У.т],11,GREEN) : тА(168,140,'схема появится после ответа',10,'#6a7480'));
-    const кол=(i)=>УРАВНЕНИЯ.filter((x,k)=>k<готовых&&x.т===i).length;
+    const Н=306, y0=292, n=Math.min(s.у6||0,УРАВНЕНИЯ.length-1), У=УРАВНЕНИЯ[n], ок=!!s.ок6, отз=s.отз6, готовых=n+(ок?1:0), все=готовых>=УРАВНЕНИЯ.length;
+    const ЦВ=['#c8a04a','#3aa86a','#e8885a','#c8ccd4'], кол=(i)=>УРАВНЕНИЯ.filter((x,k)=>k<готовых&&x.т===i).length, xs=[48,128,208,288];
+    let тело = фон(Н,y0) +
+      `<path d="M30 12 H306 L280 112 H56 Z" fill="url(#c123-корпусФ)" stroke="#6a737d" stroke-width="1.2"/><path d="M34 15 H302" stroke="#fff" stroke-opacity=".2"/>` +
+      [0,1,2,3,4,5].map(i=>`<circle cx="${46+i*49}" cy="104" r="1.6" fill="#8a929c"/>`).join('') +
+      карточкаУр(44,26,248,58,У.у,У.у.length>26?14:17) + метка(168,90,'слева '+У.сл+' · справа '+У.сп+' · уравнение '+(n+1)+' из 10',ЗЛ,{кегль:9}) +
+      `<path d="M150 112 H186 L180 140 H156 Z" fill="#2a3038" stroke="#5a636d"/>`;
+    xs.forEach((x,i)=>{ const выбор=ок&&У.т===i;
+      тело += `<path d="M168 140 Q${(168+x)/2} 150 ${x} 170" stroke="${выбор?ЦВ[i]:'#3a4048'}" stroke-width="${выбор?3:2}" fill="none" stroke-dasharray="${выбор?'':'4 3'}"/>` +
+        `<rect x="${x-30}" y="172" width="60" height="${y0-172}" rx="6" fill="rgba(200,225,240,.08)" stroke="${выбор?ЦВ[i]:'#8fa8b8'}" stroke-opacity="${выбор?1:.5}" stroke-width="${выбор?2:1}"/>` +
+        `<rect x="${x-27}" y="176" width="3" height="${y0-180}" rx="1.5" fill="#fff" opacity=".35"/>` +
+        Array.from({length:кол(i)},(_,k)=>`<g>${выбор&&k===кол(i)-1&&ДВ()?`<animateTransform attributeName="transform" type="translate" from="${168-x} -100" to="0 0" dur=".7s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.5 0 0.9 0.6"/>`:''}<ellipse cx="${x+(k%2?9:-9)}" cy="${y0-9-Math.floor(k/2)*12}" rx="10" ry="5.5" fill="${ЦВ[i]}" stroke="#14171b" stroke-width=".8"/><ellipse cx="${x+(k%2?9:-9)-3}" cy="${y0-11-Math.floor(k/2)*12}" rx="4" ry="1.6" fill="#fff" opacity=".45"/></g>`).join('') +
+        тА(x,188,ТИПЫ[i],8.5,'#eef2f6') + `<g transform="translate(${x} 204) scale(.34) translate(${-x} -204)">${схемаТипа(x,204,i)}</g>` + тА(x,y0-62,кол(i)||'',16,ЦВ[i]); });
     return ЖУРНАЛ(s) + ШАПКА('Шаг 5','Сортировщик реакций') +
       `<div class="pic тёмная">${свгЛ(тело,Н)}</div>` +
       ТОЧКИ(УРАВНЕНИЯ.length,все?-1:n,готовых) +
       (ок ? '' : `<div class="ask пара">${ТИПЫ.map((t0,j)=>BTN(4+j,отз&&!отз.ок&&отз.j===j?'miss':'',t0,"r123тип("+j+")")).join('')}</div>`) +
       (отз ? РАЗБОР(отз.ок,отз.т) : '') +
       (ок&&!все ? `<div class="ask">${BTN(6,'','Следующее уравнение →',"r123удальше()")}</div>` : '') +
-      A(8,'карт','<span class="метка">Корзины · '+готовых+' из 10</span><table class="итоги">'+ТИПЫ.map((t0,i)=>'<tr><td>'+t0+'</td><td>'+кол(i)+'</td></tr>').join('')+'</table>') +
       (все ? ПРАВИЛО('Считай вещества: одно → несколько — разложение; несколько → одно — соединение; простое + сложное — замещение; два сложных — обмен.') : '');
   }
 
   /* 7. Вывод */
   function F7(s){
-    const Н=246;
-    const тело = L_().студия(Н,236) + [0,1,2,3].map(i=>`<g>${тА(168,28+i*52,ТИПЫ[i],11,GOLD)}${схемаТипа(168,52+i*52,i)}</g>`).join('');
+    const Н=352, ЦВ=['#c8a04a','#3aa86a','#e8885a','#c8ccd4'], УР=['Fe + S → FeS','(CuOH)₂CO₃ → 2CuO + H₂O + CO₂','Fe + CuSO₄ → FeSO₄ + Cu','AgNO₃ + NaCl → AgCl↓ + NaNO₃'];
+    const тело = фон(Н,344) + [0,1,2,3].map(i=>{ const x=10+(i%2)*162, y=22+Math.floor(i/2)*172;
+      return миниСцена(i,x,y,154,104,i+10) + метка(x+77,y-8,ТИПЫ[i],ЦВ[i],{кегль:9}) +
+        `<g transform="translate(${x+77} ${y+120}) scale(.6) translate(${-x-77} ${-y-120})">${схемаТипа(x+77,y+120,i)}</g>` +
+        `<text x="${x+77}" y="${y+144}" text-anchor="middle" font-size="${УР[i].length>22?7:8.5}" font-weight="bold" fill="#eef2f6" font-family="${ШР}">${esc(УР[i])}</text>`; }).join('');
     return ЖУРНАЛ(s) + ШАПКА('Вывод','Четыре типа реакций') +
       `<div class="pic тёмная">${свгЛ(тело,Н)}</div>` +
       A(4,'карт теория','<span class="метка">Вывод</span><div class="текст" style="font-size:18px">'+
@@ -1101,13 +1189,13 @@
   const Т = {
     т1:{ имя:'Тип по уравнению', пул:П1, класс:'пара',
       сцена:(з,ст)=>{ const Н=150, отв=ст.ответ!=null;
-        return свгЛ(L_().студия(Н,150)+`<text x="168" y="${отв?52:80}" text-anchor="middle" font-size="${з.у.length>26?14:18}" font-weight="bold" fill="#eef2f6" font-family="${ШР}">${esc(з.у)}</text>`+(отв?схемаТипа(168,100,з.т):'')+серия(ст),Н); } },
+        return свгЛ(фон(Н,150)+карточкаУр(22,18,292,58,з.у,з.у.length>26?13:16)+(отв?схемаТипа(168,108,з.т):тА(168,112,'схема появится после ответа',9,'#6a7480'))+серия(ст),Н); } },
     т2:{ имя:'Что получится', пул:П2, класс:'пара',
       сцена:(з,ст)=>{ const Н=130, отв=ст.ответ!=null;
-        return свгЛ(L_().студия(Н,130)+`<text x="168" y="62" text-anchor="middle" font-size="18" font-weight="bold" fill="#eef2f6" font-family="${ШР}">${esc(з.л+' '+(отв?з.ок:'?'))}</text>`+серия(ст),Н); } },
+        return свгЛ(фон(Н,130)+карточкаУр(18,24,300,64,з.л+' '+(отв?з.ок:'?'),(з.л+' '+з.ок).length>28?13:16)+серия(ст),Н); } },
     т3:{ имя:'Схема — тип', пул:П3, класс:'пара',
       сцена:(з,ст)=>{ const Н=130, отв=ст.ответ!=null;
-        return свгЛ(L_().студия(Н,130)+схемаТипа(168,62,з.т)+(отв?тА(168,102,ТИПЫ[з.т],13,GREEN):'')+серия(ст),Н); } }
+        return свгЛ(фон(Н,130)+`<g transform="translate(168 58) scale(1.45) translate(-168 -58)">${схемаТипа(168,58,з.т)}</g>`+(отв?тА(168,110,ТИПЫ[з.т],13,GREEN):'')+серия(ст),Н); } }
   };
   const сост = (s,ключ) => Object.assign({круг:0,шаг:0,верно:0,ош:0,серия:0,лучшая:0,ответ:null}, s[ключ]||{});
   const задание = (ключ,ст) => { const пул=Т[ключ].пул; return пул[(ст.круг*КРУГ+ст.шаг)%пул.length]; };
