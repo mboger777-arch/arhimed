@@ -1,0 +1,10 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const code=fs.readFileSync(require('path').join(__dirname,'../MVP/data/lesson_jun300_orehi.js'),'utf8');
+function setup(record){let events=[],saved=0,other=0;const c={window:null,ARH_LESSONS:[{id:300,comic:[1],__планПорядок:8}],DB:{points:0,lessons:record?{300:record}:{}},LV:{id:300},document:{getElementById:()=>({})},renderLessonView:()=>other++,bumpDay:()=>{},logEvent:(type,d)=>events.push([type,d]),save:()=>saved++,hud:()=>{},go:()=>{},console};c.window=c;vm.createContext(c);vm.runInContext(code,c);return {c,events,get other(){return other}}}
+let t=setup();assert.equal(t.c.ARH_LESSONS[0].tasks.length,9);assert.equal(t.c.ARH_LESSONS[0].comic,undefined);assert.equal(t.c.ARH_LESSONS[0].__планПорядок,8);
+const answers=[2,4,1,3,2,1,11,15,15];t.c.OREH300.award(0,99,false);assert.equal(t.c.DB.points,0);
+answers.forEach((a,i)=>{t.c.OREH300.award(i,a,i===0);t.c.OREH300.award(i,a,false)});assert.equal(t.c.DB.points,157);assert.equal(t.c.DB.lessons[300].stars,9);assert(t.c.DB.lessons[300].done);assert.equal(t.events.filter(e=>e[0]==='lesson').length,1);
+t.c.OREH300.save({step:6,unlocked:6,completed:true,states:{}});assert.equal(t.events.filter(e=>e[0]==='lesson').length,1);t.c.OREH300.save({step:0,unlocked:0,completed:false,states:{}});assert(t.c.DB.lessons[300].done);assert.equal(t.c.DB.lessons[300].tasks.length,9);let load=t.c.OREH300.load();load.step=5;assert.equal(t.c.OREH300.load().step,0);
+t.c.LV.id=256;t.c.renderLessonView();assert.equal(t.other,1);t.c.OREH300.award(0,2,false);assert.equal(t.c.DB.points,157);
+t=setup({done:true,doneTs:123,stars:2,tasks:[0,1]});answers.forEach((a,i)=>t.c.OREH300.award(i,a,false));assert.equal(t.c.DB.lessons[300].doneTs,123);assert.equal(t.events.filter(e=>e[0]==='lesson').length,0);assert.equal(t.c.DB.points,126);assert.equal(t.c.DB.lessons[300].stars,9);
+console.log('PASS: correct answers, idempotent rewards, native events, replay, legacy completion, state copy and isolation.');
