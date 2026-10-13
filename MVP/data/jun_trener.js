@@ -25,6 +25,8 @@
   const СТИЛЬ = `
   #lvis .число.мал.мал{min-width:56px;min-height:58px;padding:4px;border-radius:16px}
   #lvis .число.мал.мал .окно{min-width:42px;height:44px;font-size:26px;border-radius:11px}
+  #lvis .число.длин.длин{width:100%;max-width:340px;min-height:0}
+  #lvis .число.длин.длин .окно{font-size:21px;height:auto;min-height:46px;padding:8px 14px;line-height:1.2;text-align:center}
   #lvis .дт-ряд{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
   #lvis .дт-лента{align-self:center;display:inline-flex;gap:10px;align-items:center;padding:6px 16px;border-radius:14px;
     border:3px solid #5b3416;color:#4a2a0c;font-size:19px;
@@ -51,7 +53,8 @@
   function табличка(текст, клик, сост, мал){
     const кл = сост === 'верно' ? ' верно' : сост === 'мимо' ? ' мимо' : '';
     const закр = сост ? 'disabled' : '';
-    return `<button type="button" class="число${кл}${мал ? ' мал мал' : ''}" ${закр} onclick="${клик}"><span class="окно">${esc(текст)}</span></button>`;
+    const длин = String(текст).length > 4;      /* ответ словами («1 десяток и 6 единиц») — широкая табличка, кегль меньше */
+    return `<button type="button" class="число${кл}${мал ? ' мал мал' : ''}${длин ? ' длин длин' : ''}" ${закр} onclick="${клик}"><span class="окно">${esc(текст)}</span></button>`;
   }
   function реплика(к, вопрос, кто){
     const Г = (кто && к.герои && к.герои[кто]) || к.герой;
@@ -85,8 +88,8 @@
     const зв = L.tasks.map((_, i) => `<i class="${rec.tasks.indexOf(i) >= 0 ? '' : 'нет'}">★</i>`).join('');
     let ответы = '';
     if (T.kind === 'unit'){
-      const до = В.до || 10;
-      ответы = `<input type="hidden" id="lvNum"><div class="дт-ряд">${Array.from({length: до + 1}, (_, n) =>
+      const от = В.от || 0, до = В.до || 10;     /* ряд табличек: по умолчанию 0–10, у урока 301 — 10–20 */
+      ответы = `<input type="hidden" id="lvNum"><div class="дт-ряд">${Array.from({length: до - от + 1}, (_, k) => от + k).map(n =>
         табличка(n, `ДТ.число(${n})`, решена && n === T.ans ? 'верно' : (ош.includes(n) ? 'мимо' : (решена ? 'закрыто' : '')), true)).join('')}</div>`;
     } else {
       ответы = `<div class="числа">${T.choices.map((x, i) =>
