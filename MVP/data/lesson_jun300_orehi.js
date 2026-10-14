@@ -15,7 +15,6 @@
     ['6 + 5', 11], ['7 + 8', 15], ['9 + 6', 15]
   ];
   const lesson = window.ARH_LESSONS.find(l => l.id === ID);
-  if (!lesson) return;   /* урок не догрузился (обрыв сети) — не роняем остальное приложение */
   Object.assign(lesson, {
     title: 'Сложение с переходом через десяток · Ореховый экспресс',
     src: 'Начальная школа · 1 класс · Сложение в пределах 20', subj: 'jun',
@@ -83,10 +82,8 @@
   window.renderLessonView = function () {
     if (LV.id !== ID) return previous.apply(this, arguments);
     if (!document.getElementById('lesson300-frame')) {
-      /* Урок встроен в обычный экран: шапка приложения, «← Книга знаний», название урока и нижнее
-         меню на месте; документ урока — в карточке, его шапка и 100svh сняты (js/lesson_embed.js). */
-      ВСТРОЕННЫЙ_УРОК.экран({ рамка: 'lesson300-frame', адрес: 'lessons/300/index.html?v=931', название: 'Урок 300 — Ореховый экспресс',
-        подпись: lesson.src, css: '.app-header{display:none!important}.book-label{display:none!important}.wrap{padding-top:10px!important}footer{display:none!important}' });
+      document.getElementById('screen').innerHTML =
+        '<iframe id="lesson300-frame" title="Урок 300 — Ореховый экспресс" src="lessons/300/index.html?v=931" style="position:fixed;inset:0;width:100%;height:100%;height:100dvh;border:0;z-index:9000;background:#0b1712"></iframe>';
     }
     hud();
   };
