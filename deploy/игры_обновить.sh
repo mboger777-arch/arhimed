@@ -10,21 +10,21 @@
 # Какая игра к какому уроку — MVP/js/lesson_games.js (таблица ИГРЫ).
 #
 # Запуск из корня репозитория:  bash deploy/игры_обновить.sh [папка ...]
-# Без аргументов обновляет все пять. После — ритуал версии и выкладка как обычно.
+# Без аргументов обновляет все восемь. После — ритуал версии и выкладка как обычно.
 set -e
 cd "$(dirname "$0")/.."
-ИГРЫ=${*:-"desyat-fonarei vesy-znaki chasy sto-monetok sad-umnozheniya"}
-ВРЕМ=$(mktemp -d)
-for g in $ИГРЫ; do
+GAMES=${*:-"desyat-fonarei vesy-znaki chasy sto-monetok sad-umnozheniya tsyplyata-parami igrushki-na-polkah polovina-yabloka"}
+TMPD=$(mktemp -d)
+for g in $GAMES; do
   echo "--- $g"
-  git clone -q --depth 1 "https://github.com/mboger777-arch/$g.git" "$ВРЕМ/$g"
-  echo "    коммит игры: $(git -C "$ВРЕМ/$g" log -1 --format='%h %ad %s' --date=short)"
-  rsync -a --delete --exclude .git --exclude .nojekyll "$ВРЕМ/$g/" "MVP/games/$g/"
+  git clone -q --depth 1 "https://github.com/mboger777-arch/$g.git" "$TMPD/$g"
+  echo "    коммит игры: $(git -C "$TMPD/$g" log -1 --format='%h %ad %s' --date=short)"
+  rsync -a --delete --exclude .git --exclude .nojekyll "$TMPD/$g/" "MVP/games/$g/"
   f="MVP/games/$g/index.html"
   sed -i '' '/<link rel="manifest"/d' "$f"
   grep -q back_to_lesson "$f" || sed -i '' 's|</body>|<script src="../back_to_lesson.js"></script>\
 </body>|' "$f"
   grep -q back_to_lesson "$f" && echo "    кнопка «В урок» подключена"
 done
-rm -rf "$ВРЕМ"
+rm -rf "$TMPD"
 echo "Готово. Проверь: PYTHONPATH=.py-libs python3 deploy/игры_проверить.py"

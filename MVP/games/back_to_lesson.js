@@ -27,7 +27,8 @@
   document.body.appendChild(b);
 
   function заставка(){
-    try { return typeof G !== 'undefined' && G.scene && G.scene.constructor && G.scene.constructor.name === 'TitleScene'; }
+    /* платформеры: сцена-объект TitleScene; «Половина яблока»: G.scene — строка, заставка — 'title' */
+    try { return typeof G !== 'undefined' && G.scene && (G.scene === 'title' || (G.scene.constructor && G.scene.constructor.name === 'TitleScene')); }
     catch (e) { return false; }
   }
   /* в вертикальном положении игра просит повернуть телефон — кнопка нужна и там */
