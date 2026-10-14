@@ -42,6 +42,7 @@
   function setFeedback(text,success=false){$('feedback').textContent=text;$('feedback').className='feedback'+(success?' success':'');}
   function ready(){const s=stepState();return state.step===0||state.step===6||state.step===1&&s.moved===2||s.answer;}
   function render(){
+    cancelSpeech();
     animationVersion++;moving=false;document.querySelectorAll('.celebrate').forEach(e=>e.remove());
     const i=state.step,s=stepState(),d=lesson[i];
     const speaker=i===4||s.hint?'tosha-point':i===5?'ryzhik-search':s.answer?'ryzhik-happy':'ryzhik-squirrel';
@@ -73,7 +74,7 @@
       $('mobile-instruction').textContent='Выбери тренажёр. На каждой станции — три задания.';
       state.training ||= {active:null,stations:[{index:0},{index:0},{index:0}]};
       window.LessonTraining.mount($('game-area'),state.training,{
-        frame,save,award:(index,value,hinted)=>bridge?.award(index,value,hinted),
+        frame,save,stopAudio:cancelSpeech,playAudio:(key,button,onError)=>window.LESSON_VOICE.toggle(key,button,onError),award:(index,value,hinted)=>bridge?.award(index,value,hinted),
         complete:()=>{const first=!state.completed;state.completed=true;if(first)celebrate();save();$('guide-title').textContent='Все тренажёры пройдены!';$('guide-copy').textContent='Ты умеешь дополнять до десяти, делить число на удобные части и складывать в уме.';$('next').hidden=false;$('next').textContent='Готово! Дальше →';$('speech').textContent='Девять заданий позади! Теперь все посылки отправятся к друзьям.';}
       });
       bindGame();save();return;
@@ -89,14 +90,14 @@
     document.querySelectorAll('[data-nut]').forEach(b=>b.onclick=()=>transfer(Number(b.dataset.nut),b));
     document.querySelectorAll('[data-total]').forEach(b=>b.onclick=()=>answer(Number(b.dataset.total),b));
     document.querySelectorAll('[data-split]').forEach(b=>b.onclick=()=>split(b.dataset.split,b));
-    const form=$('answer-form');if(form)form.onsubmit=e=>{e.preventDefault();const val=$('answer-input').value.trim();if(!/^\d{1,2}$/.test(val)){setFeedback('Введи число — сколько орехов получилось.');return;}answer(Number(val));};
+    const form=$('answer-form');if(form)form.onsubmit=e=>{e.preventDefault();cancelSpeech();const val=$('answer-input').value.trim();if(!/^\d{1,2}$/.test(val)){setFeedback('Введи число — сколько орехов получилось.');return;}answer(Number(val));};
   }
   function go(i){if(i<0||i>state.unlocked||i>6)return;cancelSpeech();state.step=i;render();}
   function transfer(k,button){
     if(moving)return;
     const s=stepState(),a=state.step===1?8:7,b=state.step===1?5:6;
     if(![1,3].includes(state.step)||s.moved>=10-a||s.used.includes(k)||k<0||k>=b)return;
-    moving=true;
+    cancelSpeech();moving=true;
     const start=(button.querySelector('.paw-origin')||button).getBoundingClientRect(),target=document.querySelector('.slot.empty')?.getBoundingClientRect();
     s.used.push(k);s.moved++;save();
     const token=animationVersion;
@@ -108,6 +109,7 @@
     }else render();
   }
   function answer(n,button){
+    cancelSpeech();
     const s=stepState(),i=state.step;if(s.answer||![2,3,4,5].includes(i)||i===3&&s.moved!==3||i===5&&!s.split)return;
     const correct=i===5?15:13;
     if(n===correct){s.answer=true;render();celebrate();return;}
@@ -121,15 +123,24 @@
     else if(i===4)message='Девятке нужен 1 орех до десяти. Из четырёх останутся 3. Сколько будет 10 + 3?';
     reactHero(false);setFeedback(message);
   }
-  function split(value,button){const s=stepState();if(state.step!==5||s.split)return;if(value==='2 + 5'){s.split=true;render();setFeedback('Да! Именно 2 не хватает восьмёрке до десяти.',true);}else{button.classList.add('wrong');setFeedback(value==='3 + 4'?'3 + 4 — тоже 7. Но 8 + 3 = 11. Чтобы получить ровно 10, нужна другая первая часть.':'1 + 6 — тоже 7. Но 8 + 1 = 9. До десятка пока не хватает ещё одного.');}}
+  function split(value,button){cancelSpeech();const s=stepState();if(state.step!==5||s.split)return;if(value==='2 + 5'){s.split=true;render();setFeedback('Да! Именно 2 не хватает восьмёрке до десяти.',true);}else{button.classList.add('wrong');setFeedback(value==='3 + 4'?'3 + 4 — тоже 7. Но 8 + 3 = 11. Чтобы получить ровно 10, нужна другая первая часть.':'1 + 6 — тоже 7. Но 8 + 1 = 9. До десятка пока не хватает ещё одного.');}}
   function celebrate(){reactHero(true);if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const wrap=document.createElement('div');wrap.className='celebrate';wrap.innerHTML=Array.from({length:20},(_,i)=>`<span class="confetti" style="left:${i*5}%;background:${['#e1b74e','#72995b','#f7df97','#cb8352'][i%4]};animation-delay:${(i%5)*.08}s;transform:rotate(${i*17}deg)"></span>`).join('');document.querySelector('.scene').appendChild(wrap);setTimeout(()=>wrap.remove(),2800);}
-  function cancelSpeech(){if('speechSynthesis'in window)speechSynthesis.cancel();$('sound').setAttribute('aria-pressed','false');}
+  function cancelSpeech(){window.LESSON_VOICE?.stop();$('sound').setAttribute('aria-pressed','false');}
   function reset(){cancelSpeech();state=fresh();render();}
   $('next').onclick=()=>{if(!ready())return;if(state.step===6){bridge?.exit(true);return;}cancelSpeech();state.step++;state.unlocked=Math.max(state.unlocked,state.step);render();if(innerWidth<960)document.querySelector('.adventure').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});};
   $('exit').onclick=()=>{cancelSpeech();bridge?.exit(false);};
   $('back').onclick=()=>go(state.step-1);$('restart').onclick=reset;
-  $('hint').onclick=()=>{reactHero(false);const s=stepState();s.hint=true;$('mentor').hidden=false;if(state.step===4){render();setFeedback('Возьми из четырёх один: 9 + 1 = 10. Сколько осталось прибавить?');}else{setFeedback(lesson[state.step].mentor);}save();};
-  $('sound').onclick=()=>{if(!('speechSynthesis'in window)){setFeedback('Озвучка недоступна в этом браузере. Всё задание написано на экране.');return;}if(speechSynthesis.speaking){cancelSpeech();return;}const task=document.querySelector('.trainer-question');const spoken=task?[document.querySelector('.trainer-task h3').textContent,task.textContent,document.querySelector('.trainer-equation')?.textContent||''].join('. ').replace(/\?/g,'неизвестное число'):$('speech').textContent+' '+$('guide-copy').textContent;const speech=new SpeechSynthesisUtterance(spoken);speech.lang='ru-RU';speech.rate=.85;const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('ru'));if(v)speech.voice=v;speech.onend=speech.onerror=()=>{$('sound').setAttribute('aria-pressed','false');};$('sound').setAttribute('aria-pressed','true');speechSynthesis.speak(speech);};
+  $('hint').onclick=()=>{cancelSpeech();reactHero(false);const s=stepState();s.hint=true;$('mentor').hidden=false;if(state.step===4){render();setFeedback('Возьми из четырёх один: 9 + 1 = 10. Сколько осталось прибавить?');}else{setFeedback(lesson[state.step].mentor);}save();};
+  $('sound').onclick=()=>{
+    const s=stepState(),i=state.step;
+    let key=`frame-${i}`;
+    if(i===6&&state.completed)key='complete';
+    else if(s.answer)key+='-success';
+    else if(i===1&&s.moved===2||i===3&&s.moved===3)key+='-full';
+    else if(i===5&&s.split)key+='-split';
+    else if(s.hint)key+='-hint';
+    window.LESSON_VOICE.toggle(key,$('sound'),setFeedback);
+  };
   window.addEventListener('pagehide',cancelSpeech);
   if(!bridge){location.replace('../../index.html#lesson-300');return;}
   render();

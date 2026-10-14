@@ -99,7 +99,7 @@
         </g>
       </svg>${!s.solved?`<button class="hero-touch" style="left:${x(s.pos)/360*100}%" ${canMove?`data-move="${heroDelta}"`:'data-ask-hero'} aria-label="${canMove?`Пых: ${heroDelta===3?'прыгнуть на три':heroDelta<0?'шаг влево':'шаг вправо'}`:`${actor}: помоги решить`}"></button>`:''}${arcs.length?'':`<span class="trail-tail">дальше →</span>`}</div>`;
   }
-  function say(text, success=false) { const c=context();if(c&&!c.st.solved&&c.frame.start!==c.frame.goal){const hero=$('pykh-pose');if(hero?.dataset.character==='Пых'){hero.setAttribute('href','assets/pykh-think.webp');hero.setAttribute('y','67.1');}} feedback=text;good=success;const e=$('feedback');if(e){e.textContent=text;e.classList.toggle('success',success);} }
+  function say(text, success=false) { silence();const c=context();if(c&&!c.st.solved&&c.frame.start!==c.frame.goal){const hero=$('pykh-pose');if(hero?.dataset.character==='Пых'){hero.setAttribute('href','assets/pykh-think.webp');hero.setAttribute('y','67.1');}} feedback=text;good=success;const e=$('feedback');if(e){e.textContent=text;e.classList.toggle('success',success);} }
   function win(c) {
     if (c.st.solved) return;
     c.st.solved=true;
@@ -114,6 +114,7 @@
     return `<div class="controls"><button class="step-button" data-move="-1" ${s.pos===0?'disabled':''}>← −1</button><button class="step-button primary" data-move="1" ${s.pos===20?'disabled':''}>+1 →</button>${f.mode==='free'?`<button class="step-button primary" data-move="3" ${s.pos>17?'disabled':''}>+3 →</button>`:''}</div>`;
   }
   function render() {
+    silence();
     const training=isTraining(), c=context(), done=earned();
     $('stage-label').textContent=training?'ЛЕСНЫЕ ТРЕНАЖЁРЫ':'ПРИКЛЮЧЕНИЕ ПЫХА';
     $('progress-label').textContent=training?`${done} из 12 ★`:`${state.step+1} из ${frames.length}`;
@@ -182,12 +183,14 @@
     if($('stations-back'))$('stations-back').onclick=()=>{silence();const c=context();if(c?.st.solved)progress().index++;state.training.active=null;feedback='';save();render();};
     if($('friend-help'))$('friend-help').onclick=()=>{const c=context();c.st.hinted=true;save();say(c.frame.hint);document.querySelector('.forest-scene').classList.add('show-route');};
     if($('speak'))$('speak').onclick=()=>{
-      if(!('speechSynthesis'in window)){say('Задание написано на пергаменте. Озвучка недоступна в этом браузере.');return;}
-      if(speechSynthesis.speaking){silence();return;}
-      const c=context(),u=new SpeechSynthesisUtterance((c.frame.say||c.frame.q)+' '+(feedback||''));u.lang='ru-RU';u.rate=.85;speechSynthesis.speak(u);
+      const c=context();if(!c)return;
+      const base=isTraining()?`task-${c.station}-${c.index}`:`frame-${state.step}`;
+      const suffix=c.st.solved?'-success':feedback===c.frame.hint?'-hint':!isTraining()&&c.frame.mode==='distance'&&c.st.pos===c.frame.goal?'-arrived':!isTraining()&&c.frame.mode==='predict'&&c.st.predicted?'-predicted':'';
+      window.LESSON_VOICE.toggle(base+suffix,$('speak'),message=>say(message));
     };
   }
-  function silence(){if('speechSynthesis'in window)speechSynthesis.cancel();}
+
+  function silence(){window.LESSON_VOICE?.stop();}
   $('next').onclick=()=>{
     if(state.completed&&isTraining()){silence();bridge.exit(true);return;}
     const c=context();if(!c?.st.solved)return;silence();feedback='';good=false;
