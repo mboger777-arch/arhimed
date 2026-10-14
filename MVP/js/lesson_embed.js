@@ -34,6 +34,10 @@
     подогнать(f);
     try { new (d.defaultView.ResizeObserver || ResizeObserver)(() => подогнать(f)).observe(d.querySelector('.lesson-shell, .wrap') || d.body); } catch(e){}
     d.defaultView.addEventListener('load', () => подогнать(f));
+    /* у встроенного документа своей прокрутки нет: урок сам прокручивает себя к сцене (scrollIntoView,
+       scrollTo) — сбрасываем в ноль, иначе верх урока (заголовок) уезжает под край карточки */
+    const w = d.defaultView;
+    w.addEventListener('scroll', () => { if (w.scrollY || w.scrollX) w.scrollTo(0, 0); }, { passive: true });
     /* после «Дальше / Назад / этапа» — к началу урока, а не середине новой сцены */
     d.addEventListener('click', (e) => {
       const к = e.target && e.target.closest && e.target.closest('#next, #back, .chapter, .station, .station-button, #restart');

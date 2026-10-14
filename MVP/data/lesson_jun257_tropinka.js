@@ -78,7 +78,7 @@
       /* Урок встроен в обычный экран: шапка приложения, «← Книга знаний», название урока и нижнее
          меню на месте; документ урока — в карточке, его шапка и 100svh сняты (js/lesson_embed.js). */
       ВСТРОЕННЫЙ_УРОК.экран({ рамка: 'lesson257-frame', адрес: 'lessons/257/index.html?v=931', название: 'Урок 257 — Тропинка к дому',
-        подпись: lesson.src, css: 'header .brand,header #exit{display:none!important}header{position:absolute!important;top:6px;right:8px;border:0!important;padding:0!important;min-height:0!important;z-index:6}.lesson-shell{position:relative!important}.heading{padding-right:56px}.eyebrow{display:none!important}.heading{margin-top:0!important}.lesson-shell{padding-top:8px!important}' });
+        подпись: lesson.src, css: 'header .brand,header #exit{display:none!important}header{border:0!important;padding:0!important;justify-content:flex-end!important;min-height:0!important}.eyebrow{display:none!important}.heading{margin-top:0!important}.lesson-shell{padding-top:8px!important}' });
     }
     hud();
   };
