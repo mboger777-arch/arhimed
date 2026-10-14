@@ -1,22 +1,32 @@
-/* ============ УРОК 302 · «ЧИСЛОВЫЕ И БУКВЕННЫЕ ВЫРАЖЕНИЯ» · буква — это закрытая коробка ============
+/* ============ УРОК 302 · «ЧИСЛОВЫЕ И БУКВЕННЫЕ ВЫРАЖЕНИЯ» · буква — корзинка под листом ============
 
-   Сделан 14.10.2026 по просьбе владельца: «делай следующий дальше, в загрузках новые герои и фоны».
-   Прежний урок — общий комикс (MVP/data/comics_12.js, мастерская Архимеда); этот файл
-   перерегистрирует урок: WAVE_B[302] и запись в ARH_LESSONS на месте, поле comic снимается —
-   иначе openLessonView открыл бы окно комикса.
+   История просьб владельца 14.10.2026: «делай следующий дальше, в загрузках новые герои и фоны» →
+   «вообще не такой урок нужен, делай как ты раньше делал» (как 256/301) → «там ещё яблоки есть
+   в загрузках, не делай одинаково» → «интерактивности нет и лучше всё прорисуй» (выбрал: таскать
+   пальцем, живые герои, ответ делом, а не табличкой) → «и шрифты поменяй» (Nunito, как в его уроке 300).
 
-   ГЛАВНАЯ МЫСЛЬ КАРТИНОК: буква — это ЗАКРЫТАЯ КОРОБКА на конвейере мастерской. Сколько в ней
-   игрушек, не видно, поэтому на коробке пишут букву a. Открыли коробку — узнали число, поставили
-   его на место буквы и посчитали. «3 + 2» — выражение (запись того, что сделали руками),
-   «5» — его значение.
+   ГЛАВНАЯ МЫСЛЬ: буква — это КОРЗИНКА, НАКРЫТАЯ ЛИСТОМ ЛОПУХА. Сколько в ней яблок, не видно,
+   поэтому на листе пишут букву a. Ребёнок сам стаскивает лист пальцем, видит число, ставит его на
+   место буквы. «3 + 2» — выражение (запись того, что сделали руками), «5» — его значение.
 
-   ГЕРОИ И ФОН — картинки владельца из «Загрузок» (img/l302/): ёжик Пых в пяти позах, деревянный
-   робот Кубик, оловянный солдатик и тряпичная кукла (игрушки, которые кладём в коробки),
-   мастерская игрушек с конвейером. Доска и пергаментная рамка — из урока 301 (img/l301/).
+   КАК УСТРОЕНО ДЕЙСТВИЕ. Всё, что можно двигать, — <g class="тащ" data-что="…">: яблоки, лист,
+   жетоны с числами, карточки записи, звезда. Один общий обработчик pointer-событий на document
+   тащит элемент за пальцем (style.transform в единицах рисунка), при отпускании ищет зону
+   [data-зона] под пальцем и зовёт ДС302.бросить(кадр, что, зона, x, y). Не принято — элемент
+   плавно возвращается. Короткое касание без сдвига — ДС302.тап (запасной путь: делает то же самое).
+   Ответы — делом: пересчитать касаниями, положить ровно три, принести жетон в окошко, собрать
+   запись из карточек. Табличек-ответов в объяснении нет; тренажёр (jun_trener.js) — как у всех.
 
-   КАДРЫ (10): выражение — что сделали руками · закрытая коробка a · машина «+3» · ловушка «45» ·
-   коробка b: отдай две · какая запись? · сам выбери a · где больше? · машина загадок · итог.
-   Проверь себя и задачи — общий детский тренажёр (jun_trener.js).
+   ЖИВЫЕ ГЕРОИ: на каждое действие герой отвечает репликой в облачке над собой (и голосом VOICE,
+   если ученик его включил), меняет позу (Хрум: обычный, с лупой, радуется, протягивает; Борька:
+   машет, показывает; Сова). Нажал на героя — подсказка к текущему шагу.
+
+   КАРТИНКИ владельца из «Загрузок» (img/l302/): фоны — домик на дереве, огород, мельница; яблоко,
+   деревянная тележка, Сова, новые позы Хрума и Борьки. Общие: корзинка, звезда, Хрум, Борька
+   (img/l256/), доска, рамка, друзья с корзиной (img/l301/). Ветка яблони, лист лопуха, жетоны —
+   вектор с объёмом. Яблоки лежат В корзинке: передняя стенка корзинки рисуется второй раз поверх,
+   обрезанная по краю проёма (clipPath). Шрифт — Nunito (fonts/Nunito-ru.woff2, подмножество
+   переменного шрифта из урока 300 владельца, лицензия OFL — fonts/Nunito-OFL.txt).
 
    Состояние — CHS['l302'].п[кадр]. Обработчики — window.ДС302. Классы — .дс302. */
 (function(){
@@ -24,16 +34,21 @@
   const ID = 302;
   const К = 'дс302';
   const ИМГ = 'img/l302/';
-  const ДОСКА = 'img/l301/';            /* доска-вывеска и пергаментная рамка — общие с уроком 301 */
-  const ЗВЕЗДА = 'img/l256/star.webp';
-  const ЛЁТ = 700;
+  const ОБЩ = 'img/l256/';
+  const ДОСКА = 'img/l301/';
+  const ЛЁТ = 650;
 
   const ГЕРОИ = {
-    пых:   { имя: 'Пых',   ф: ИМГ + 'pykh_privet.webp', w: 237, h: 300 },
-    кубик: { имя: 'Кубик', ф: ИМГ + 'robot.webp',       w: 200, h: 300 }
+    хрум:   { имя: 'Хрум',   ф: ОБЩ + 'hrum.webp',  w: 203 },
+    борька: { имя: 'Борька', ф: ОБЩ + 'borka.webp', w: 196 },
+    сова:   { имя: 'Сова',   ф: ИМГ + 'sova.webp',  w: 216 }
   };
-  const ПОЗЫ = { идёт: [230, 'pykh_idet'], привет: [237, 'pykh_privet'], думает: [225, 'pykh_dumaet'], прыг: [269, 'pykh_pryg'], руки: [216, 'pykh_ruki'] };
-  const ИГРУШКИ = { с: ['soldatik', 154], к: ['kukla', 187], р: ['robot', 200] };
+  const ПОЗЫ = {
+    хрум:   { лупа: ['hrum_lupa', 269], ура: ['hrum_ura', 230], даёт: ['hrum_daet', 265] },
+    борька: { показ: ['borka_pokaz', 267] },
+    сова:   {}
+  };
+  const ФОНЫ = ['fon_domik', 'fon_domik', 'fon_ogorod', 'fon_melnica', 'fon_ogorod', 'fon_melnica', 'fon_domik', 'fon_ogorod', 'fon_domik', 'fon_melnica'];
 
   /* ─────────────────── состояние ─────────────────── */
   function пам(){
@@ -46,518 +61,686 @@
   function шаг(){ return Math.max(0, Math.min(КАДРЫ.length - 1, (typeof LV !== 'undefined' && LV.step) || 0)); }
   function сост(i){
     const п = пам();
-    if (!п[i]){ п[i] = { о: {}, м: {} }; if (КАДРЫ[i].начало) КАДРЫ[i].начало(п[i]); }
+    if (!п[i]){ п[i] = { о: {} }; if (КАДРЫ[i].начало) КАДРЫ[i].начало(п[i]); }
     return п[i];
   }
   const перерисовать = () => { if (typeof chRender === 'function') chRender(0); };
-  const свежо = (н) => н && (Date.now() - н.t) < ЛЁТ;
-  const лётСтиль = (от, x, y) => от ? ` class="лёт" style="--dx:${(от[0] - x).toFixed(1)}px;--dy:${(от[1] - y).toFixed(1)}px"` : '';
+  const свежо = (t) => t && (Date.now() - t) < ЛЁТ;
   const цель = (клик) => клик ? `class="цель" role="button" tabindex="0" onclick="${клик}"` : '';
+  /* герой говорит: облачко над ним, поза, голос (если ученик включил голос) */
+  function сказ(st, кто, т, поза){
+    st.рк = { кто, т, поза: поза || null, t: Date.now() };
+    try { if (window.VOICE && VOICE.say) VOICE.say(т); } catch(e){}
+  }
 
   /* ═══════════════════ РИСУНКИ ═══════════════════ */
+  let клип = 0;
   const ГРАД = `<defs>
-    <linearGradient id="мс-картон" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2b277"/><stop offset=".55" stop-color="#cf9a5c"/><stop offset="1" stop-color="#b07a40"/></linearGradient>
-    <linearGradient id="мс-бок" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b98348"/><stop offset="1" stop-color="#94612e"/></linearGradient>
-    <linearGradient id="мс-верх" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#eecb94"/><stop offset="1" stop-color="#ddb276"/></linearGradient>
-    <linearGradient id="мс-нутро" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a2c12"/><stop offset="1" stop-color="#7a4f26"/></linearGradient>
-    <radialGradient id="мс-окно" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#fffdf3"/><stop offset=".7" stop-color="#fff0c8"/><stop offset="1" stop-color="#f3d58e"/></radialGradient>
-    <radialGradient id="мс-монета" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#fff3b0"/><stop offset=".55" stop-color="#ffc93a"/><stop offset="1" stop-color="#c9861a"/></radialGradient>
-    <linearGradient id="мс-корпус" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ef6a4a"/><stop offset=".6" stop-color="#cf3f2c"/><stop offset="1" stop-color="#9a2a1c"/></linearGradient>
-    <linearGradient id="мс-синий" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c8fe0"/><stop offset="1" stop-color="#2a55a8"/></linearGradient>
-    <linearGradient id="мс-жёлтый" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#e09a1a"/></linearGradient>
+    <radialGradient id="кл-окно" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#fffdf3"/><stop offset=".7" stop-color="#fff0c8"/><stop offset="1" stop-color="#f3d58e"/></radialGradient>
+    <radialGradient id="кл-лопух" cx=".42" cy=".3" r=".85"><stop offset="0" stop-color="#b5e88a"/><stop offset=".45" stop-color="#6cbc48"/><stop offset=".85" stop-color="#3f8a2e"/><stop offset="1" stop-color="#2c6a20"/></radialGradient>
+    <linearGradient id="кл-ветка" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5a32"/><stop offset=".5" stop-color="#6b4022"/><stop offset="1" stop-color="#4a2a12"/></linearGradient>
+    <linearGradient id="кл-листок" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9ad874"/><stop offset=".6" stop-color="#4e9e36"/><stop offset="1" stop-color="#2f6e22"/></linearGradient>
+    <radialGradient id="кл-синий" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#9cc0f4"/><stop offset=".6" stop-color="#3a68c0"/><stop offset="1" stop-color="#24489a"/></radialGradient>
+    <radialGradient id="кл-монета" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#fff3b0"/><stop offset=".55" stop-color="#ffc93a"/><stop offset="1" stop-color="#c9861a"/></radialGradient>
+    <linearGradient id="кл-дерево" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8b878"/><stop offset=".55" stop-color="#c98d50"/><stop offset="1" stop-color="#9a6230"/></linearGradient>
+    <filter id="кл-тень" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="2.4" flood-color="#2a1404" flood-opacity=".38"/></filter>
   </defs>`;
 
-  /* игрушка: ноги в (x, y), высота h */
-  function игрушка(тип, x, y, h, о){
+  /* яблоко: центр (0,0), s — размер; зелёное — то же яблоко, повёрнутое по цвету */
+  const яблокоИмг = (s, зел) => `<image href="${ИМГ}yabloko.webp" x="${-s / 2}" y="${-s * .55}" width="${s}" height="${s * 1.02}"${зел ? ' style="filter:hue-rotate(75deg) saturate(.85) brightness(1.08)"' : ''}/>`;
+  /* перетаскиваемое: локальные координаты (x,y) пишутся в data-x/y — по ним элемент возвращается */
+  function тащ(что, x, y, тело, о){
     о = о || {};
-    const [ф, ш] = ИГРУШКИ[тип], w = h * ш / 300;
-    return `<g transform="translate(${x},${y})" ${цель(о.клик)} opacity="${о.прозр || 1}">
-      ${о.клик ? `<rect x="${-w / 2 - 4}" y="${-h - 4}" width="${w + 8}" height="${h + 8}" fill="transparent"/>` : ''}
-      <g${лётСтиль(о.откуда, x, y)}><g class="${о.класс || ''}">
-        ${о.тень === false ? '' : `<ellipse cx="0" cy="-1" rx="${w * .42}" ry="${Math.max(2, h * .05)}" fill="rgba(30,15,5,.28)"/>`}
-        <image href="${ИМГ}${ф}.webp" x="${-w / 2}" y="${-h}" width="${w}" height="${h}"/></g></g></g>`;
+    return `<g class="тащ" data-что="${что}" data-x="${x}" data-y="${y}" transform="translate(${x},${y})">
+      <circle r="${о.r || 24}" fill="transparent"/>${тело}</g>`;
   }
-  /* места игрушек в открытой коробке (относительно левого верхнего угла передней стенки) */
-  function места(n, w, h){
-    const р = [];
-    const ряд = (m, ногиY, сдвиг) => { const шагX = w * .19; for (let c = 0; c < m; c++) р.push([w * .55 + сдвиг - (m - 1) / 2 * шагX + c * шагX, ногиY]); };
-    if (n <= 5) ряд(n, h * .2, w * .02);
-    else { ряд(5, -h * .02, w * .07); ряд(n - 5, h * .3, -w * .02); }
+  function яблоко(x, y, о){
+    о = о || {};
+    const s = о.s || 30;
+    const тело = `<g class="${о.качается ? 'качается' : ''}">${о.тень === false ? '' : `<ellipse cx="0" cy="${s * .46}" rx="${s * .36}" ry="${s * .1}" fill="rgba(30,15,5,.28)"/>`}${яблокоИмг(s, о.зел)}</g>`;
+    if (о.что) return тащ(о.что, x, y, тело, { r: s * .7 });
+    return `<g transform="translate(${x},${y})">${тело}</g>`;
+  }
+
+  /* места яблок горкой в корзинке ширины w (локально): нижний ряд до 5, выше до 4, верх до 3 */
+  function горка(n, w){
+    const h = w * 1.034, р = [], ш = w * .16;
+    const ряды = [[5, .5], [4, .405], [3, .315]];
+    let ост = n;
+    for (const [m, yy] of ряды){
+      const k = Math.min(m, ост); ост -= k;
+      for (let c = 0; c < k; c++) р.push([w * .5 + (c - (k - 1) / 2) * ш, h * yy]);
+      if (!ост) break;
+    }
     return р;
   }
-  /* картонная коробка: (x, y) — левый верхний угол передней стенки; буква на ярлыке; открытая — с игрушками */
-  function коробка(x, y, w, о){
-    о = о || {};
-    const h = w * .62, dx = w * .14, dy = -h * .3;
-    const внутри = о.внутри || [], отк = о.открыта;
-    const п = места(внутри.length, w, h);
-    const игрушки = отк ? внутри.map((т, j) => {
-      const н = о.нов && о.нов.j === j && свежо(о.нов) ? [о.нов.x - x - п[j][0], о.нов.y - y - п[j][1]] : null;
-      return `<g transform="translate(${п[j][0]},${п[j][1]})"><g${н ? ` class="лёт" style="--dx:${н[0].toFixed(1)}px;--dy:${н[1].toFixed(1)}px"` : ''}>${игрушка(т, 0, 0, h * .7, { тень: false })}</g></g>`;
-    }).join('') : '';
-    const верх = отк
-      ? `<polygon points="0,0 ${w},0 ${w + dx},${dy} ${dx},${dy}" fill="url(#мс-нутро)"/>
-         <polygon points="${dx},${dy} ${w + dx},${dy} ${w + dx + w * .05},${dy - h * .42} ${dx - w * .03},${dy - h * .42}" fill="url(#мс-верх)" stroke="#8a5a2a" stroke-width="1.4"/>
-         <polygon points="0,0 ${dx},${dy} ${dx - w * .2},${dy - h * .06} ${-w * .2},${-h * .02}" fill="#e2b277" stroke="#8a5a2a" stroke-width="1.4"/>
-         <polygon points="${w},0 ${w + dx},${dy} ${w + dx + w * .17},${dy + h * .1} ${w + w * .17},${h * .14}" fill="#c99358" stroke="#8a5a2a" stroke-width="1.4"/>`
-      : `<polygon points="0,0 ${w},0 ${w + dx},${dy} ${dx},${dy}" fill="url(#мс-верх)" stroke="#8a5a2a" stroke-width="1.4"/>
-         <polygon points="${w / 2 - 7},0 ${w / 2 + 7},0 ${w / 2 + 7 + dx},${dy} ${w / 2 - 7 + dx},${dy}" fill="#c7a46a" opacity=".85"/>`;
-    const буква = о.буква ? `<g transform="translate(${w * .5},${h * .56})">
-        <rect x="${-w * .2}" y="${-h * .3}" width="${w * .4}" height="${h * .56}" rx="${w * .04}" fill="#fffaf0" stroke="#6b3f1e" stroke-width="1.8"/>
-        <text y="${h * .16}" text-anchor="middle" class="буква-к" style="font-size:${(h * .5).toFixed(1)}px">${о.буква}</text></g>` : '';
-    const ярлык = о.ярлык && о.ярлыкНиз ? `<text x="${w * .55}" y="${h + 22}" text-anchor="middle" class="подпись-б">${о.ярлык}</text>` : о.ярлык ? `<g transform="translate(${w + dx * .5},${-h * .1})"><g class="хлоп">
-        <path d="M-8,${h * .2} L0,0" stroke="#8a6a3a" stroke-width="1.6"/>
-        <rect x="-6" y="-${h * .2 + 8}" width="${о.ярлык.length * 10 + 16}" height="${h * .2 + 14}" rx="7" fill="url(#мс-окно)" stroke="#6b3f1e" stroke-width="1.8"/>
-        <text x="${о.ярлык.length * 5 + 2}" y="0" text-anchor="middle" class="ярлык-т">${о.ярлык}</text></g></g>` : '';
-    return `<g transform="translate(${x},${y})" ${цель(о.клик)} opacity="${о.прозр || 1}">
-      ${о.клик ? `<rect x="-8" y="${dy - h * .5}" width="${w + dx + 16}" height="${h - dy + h * .5 + 8}" fill="transparent"/>` : ''}
-      <g class="${о.хлоп ? 'хлоп' : (о.качается ? 'качается-к' : '')}">
-        <ellipse cx="${w * .58}" cy="${h + 2}" rx="${w * .62}" ry="${h * .1}" fill="rgba(30,15,5,.32)"/>
-        <polygon points="${w},0 ${w + dx},${dy} ${w + dx},${h + dy} ${w},${h}" fill="url(#мс-бок)" stroke="#6b3f1e" stroke-width="1.6"/>
-        ${верх}${игрушки}
-        <rect x="0" y="0" width="${w}" height="${h}" fill="url(#мс-картон)" stroke="#6b3f1e" stroke-width="1.8"/>
-        <path d="M3,4 H${w - 3}" stroke="#fff" stroke-width="2" opacity=".35"/>
-        ${отк ? '' : `<rect x="${w / 2 - 7}" y="0" width="14" height="${h * .2}" fill="#c7a46a" opacity=".85"/>`}
-        ${буква}
-        ${о.свет ? `<rect x="-6" y="${dy - 6}" width="${w + dx + 12}" height="${h - dy + 12}" rx="12" fill="none" stroke="#ffd76a" stroke-width="3.4" stroke-dasharray="8 6" class="мерцает"/>` : ''}
-      </g>${ярлык}</g>`;
-  }
-  /* шестерёнка радиуса r с зубцами */
-  function шестерня(r, зубцов, цвет){
+  /* лист лопуха: волнистый край, жилки, блик; центр (0,0), радиус r */
+  function лопухТело(r, буква){
     let d = '';
-    for (let k = 0; k < зубцов * 2; k++){
-      const a = k / (зубцов * 2) * Math.PI * 2, rr = k % 2 ? r * .78 : r;
-      const a1 = a - Math.PI / (зубцов * 2) * .55, a2 = a + Math.PI / (зубцов * 2) * .55;
-      d += `${k ? 'L' : 'M'}${(Math.cos(a1) * rr).toFixed(1)},${(Math.sin(a1) * rr).toFixed(1)} L${(Math.cos(a2) * rr).toFixed(1)},${(Math.sin(a2) * rr).toFixed(1)} `;
+    for (let k = 0; k <= 48; k++){
+      const a = k / 48 * Math.PI * 2;
+      const rr = r * (1 + .07 * Math.sin(a * 7) + .035 * Math.sin(a * 13 + 1));
+      d += `${k ? 'L' : 'M'}${(Math.cos(a) * rr).toFixed(1)},${(Math.sin(a) * rr * .6).toFixed(1)} `;
     }
-    return `<path d="${d}Z" fill="${цвет}" stroke="#4a2a10" stroke-width="1.6"/><circle r="${r * .32}" fill="#ffe7a8" stroke="#4a2a10" stroke-width="1.4"/>`;
+    const жилки = [-.75, -.42, .42, .75].map(f => `M0,${(-r * .06).toFixed(1)} Q${(r * f * .55).toFixed(1)},${(-r * .3).toFixed(1)} ${(r * f).toFixed(1)},${(-r * .2 * (1 - Math.abs(f) * .2)).toFixed(1)} M0,${(r * .2).toFixed(1)} Q${(r * f * .5).toFixed(1)},${(r * .14).toFixed(1)} ${(r * f * .95).toFixed(1)},${(r * .26).toFixed(1)}`).join(' ');
+    return `<ellipse cx="0" cy="${r * .5}" rx="${r * .9}" ry="${r * .14}" fill="rgba(20,40,10,.3)"/>
+      <path d="${d}Z" fill="url(#кл-лопух)" stroke="#24561a" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M${-r * .9},${-r * .05} Q0,${-r * .62} ${r * .9},${-r * .05}" stroke="#d6f2b8" stroke-width="2" fill="none" opacity=".35"/>
+      <path d="M0,${-r * .6} L0,${r * .52}" stroke="#e2f6c8" stroke-width="${Math.max(1.6, r * .045)}" opacity=".85" stroke-linecap="round"/>
+      <path d="${жилки}" stroke="#d2efb4" stroke-width="${Math.max(1.1, r * .025)}" fill="none" opacity=".75" stroke-linecap="round"/>
+      <path d="M0,${-r * .6} C${r * .08},${-r * .78} ${r * .22},${-r * .82} ${r * .3},${-r * .74}" stroke="#3a7a26" stroke-width="${r * .07}" fill="none" stroke-linecap="round"/>
+      <ellipse cx="${-r * .38}" cy="${-r * .22}" rx="${r * .26}" ry="${r * .08}" fill="#fff" opacity=".28" transform="rotate(-18 ${-r * .38} ${-r * .22})"/>
+      ${буква ? `<g filter="url(#кл-тень)"><circle cy="${-r * .02}" r="${r * .3}" fill="url(#кл-окно)" stroke="#6b3f1e" stroke-width="2"/></g>
+        <text y="${r * .14}" text-anchor="middle" class="буква-к" style="font-size:${(r * .44).toFixed(1)}px">${буква}</text>` : ''}`;
   }
-  /* машина-«превращалка»: (x, y) — левый верхний угол корпуса; табличка с правилом; гудит, когда работает */
-  function машина(x, y, правило, о){
+  /* снятый лист лежит на траве там, куда его бросили */
+  const лежит = (st, буква) => st.открыта && st.лист ? `<g transform="translate(${st.лист[0]},${st.лист[1]}) rotate(-16) scale(.42)" opacity=".95">${лопухТело(80, буква)}</g>` : '';
+  /* корзинка (x,y — левый верх картинки, w — ширина). о: яблоки:[зел?…], лист:true (накрыта), буква,
+     листТащ, счёт:{сч:[j…], клик}, нов:{j, x, y, t} (прилёт из абсолютной точки), тащЯблоки:'префикс', ярлык */
+  function корзинка(x, y, w, о){
     о = о || {};
-    return `<g transform="translate(${x},${y})"><g class="${о.гудит ? 'гудит' : ''}">
-      <ellipse cx="62" cy="112" rx="70" ry="8" fill="rgba(30,15,5,.35)"/>
-      <polygon points="-6,-34 46,-34 34,4 6,4" fill="url(#мс-синий)" stroke="#1d3a78" stroke-width="2"/>
-      <path d="M-6,-34 H46" stroke="#a8c8ff" stroke-width="3" stroke-linecap="round"/>
-      <rect x="0" y="0" width="124" height="108" rx="16" fill="url(#мс-корпус)" stroke="#5a1a10" stroke-width="2.4"/>
-      <rect x="8" y="6" width="108" height="10" rx="5" fill="#fff" opacity=".25"/>
-      <g transform="translate(104,4)"><g class="${о.гудит ? 'крутится' : 'крутится-м'}">${шестерня(20, 9, 'url(#мс-жёлтый)')}</g></g>
-      <g transform="translate(16,96)"><g class="${о.гудит ? 'крутится-н' : ''}">${шестерня(12, 7, 'url(#мс-синий)')}</g></g>
-      <g transform="translate(62,0)"><rect x="-4" y="-16" width="8" height="16" fill="#5a1a10"/><circle cy="-20" r="9" fill="${о.гудит ? '#fff27a' : '#ffd76a'}" stroke="#5a1a10" stroke-width="2" class="${о.гудит ? 'мерцает' : ''}"/></g>
-      <image href="${ДОСКА}doska.webp" x="8" y="34" width="108" height="42"/>
-      <text x="62" y="64" text-anchor="middle" class="машина-т">${правило}</text>
-      <rect x="118" y="78" width="26" height="22" rx="4" fill="url(#мс-синий)" stroke="#1d3a78" stroke-width="2"/>
-      </g></g>`;
+    const h = w * 1.034, id = 'кл-кз' + (++клип), ябл = о.яблоки || [], п = горка(ябл.length, w), s = w * .21;
+    const край = `M0,${h * .43} A${w * .48},${h * .11} 0 0 0 ${w},${h * .43} L${w},${h} L0,${h} Z`;
+    const порядок = п.map((_, j) => j).sort((a, b) => п[a][1] - п[b][1]);   /* сначала дальние (выше) */
+    const сч = о.счёт ? о.счёт.сч : null;
+    const яблоки = порядок.map(j => {
+      const [px, py] = п[j];
+      const н = о.нов && свежо(о.нов.t) && (Array.isArray(о.нов.j) ? о.нов.j.includes(j) : о.нов.j === j);
+      const от = н ? (о.нов.от ? о.нов.от[Array.isArray(о.нов.j) ? о.нов.j.indexOf(j) : 0] : [о.нов.x, о.нов.y]) : null;
+      const лёт = от ? ` class="лёт" style="--dx:${(от[0] - x - px).toFixed(1)}px;--dy:${(от[1] - y - py).toFixed(1)}px"` : '';
+      const тело = `<g${лёт}>${яблокоИмг(s, ябл[j])}</g>`;
+      if (о.тащЯблоки && j === п.length - 1) return тащ(о.тащЯблоки + j, px, py, тело, { r: s * .7 });
+      const к = сч ? сч.indexOf(j) : -1;
+      return `<g transform="translate(${px},${py})" ${о.счёт && к < 0 ? цель(о.счёт.клик + j + ')') : ''}>${о.счёт && к < 0 ? `<circle r="${s * .62}" fill="transparent"/>` : ''}${тело}
+        ${к >= 0 ? `<g transform="translate(0,${-s * .62})"><g class="хлоп"><circle r="${s * .38}" fill="url(#кл-монета)" stroke="#8a5a10" stroke-width="1.6"/><text y="${s * .15}" text-anchor="middle" class="счёт-ч" style="font-size:${(s * .45).toFixed(1)}px">${к + 1}</text></g></g>` : ''}</g>`;
+    }).join('');
+    const лист = о.лист ? (о.листТащ ? тащ('лист', w * .5, h * .4, `<g class="покачивается">${лопухТело(w * .56, о.буква)}</g>`, { r: w * .5 })
+                                      : `<g transform="translate(${w * .5},${h * .4})">${лопухТело(w * .56, о.буква)}</g>`) : '';
+    const ярлык = о.ярлык ? `<g transform="translate(${w * .5},${h + 16})"><g class="хлоп"><rect x="${-о.ярлык.length * 5 - 10}" y="-13" width="${о.ярлык.length * 10 + 20}" height="26" rx="13" fill="url(#кл-окно)" stroke="#6b3f1e" stroke-width="2"/>
+        <text y="6" text-anchor="middle" class="ярлык-т">${о.ярлык}</text></g></g>` : '';
+    return `<g transform="translate(${x},${y})">
+      <clipPath id="${id}"><path d="${край}"/></clipPath>
+      <ellipse cx="${w / 2}" cy="${h - 3}" rx="${w * .46}" ry="${w * .07}" fill="rgba(30,15,5,.32)"/>
+      <image href="${ОБЩ}basket.webp" width="${w}" height="${h}"/>
+      ${яблоки}
+      <image href="${ОБЩ}basket.webp" width="${w}" height="${h}" clip-path="url(#${id})"/>
+      ${лист}${ярлык}</g>`;
   }
-  function герой(кто, x, y, h, класс, поза){
-    let ф, ш;
-    if (кто === 'пых'){ const П = ПОЗЫ[поза || 'привет']; ш = П[0]; ф = ИМГ + П[1] + '.webp'; }
-    else { ш = ГЕРОИ[кто].w; ф = ГЕРОИ[кто].ф; }
+  /* зона — прозрачный прямоугольник в координатах рисунка; подсвечивается, когда над ней тащат */
+  const зона = (имя, x, y, w, h) => `<rect data-зона="${имя}" x="${x}" y="${y}" width="${w}" height="${h}" rx="18" class="зона"/>`;
+
+  /* ветка яблони через верх кадра: x0..x1 на высоте y */
+  function ветка(x0, x1, y){
+    const листья = [];
+    for (let k = 0; k < 11; k++){
+      const t = k / 10, x = x0 + (x1 - x0) * t, yy = y + Math.sin(t * 5) * 6 - 4;
+      const р = (k % 2 ? -1 : 1) * (25 + (k * 37) % 30), м = .8 + (k % 3) * .15;
+      листья.push(`<g transform="translate(${x.toFixed(1)},${yy.toFixed(1)}) rotate(${р}) scale(${м})">
+        <path d="M0,0 C8,-10 26,-12 36,-2 C26,6 10,8 0,0 Z" fill="url(#кл-листок)" stroke="#2a5a1e" stroke-width="1"/>
+        <path d="M2,-1 L32,-2" stroke="#c8ecb0" stroke-width="1" opacity=".7"/></g>`);
+    }
+    return `<g filter="url(#кл-тень)">
+      <path d="M${x0 - 20},${y - 6} C${x0 + 80},${y + 14} ${x1 - 120},${y - 18} ${x1 + 20},${y + 4} L${x1 + 20},${y + 14} C${x1 - 120},${y - 6} ${x0 + 80},${y + 26} ${x0 - 20},${y + 8} Z" fill="url(#кл-ветка)" stroke="#3a200c" stroke-width="1.4"/>
+      <path d="M${x0 + 60},${y + 4} q10,-22 28,-30 M${x1 - 70},${y - 4} q8,-20 24,-26" stroke="#5a3418" stroke-width="5" fill="none" stroke-linecap="round"/>
+      ${листья.join('')}</g>`;
+  }
+  /* яблоко висит на ветке: черенок от (x, yВетки) */
+  const наВетке = (x, y, yв, о) => `<path d="M${x},${yв} Q${x + 3},${(yв + y) / 2} ${x},${y - 12}" stroke="#4a2a12" stroke-width="2.2" fill="none"/>` + яблоко(x, y, Object.assign({ тень: false }, о));
+
+  function герой(кто, x, y, h, st, поза, класс, i){
+    const рк = st && st.рк && st.рк.кто === кто ? st.рк : null;
+    const п = (рк && рк.поза) || поза;
+    let ф = ГЕРОИ[кто].ф, ш = ГЕРОИ[кто].w;
+    if (п && ПОЗЫ[кто][п]){ ф = ИМГ + ПОЗЫ[кто][п][0] + '.webp'; ш = ПОЗЫ[кто][п][1]; }
     const w = h * ш / 300;
-    return `<g transform="translate(${x},${y})"><ellipse cx="0" cy="-2" rx="${w * .38}" ry="${Math.max(3, w * .08)}" fill="rgba(30,15,5,.3)"/>
-      <image href="${ф}" x="${-w / 2}" y="${-h}" width="${w}" height="${h}" class="${класс || ''}"/></g>`;
+    const кл = класс || (рк && свежо(рк.t) ? 'прыжок' : 'дышит');
+    return `<g ${цель(i != null ? `ДС302.подсказка(${i},'${кто}')` : '')}><g transform="translate(${x},${y})">
+      <rect x="${-w / 2}" y="${-h}" width="${w}" height="${h}" fill="transparent"/>
+      <ellipse cx="0" cy="-2" rx="${w * .34}" ry="${Math.max(3, w * .07)}" fill="rgba(30,15,5,.28)"/>
+      <image href="${ф}" x="${-w / 2}" y="${-h}" width="${w}" height="${h}" class="${кл}"/></g></g>`;
   }
-  /* вывеска на рисунке — доска с верёвочками; части: строки, буквы — синим жетоном */
+  /* облачко с репликой над героем; переносим по словам */
+  function облачко(st, кто, x, yВерх){
+    const рк = st.рк; if (!рк || рк.кто !== кто) return '';
+    const слова = рк.т.split(' '), строки = []; let с = '';
+    for (const сл of слова){ if ((с + ' ' + сл).trim().length > 27){ строки.push(с.trim()); с = сл; } else с += ' ' + сл; }
+    if (с.trim()) строки.push(с.trim());
+    const ш = Math.min(236, Math.max(...строки.map(s => s.length)) * 7.4 + 28), в = строки.length * 17 + 14;
+    const bx = Math.max(4, Math.min(356 - ш, x - ш / 2)), by = Math.max(4, yВерх - в - 12);
+    const хвост = Math.max(bx + 16, Math.min(bx + ш - 16, x));
+    return `<g class="облачко"><g filter="url(#кл-тень)">
+      <rect x="${bx}" y="${by}" width="${ш}" height="${в}" rx="14" fill="#fffef6" stroke="#6b3f1e" stroke-width="2"/>
+      <path d="M${хвост - 8},${by + в - 1} L${хвост},${by + в + 11} L${хвост + 8},${by + в - 1} Z" fill="#fffef6" stroke="#6b3f1e" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M${хвост - 7},${by + в - 1.5} L${хвост + 7},${by + в - 1.5}" stroke="#fffef6" stroke-width="3"/></g>
+      ${строки.map((s, k) => `<text x="${bx + ш / 2}" y="${by + 21 + k * 17}" text-anchor="middle" class="облако-т">${s}</text>`).join('')}</g>`;
+  }
+  /* вывеска — доска владельца с верёвочками */
   function вывеска(x, y, текст, w, кл){
     const ш = w || Math.min(340, Math.max(150, текст.length * 13 + 60)), h = ш * .228;
-    return `<g transform="translate(${x},${y})"><g class="хлоп">
+    return `<g transform="translate(${x},${y})">
       <path d="M${-ш / 2 + 30},${-h / 2 - 14} L${-ш / 2 + 34},${-h / 2 + 4} M${ш / 2 - 30},${-h / 2 - 14} L${ш / 2 - 34},${-h / 2 + 4}" stroke="#8a6a3a" stroke-width="2.4" stroke-dasharray="3 2"/>
       <image href="${ДОСКА}doska.webp" x="${-ш / 2}" y="${-h / 2}" width="${ш}" height="${h}"/>
-      <text y="${кл ? 12 : 9}" text-anchor="middle" class="${кл || 'вывеска-т'}">${текст}</text></g></g>`;
+      <text y="${кл ? 11 : 7}" text-anchor="middle" class="${кл || 'вывеска-т'}">${текст}</text></g>`;
   }
-  /* жетон с буквой или числом (для вывески с окошком) */
-  function жетон(x, y, т, о){
-    о = о || {};
-    const буква = /[a-z]/.test(т);
-    return `<g transform="translate(${x},${y})" ${цель(о.клик)}><g${лётСтиль(о.откуда, x, y)}><g class="${о.класс || ''}">
-      ${о.клик ? '<circle r="30" fill="transparent"/>' : ''}
-      <circle r="23" cy="3" fill="rgba(40,20,5,.3)"/>
-      <circle r="22" fill="${буква ? 'url(#мс-синий)' : 'url(#мс-монета)'}" stroke="${буква ? '#1d3a78' : '#8a5a10'}" stroke-width="2.4"/>
-      <ellipse cx="-6" cy="-10" rx="9" ry="4" fill="#fff" opacity=".55"/>
-      <text y="10" text-anchor="middle" class="${буква ? 'жетон-б' : 'жетон-ч'}">${т}</text></g></g></g>`;
-  }
-  const фон = () => `<image href="${ИМГ}masterskaya.webp" x="-90" y="0" width="534" height="300" preserveAspectRatio="xMidYMid slice"/>`;
-  const сцена = (тело, подпись) => `<div class="сцена"><svg viewBox="0 0 360 300" role="img" aria-label="${подпись || 'Картинка'}">${ГРАД}${фон()}${тело}</svg></div>`;
+  /* жетон: число — золотой, буква — синий; r — радиус */
+  const жетонТело = (т, r) => { const б = /^[a-z]$/.test(т);
+    return `<g filter="url(#кл-тень)"><circle r="${r}" fill="${б ? 'url(#кл-синий)' : 'url(#кл-монета)'}" stroke="${б ? '#1d3a78' : '#8a5a10'}" stroke-width="2.4"/></g>
+      <circle r="${r * .78}" fill="none" stroke="#fff" stroke-width="1.2" opacity=".45"/>
+      <ellipse cx="${-r * .3}" cy="${-r * .45}" rx="${r * .4}" ry="${r * .17}" fill="#fff" opacity=".5"/>
+      <text y="${r * .36}" text-anchor="middle" class="${б ? 'жетон-б' : 'жетон-ч'}" style="font-size:${(т.length > 1 ? r * .9 : r * 1.05).toFixed(1)}px">${т}</text>`; };
+  /* карточка записи: деревянная плашка */
+  const карточкаТело = (т) => { const б = /^[a-z]$/.test(т), зн = /[+−]/.test(т);
+    return `<g filter="url(#кл-тень)"><rect x="-21" y="-23" width="42" height="46" rx="10" fill="url(#кл-дерево)" stroke="#5b3416" stroke-width="2.2"/></g>
+      <rect x="-15" y="-17" width="30" height="34" rx="7" fill="${б ? '#e4eeff' : '#fff7e0'}" stroke="rgba(91,52,22,.35)"/>
+      <text y="10" text-anchor="middle" class="карточка-т" style="fill:${б ? '#2a55a8' : зн ? (т === '+' ? '#2f8a2e' : '#c2412b') : '#5a2a08'}${б ? ';font-style:italic' : ''}">${т}</text>`; };
+  /* окошко на вывеске: пустое или занятое */
+  const окошко = (x, y, занято) => `<g transform="translate(${x},${y})">
+      ${занято ? `<g class="хлоп">${занято}</g>` : `<circle r="27" fill="none" stroke="#ffd76a" stroke-width="4" class="мерцает"/><g filter="url(#кл-тень)"><circle r="21" fill="#fff4cf" stroke="#8a5a10" stroke-width="2.6" stroke-dasharray="5 4"/></g><text y="9" text-anchor="middle" class="окно-т">?</text>`}</g>`;
+
+  const фон = (ф) => `<image href="${ИМГ}${ф}.webp" x="-90" y="0" width="534" height="300" preserveAspectRatio="xMidYMid slice"/>`;
+  const сцена = (тело, подпись, ф, тащатся) => `<div class="сцена${тащатся ? ' с-тащ' : ''}"><svg viewBox="0 0 360 300" role="img" aria-label="${подпись || 'Картинка'}">${ГРАД}${фон(ф || ФОНЫ[шаг()])}${тело}</svg></div>`;
 
   /* ═══════════════════ ОБЩИЕ ЧАСТИ ═══════════════════ */
-  /* запись на вывеске: числа — кремовые жетоны, буквы — синие, итог — зелёный */
   function запись(а, знак, б, итог){
-    const яч = (v, кл) => `<span class="яч ${кл || ''}${/[a-z]/.test(String(v)) ? ' буква' : ''}"><i>${v == null ? '?' : v}</i></span>`;
+    const яч = (v, кл) => `<span class="яч ${кл || ''}${/^[a-z]$/.test(String(v)) ? ' буква' : ''}"><i>${v == null ? '?' : v}</i></span>`;
     const зн = (z) => `<span class="зн ${z === '+' ? 'плюс' : z === '=' ? 'равно' : 'минус'}"><i>${z}</i></span>`;
     return `<div class="вывеска"><span class="верёвка"></span><span class="верёвка"></span>
       <div class="запись">${яч(а)}${зн(знак)}${яч(б)}${итог === false ? '' : зн('=') + яч(итог, итог == null ? 'пусто' : 'итог')}</div></div>`;
   }
-  function ответы(i, ключ, варианты, верный, st, разборы){
-    const отв = st.о[ключ], мимо = st.м[ключ] || [];
-    const кн = варианты.map(n => {
-      const кл = отв === n ? ' верно' : (мимо.includes(n) ? ' мимо' : '');
-      const арг = typeof n === 'string' ? `'${n}'` : n, вер = typeof верный === 'string' ? `'${верный}'` : верный;
-      return `<button type="button" class="число${кл}${String(n).length > 3 ? ' слово' : ''}" ${отв != null || мимо.includes(n) ? 'disabled' : ''} onclick="ДС302.ответ(${i},'${ключ}',${арг},${вер})"><span class="окно">${n}</span></button>`;
-    }).join('');
-    const посл = мимо[мимо.length - 1];
-    return `<div class="числа">${кн}</div>` + (отв == null && мимо.length ? `<p class="разбор">${(разборы && разборы[посл]) || 'Посмотри на коробку и игрушки ещё раз.'}</p>` : '');
-  }
   const готово = (т) => `<p class="готово"><span aria-hidden="true">★</span>${т}</p>`;
   const кнопка = (т, клик) => `<div class="ряд-кн"><button type="button" class="дальше-кн" onclick="${клик}">${т}</button></div>`;
-  const задание = (т) => `<p class="задание">${т}</p>`;
 
   /* ═══════════════════ КАДРЫ ═══════════════════ */
-  const СОЛДАТЫ = [[34, 206], [70, 206], [106, 206]];      /* кадр 0: где стоят игрушки до коробки */
-  const КУКЛЫ = [[268, 206], [312, 206]];
-  const МАШИНА_А = [2, 5, 6];                              /* кадр 2: a в трёх коробках */
-  const ЗАГАДКИ = [                                        /* кадр 8: выражение, буква, её число */
-    { б: 'a', з: '+', ч: 2, а: 5 }, { б: 'b', з: '−', ч: 3, а: 8 }, { б: 'x', з: '+', ч: 4, а: 6 },
-    { б: 'c', з: '−', ч: 5, а: 9 }, { б: 'a', з: '+', ч: 0, а: 7 }, { б: 'x', з: '−', ч: 4, а: 4 }];
+  const НА_ВЕТКЕ = [[54, 112, 0], [96, 122, 0], [138, 110, 0], [232, 116, 1], [278, 108, 1]];   /* кадр 0: x, y, зелёное? */
+  const КОРЗ0 = [118, 150, 124];
+  const БОРЬКИНЫ = [[236, 250], [270, 262]];                 /* кадр 1: два яблока у Борьки */
+  const ТРИ_А = [2, 5, 6];
+  const КУЧА = [[214, 262], [244, 270], [274, 262], [228, 238], [258, 240]];   /* кадр 2: яблоки Хрума */
+  const ПРЕДЕЛ6 = 6;
+  const КУЧА6 = [[30, 262], [62, 270], [94, 262], [46, 240], [78, 242], [62, 220]];   /* кадр 6 */
+  const ЗАГАДКИ = [{ б: 'a', з: '+', ч: 2, а: 5 }, { б: 'b', з: '−', ч: 3, а: 8 }, { б: 'x', з: '+', ч: 4, а: 6 }, { б: 'c', з: '−', ч: 5, а: 9 }];
   const знач = (З) => З.з === '+' ? З.а + З.ч : З.а - З.ч;
 
   const КАДРЫ = [
-  /* 0 · ВЫРАЖЕНИЕ — ЗАПИСЬ ТОГО, ЧТО СДЕЛАЛИ ─────────────────────── */
+  /* 0 · СОБЕРИ ЯБЛОКИ — ВЫРАЖЕНИЕ И ЗНАЧЕНИЕ ───────────────────── */
   {
-    кто: 'пых', t: 'Выражение — что мы сделали',
-    say: 'Я ёжик Пых! Мы собираем подарки. Положи в коробку трёх солдатиков и двух кукол.',
-    начало(st){ st.с = []; st.к = []; },
+    кто: 'хрум', t: 'Выражение — что мы сделали',
+    say: 'Я бельчонок Хрум! Сними с ветки яблоки — перетащи их пальцем в корзинку.',
+    начало(st){ st.в = []; st.сч = []; },
     рисуй(i, st){
-      const внутри = [...st.с.map(() => 'с'), ...st.к.map(() => 'к')];
-      const все = st.с.length === 3 && st.к.length === 2;
-      const надпись = !st.с.length ? 'Положи игрушки в коробку' : st.с.length < 3 ? `${st.с.length}` : !st.к.length ? '3' : `3 + ${st.к.length}`;
-      const тело = `${вывеска(180, 40, надпись, надпись.length > 6 ? 290 : 170, надпись.length > 6 ? '' : 'вывеска-ч')}
-        ${СОЛДАТЫ.map(([x, y], k) => st.с.includes(k) ? '' : игрушка('с', x, y, 70, { клик: `ДС302.положить(${i},'с',${k})`, класс: 'качается' })).join('')}
-        ${КУКЛЫ.map(([x, y], k) => st.к.includes(k) ? '' : игрушка('к', x, y, 66, { клик: `ДС302.положить(${i},'к',${k})`, класс: 'качается' })).join('')}
-        ${коробка(122, 196, 104, { открыта: true, внутри, нов: st.нов })}
-        ${герой('пых', 40, 300, 84, все ? 'радуется' : 'дышит', все ? 'руки' : 'привет')}`;
-      return сцена(тело, 'Мастерская: солдатики, куклы и открытая коробка') +
-        (все ? запись(3, '+', 2, st.о.ч === 5 ? 5 : null) + задание('Сколько игрушек в коробке?') + ответы(i, 'ч', [5, 32, 6], 5, st, {
-          32: 'Так пишут тридцать два! А мы складываем: три и ещё два.', 6: 'Пересчитай: три солдатика и две куклы.' }) : '') +
-        (st.о.ч === 5 ? готово('Запись «3 + 2» — это ВЫРАЖЕНИЕ: в ней видно, что мы сделали. А 5 — его ЗНАЧЕНИЕ: сколько получилось.') : '');
+      const кр = st.в.filter(k => !НА_ВЕТКЕ[k][2]).length, зл = st.в.length - кр, все = st.в.length === 5, посчитал = st.сч.length === 5;
+      const надпись = !st.в.length ? 'Сколько яблок соберём?' : посчитал ? `${кр} + ${зл} = 5` : зл ? `${кр} + ${зл}` : String(кр);
+      const тело = `${ветка(10, 340, 82)}
+        ${НА_ВЕТКЕ.map(([x, y, з], k) => st.в.includes(k) ? '' : наВетке(x, y, 86, { зел: з, что: 'я' + k, качается: true, s: 32 })).join('')}
+        ${вывеска(180, 28, надпись, надпись.length > 8 ? 230 : 130, надпись.length > 8 ? '' : 'вывеска-ч')}
+        ${зона('корзинка', КОРЗ0[0] - 14, КОРЗ0[1] - 20, КОРЗ0[2] + 28, 160)}
+        ${корзинка(КОРЗ0[0], КОРЗ0[1], КОРЗ0[2], { яблоки: st.в.map(k => НА_ВЕТКЕ[k][2]), нов: st.нов, счёт: все ? { сч: st.сч, клик: `ДС302.счёт(${i},` } : null })}
+        ${герой('хрум', 52, 298, 96, st, посчитал ? 'ура' : null, null, i)}${облачко(st, 'хрум', 60, 196)}`;
+      return сцена(тело, 'Ветка яблони, корзинка и Хрум', null, !все) +
+        (посчитал ? запись(3, '+', 2, 5) + готово('«3 + 2» — это ВЫРАЖЕНИЕ: в нём видно, что мы сделали — три красных и два зелёных. А 5 — его ЗНАЧЕНИЕ: сколько получилось.') : '');
     },
-    готов: st => st.о.ч === 5,
-    делать: st => st.с.length < 3 ? 'Нажимай на солдатиков — они прыгнут в коробку' : st.к.length < 2 ? 'Теперь нажимай на кукол' : 'Сколько всего?'
+    готов: st => st.сч.length === 5,
+    делать: st => st.в.length < 5 ? 'Тащи яблоки с ветки в корзинку' : 'Посчитай яблоки в корзинке — нажимай на каждое',
+    подсказка: st => st.в.length < 5 ? 'Прижми яблоко пальцем и веди к корзинке!' : 'Нажимай на яблоки по одному — я буду считать.'
   },
-  /* 1 · ЗАКРЫТАЯ КОРОБКА a ─────────────────────────────────────── */
+  /* 1 · КОРЗИНКА ПОД ЛИСТОМ ───────────────────────────────────── */
   {
-    кто: 'кубик', t: 'Коробка с буквой',
-    say: 'Я робот Кубик! Коробка закрыта — сколько в ней, не видно. Поэтому на ней буква a.',
-    начало(st){ st.открыта = false; },
+    кто: 'борька', t: 'Корзинка под листом',
+    say: 'Я барсук Борька! Я накрыл корзинку листом — сколько там яблок, не видно. Поэтому на листе буква a.',
+    начало(st){ st.открыта = false; st.д = []; st.ответ = null; },
     рисуй(i, st){
-      const отк = st.открыта;
-      const тело = `${вывеска(180, 40, 'a + 2', 170, 'вывеска-ч')}
-        ${коробка(70, 190, 118, { буква: 'a', открыта: отк, внутри: ['с', 'с', 'с', 'с'], ярлык: отк ? 'a = 4' : '', хлоп: отк, свет: !отк, клик: отк ? '' : `ДС302.открыть(${i})` })}
-        ${игрушка('к', 232, 268, 62)}${игрушка('к', 262, 272, 62)}
-        <text x="226" y="230" text-anchor="middle" class="плюс-б">+</text>
-        ${герой('кубик', 318, 296, 112, 'дышит')}`;
-      return сцена(тело, 'Закрытая коробка с буквой a и две куклы') +
-        (отк ? запись(4, '+', 2, st.о.ч === 6 ? 6 : null) + задание('a = 4. Сколько будет a + 2?') + ответы(i, 'ч', [6, 42, 2], 6, st, {
-          42: 'Четыре и два рядом — это сорок два. А между ними плюс: 4 + 2.', 2: 'Два — это только куклы. А в коробке ещё четыре солдатика!' }) : '') +
-        (st.о.ч === 6 ? готово('Буква a — это закрытая коробка. Открыли: a = 4. Ставим 4 вместо буквы: a + 2 = 4 + 2 = 6.') : '');
+      const отк = st.открыта, все = st.д.length === 2, верно = st.ответ === 6;
+      const тело = `${вывеска(180, 30, отк ? (все ? 'a + 2 = 4 + 2' : 'a = 4') : 'a + 2', отк && все ? 220 : 130, отк && все ? '' : 'вывеска-ч')}
+        ${зона('корзинка', 26, 96, 170, 180)}${лежит(st, 'a')}
+        ${корзинка(40, 110, 144, { яблоки: Array(4 + st.д.length).fill(0), лист: !отк, листТащ: true, буква: 'a', нов: st.нов, ярлык: отк ? 'a = 4' : '' })}
+        ${БОРЬКИНЫ.map(([x, y], k) => st.д.includes(k) ? '' : яблоко(x, y, { что: отк ? 'б' + k : null, качается: отк, s: 32 })).join('')}
+        ${все ? `${верно ? '' : зона('окошко', 196, 150, 74, 74)}${окошко(233, 187, верно ? жетонТело('6', 22) : null)}
+          ${верно ? '' : ['6', '42', '2'].map((т, k) => т === String(st.ответ) ? '' : тащ('ж' + т, 214 + k * 50, 274, жетонТело(т, 21))).join('')}` : ''}
+        ${герой('борька', 316, все ? 252 : 296, все ? 104 : 128, st, null, null, i)}${облачко(st, 'борька', 290, все ? 146 : 168)}`;
+      return сцена(тело, 'Корзинка под листом с буквой a', null, !верно) +
+        (верно ? запись(4, '+', 2, 6) + готово('Буква a — корзинка под листом. Сняли лист: a = 4. Ставим 4 вместо буквы: a + 2 = 4 + 2 = 6.') : '');
     },
-    готов: st => st.о.ч === 6,
-    делать: st => !st.открыта ? 'Нажми на коробку — откроем и посмотрим' : 'Сколько будет a + 2?'
+    готов: st => st.ответ === 6,
+    делать: st => !st.открыта ? 'Стащи лист с корзинки пальцем' : st.д.length < 2 ? 'Перетащи два яблока Борьки в корзинку' : 'Принеси жетон с ответом в окошко',
+    подсказка: st => !st.открыта ? 'Прижми лист и сдвинь его в сторону!' : st.д.length < 2 ? 'Мои яблоки лежат у моих лап — тащи их в корзинку.' : 'Было 4, добавили 2. Посчитай яблоки в корзинке!'
   },
-  /* 2 · МАШИНА «+3» ────────────────────────────────────────────── */
+  /* 2 · ДОБАВЬ ТРИ: a + 3 ─────────────────────────────────────── */
   {
-    кто: 'пых', t: 'Машина «a + 3»',
-    say: 'Это машина «плюс три»! Положи в неё коробку — выйдет на три игрушки больше.',
-    начало(st){ st.сделано = []; st.в = null; },
+    кто: 'хрум', t: 'Добавь три: a + 3',
+    say: 'Правило: a + 3. Сними лист, посмотри, сколько там, и положи в корзинку ровно три яблока.',
+    начало(st){ st.р = 0; st.открыта = false; st.д = []; st.таблица = []; },
     рисуй(i, st){
-      const тело = `${МАШИНА_А.map((a, k) => {
-          const сделана = st.сделано.includes(k), в = st.в === k;
-          if (в) return '';
-          return коробка(10 + k * 116, 54, 82, { буква: 'a', открыта: true, внутри: Array(a).fill('р'), ярлык: 'a = ' + a, ярлыкНиз: true,
-            прозр: сделана ? .45 : 1, клик: сделана || st.в != null ? '' : `ДС302.вмашину(${i},${k})`, качается: !сделана && st.в == null });
-        }).join('')}
-        ${машина(118, 176, 'a + 3', { гудит: st.в != null })}
-        ${st.в != null && st.о['м' + st.в] == null ? коробка(128, 146, 34, { буква: 'a', хлоп: true }) : ''}
-        ${st.в != null && st.о['м' + st.в] != null ? коробка(274, 228, 72, { открыта: true, внутри: Array(МАШИНА_А[st.в] + 3).fill('р'), хлоп: true }) : ''}
-        ${герой('пых', 50, 300, 92, 'дышит', 'думает')}`;
-      const В = st.в, a = В != null ? МАШИНА_А[В] : null;
-      const таблица = `<div class="таблица"><div class="тр шапка"><span>a</span><span>a + 3</span></div>${МАШИНА_А.map((x, k) => st.сделано.includes(k) ? `<div class="тр"><span>${x}</span><span>${x + 3}</span></div>` : '').join('')}</div>`;
-      return сцена(тело, 'Машина a + 3 и три коробки') +
-        (В != null && st.о['м' + В] == null ? запись(a, '+', 3, null) + задание(`В коробке a = ${a}. Сколько выйдет?`) +
-          ответы(i, 'м' + В, [a, a + 3, 3].sort((p, q) => p - q), a + 3, st, {
-            [a]: 'Столько было в коробке. А машина добавляет ещё три!', 3: 'Три — это сколько добавила машина. А в коробке ещё было ' + a + '.' }) : '') +
-        (В != null && st.о['м' + В] != null ? готово(`a = ${a}, значит a + 3 = ${a} + 3 = ${a + 3}.`) + кнопка(st.сделано.length < 2 ? 'Следующая коробка →' : 'Готово →', `ДС302.изМашины(${i})`) : '') +
-        (st.сделано.length ? таблица : '') +
-        (st.сделано.length === 3 ? готово('Запись одна — a + 3, а ответы разные: 5, 8, 9. Всё зависит от того, какое число спрятано в коробке!') : '');
+      if (st.р >= ТРИ_А.length) return сцена(`${вывеска(180, 34, 'a + 3', 130, 'вывеска-ч')}${корзинка(40, 100, 130, { яблоки: Array(9).fill(0) })}${герой('хрум', 270, 296, 150, st, 'ура')}${облачко(st, 'хрум', 270, 140)}`, 'Хрум радуется') + таблица(st) +
+        готово('Правило одно — a + 3, а ответы разные: 5, 8, 9. Всё зависит от того, сколько яблок под листом!');
+      const a = ТРИ_А[st.р], n = st.д.length;
+      const тело = `${вывеска(180, 30, st.открыта ? `a = ${a},  a + 3 = ?` : 'a + 3', st.открыта ? 220 : 130, st.открыта ? '' : 'вывеска-ч')}
+        ${зона('корзинка', 20, 84, 176, 196)}${лежит(st, 'a')}
+        ${корзинка(34, 100, 148, { яблоки: Array(a + n).fill(0), лист: !st.открыта, листТащ: true, буква: 'a', нов: st.нов, ярлык: st.открыта ? `a = ${a}` + (n ? `,  + ${n}` : '') : '' })}
+        ${st.открыта ? КУЧА.map(([x, y], k) => st.д.includes(k) ? '' : яблоко(x, y, { что: 'к' + k, s: 30 })).join('') : ''}
+        ${герой('хрум', 314, 240, 104, st, 'даёт', null, i)}${облачко(st, 'хрум', 290, 134)}`;
+      return сцена(тело, 'Корзинка под листом, яблоки Хрума', null, true) +
+        (st.открыта && n ? кнопка('Готово, проверь!', `ДС302.проверить3(${i})`) : '') +
+        (st.таблица.length ? таблица(st) : '');
     },
-    готов: st => st.сделано.length === 3,
-    делать: st => st.в == null ? 'Нажми на коробку — она поедет в машину' : ''
+    готов: st => st.р >= ТРИ_А.length,
+    делать: st => !st.открыта ? 'Стащи лист с корзинки' : 'Перетащи в корзинку ровно три яблока и нажми «Готово»',
+    подсказка: st => !st.открыта ? 'Сначала сними лист — узнаем, сколько там.' : 'Плюс три — это ровно три яблока: раз, два, три!'
   },
-  /* 3 · ЛОВУШКА «45» ───────────────────────────────────────────── */
+  /* 3 · ЧИСЛО — НА МЕСТО БУКВЫ (ловушка «45») ─────────────────── */
   {
-    кто: 'кубик', t: 'Число — на место буквы',
-    say: 'Я посчитал x + 5, если x = 4. У меня вышло сорок пять! Правильно?',
-    начало(st){ st.встал = false; },
+    кто: 'борька', t: 'Число — на место буквы',
+    say: 'Я посчитал x + 5, если x = 4. У меня вышло сорок пять! Правильно? Перетащи жетон 4 на место x.',
+    начало(st){ st.встал = false; st.ответ = null; },
     рисуй(i, st){
-      const свеж = st.t && (Date.now() - st.t) < ЛЁТ;
-      const тело = `<g transform="translate(180,74)"><g class="хлоп">
-          <path d="M-100,-44 L-96,-22 M100,-44 L96,-22" stroke="#8a6a3a" stroke-width="2.4" stroke-dasharray="3 2"/>
-          <image href="${ДОСКА}doska.webp" x="-140" y="-32" width="280" height="64"/></g></g>
-        ${st.встал ? жетон(120, 72, '4', { откуда: свеж ? [70, 220] : null, класс: свеж ? '' : 'хлоп' }) : жетон(120, 72, 'x')}
-        <text x="168" y="84" text-anchor="middle" class="вывеска-ч">+</text>${жетон(216, 72, '5')}
-        <text x="262" y="84" text-anchor="middle" class="вывеска-ч">=</text>
-        <text x="300" y="84" text-anchor="middle" class="вывеска-ч">${st.о.ч === 9 ? '9' : '?'}</text>
-        ${st.встал ? '' : `<g transform="translate(70,220)">${жетон(0, 0, '4', { клик: `ДС302.подставить(${i})`, класс: 'качается' })}</g>
-          <text x="70" y="264" text-anchor="middle" class="подпись-б">x = 4</text>`}
-        <g transform="translate(250,186)"><g class="${st.о.ч === 9 ? 'хлоп' : ''}">
-          <rect x="-44" y="-30" width="88" height="44" rx="12" fill="#fff" stroke="#6b3f1e" stroke-width="2"/>
-          <path d="M20,14 L34,28 L8,14 Z" fill="#fff" stroke="#6b3f1e" stroke-width="2"/>
-          <text y="4" text-anchor="middle" class="облако-т ${st.о.ч === 9 ? 'зачёркнуто' : ''}">45?</text></g></g>
-        ${герой('кубик', 304, 298, 100, 'дышит')}
-        ${герой('пых', 168, 298, 96, st.о.ч === 9 ? 'радуется' : 'дышит', st.о.ч === 9 ? 'прыг' : 'думает')}`;
-      return сцена(тело, 'Вывеска x + 5 и жетон с числом 4') +
-        (st.встал ? задание('Чему равно 4 + 5?') + ответы(i, 'ч', [45, 9, 1], 9, st, {
-          45: 'Так написал Кубик — поставил 4 и 5 рядом. Но между ними плюс! Четыре да пять…', 1: 'Это 5 − 4. А у нас плюс.' }) : '') +
-        (st.о.ч === 9 ? готово('Число встаёт на место буквы, а плюс остаётся: x + 5 = 4 + 5 = 9. Не сорок пять, Кубик!') : '');
+      const верно = st.ответ === 9;
+      const тело = `<g transform="translate(184,60)"><image href="${ДОСКА}doska.webp" x="-150" y="-34" width="300" height="68"/></g>
+        ${st.встал ? окошко(100, 60, жетонТело('4', 21)) : `${зона('икс', 66, 26, 68, 68)}<g transform="translate(100,60)">${жетонТело('x', 21)}</g>`}
+        <text x="144" y="71" text-anchor="middle" class="вывеска-ч">+</text><g transform="translate(188,60)">${жетонТело('5', 21)}</g>
+        <text x="232" y="71" text-anchor="middle" class="вывеска-ч">=</text>
+        ${st.встал && !верно ? зона('окошко', 242, 26, 68, 68) : ''}${окошко(276, 60, верно ? жетонТело('9', 21) : null)}
+        ${st.встал ? '' : тащ('ж4', 60, 170, жетонТело('4', 22)) + `<text x="60" y="210" text-anchor="middle" class="подпись-б">x = 4</text>`}
+        ${st.встал ? `${[0, 1, 2, 3].map(k => яблоко(28 + k * 24, 214, { s: 26 })).join('')}<text x="64" y="246" text-anchor="middle" class="подпись-б">4</text>
+          ${[0, 1, 2, 3, 4].map(k => яблоко(132 + k * 24, 214, { s: 26, зел: true })).join('')}<text x="180" y="246" text-anchor="middle" class="подпись-б">+ 5</text>` : ''}
+        ${st.встал && !верно ? ['45', '9', '1'].map((т, k) => т === String(st.ответ) ? '' : тащ('ж' + т, 60 + k * 66, 278, жетонТело(т, 19))).join('') : ''}
+        ${герой('борька', 318, 296, 124, st, верно ? null : 'показ', null, i)}${облачко(st, 'борька', 296, 170)}`;
+      return сцена(тело, 'Вывеска x + 5 и жетон 4', null, !верно) +
+        (верно ? готово('Число встаёт на место буквы, а плюс остаётся: x + 5 = 4 + 5 = 9. Не сорок пять!') : '');
     },
-    готов: st => st.о.ч === 9,
-    делать: st => !st.встал ? 'Нажми на жетон 4 — он встанет на место буквы x' : 'Посчитай'
+    готов: st => st.ответ === 9,
+    делать: st => !st.встал ? 'Перетащи жетон 4 на место буквы x' : 'Принеси жетон с ответом в окошко «?»',
+    подсказка: st => !st.встал ? 'Жетон 4 лежит слева. Неси его на синий кружок x!' : 'Четыре красных и пять зелёных — посчитай их вместе.'
   },
-  /* 4 · КОРОБКА b: ОТДАЙ ДВЕ ──────────────────────────────────── */
+  /* 4 · КОРЗИНКА b: ПЕРЕЛОЖИ ДВА В ТЕЛЕЖКУ ─────────────────────── */
   {
-    кто: 'пых', t: 'Коробка b: отдай две',
-    say: 'Коробка b. Открой её и отдай Кубику две куклы.',
-    начало(st){ st.открыта = false; st.отдано = []; },
+    кто: 'борька', t: 'Корзинка b: забери два',
+    say: 'Корзинка b. Сними лист и переложи два яблока в мою тележку.',
+    начало(st){ st.открыта = false; st.отдано = 0; st.сч = []; },
     рисуй(i, st){
-      const в = 7 - st.отдано.length, отк = st.открыта;
-      const свеж = st.нов && свежо(st.нов);
-      const у_кубика = st.отдано.map((_, k) => игрушка('к', 262 + k * 30, 286, 56, { откуда: свеж && k === st.отдано.length - 1 ? [st.нов.x, st.нов.y] : null })).join('');
-      const тело = `${вывеска(180, 40, 'b − 2', 170, 'вывеска-ч')}
-        ${коробка(60, 176, 132, { буква: 'b', открыта: отк, внутри: Array(в).fill('к'), ярлык: отк ? 'b = 7' : '', свет: !отк, клик: отк ? '' : `ДС302.открыть(${i})` })}
-        ${отк && st.отдано.length < 2 ? `<g ${цель(`ДС302.отдать(${i})`)}><rect x="54" y="84" width="160" height="110" fill="transparent"/></g>` : ''}
-        ${герой('кубик', 304, 220, 96, 'дышит')}${у_кубика}`;
-      const все = st.отдано.length === 2;
-      return сцена(тело, 'Коробка b с куклами и робот Кубик') +
-        (все ? запись(7, '−', 2, st.о.ч === 5 ? 5 : null) + задание('Сколько кукол осталось в коробке?') + ответы(i, 'ч', [5, 9, 6], 5, st, {
-          9: 'Мы отдали куклы, а не добавили. Здесь минус!', 6: 'Пересчитай кукол в коробке.' }) : '') +
-        (st.о.ч === 5 ? готово('b = 7, значит b − 2 = 7 − 2 = 5. Буква та же — коробка, только теперь из неё забирают.') : '');
+      const в = 7 - st.отдано, все = st.отдано === 2, посчитал = st.сч.length === 5;
+      const тело = `${вывеска(104, 30, !st.открыта ? 'b − 2' : посчитал ? '7 − 2 = 5' : 'b = 7,  b − 2', !st.открыта ? 130 : 190, !st.открыта ? 'вывеска-ч' : '')}
+        ${зона('тележка', 214, 150, 140, 140)}${лежит(st, 'b')}
+        ${корзинка(24, 104, 156, { яблоки: Array(в).fill(0), лист: !st.открыта, листТащ: true, буква: 'b', тащЯблоки: st.открыта && !все ? 'и' : null, ярлык: st.открыта ? 'b = 7' : '',
+            счёт: все ? { сч: st.сч, клик: `ДС302.счёт(${i},` } : null })}
+        ${герой('борька', 300, 198, 96, st, все ? null : 'показ', null, i)}
+        <ellipse cx="288" cy="290" rx="62" ry="7" fill="rgba(30,15,5,.3)"/>
+        ${Array.from({ length: st.отдано }, (_, k) => `<g transform="translate(${262 + k * 30},228)"><g${st.нов && k === st.отдано - 1 && свежо(st.нов.t) ? ` class="лёт" style="--dx:${(st.нов.x - 262 - k * 30).toFixed(1)}px;--dy:${(st.нов.y - 228).toFixed(1)}px"` : ''}>${яблокоИмг(30)}</g></g>`).join('')}
+        <image href="${ИМГ}telezhka.webp" x="230" y="196" width="118" height="102"/>
+        ${облачко(st, 'борька', 280, 102)}`;
+      return сцена(тело, 'Корзинка b, Борька и тележка', null, !все) +
+        (посчитал ? запись(7, '−', 2, 5) + готово('b = 7, значит b − 2 = 7 − 2 = 5. Из корзинки забрали — пишем минус.') : '');
     },
-    готов: st => st.о.ч === 5,
-    делать: st => !st.открыта ? 'Нажми на коробку — откроем' : st.отдано.length < 2 ? 'Нажимай на кукол в коробке — отдай две Кубику' : 'Сколько осталось?'
+    готов: st => st.сч.length === 5,
+    делать: st => !st.открыта ? 'Стащи лист с корзинки' : st.отдано < 2 ? 'Перетащи два яблока в тележку Борьки' : 'Сколько осталось? Нажимай на яблоки — считай',
+    подсказка: st => !st.открыта ? 'Сдвинь лист пальцем!' : st.отдано < 2 ? 'Бери верхнее яблоко и неси в мою тележку.' : 'Нажимай на каждое яблоко в корзинке по одному.'
   },
-  /* 5 · КАКАЯ ЗАПИСЬ? ──────────────────────────────────────────── */
+  /* 5 · СОБЕРИ ЗАПИСЬ ИЗ КАРТОЧЕК ─────────────────────────────── */
   {
-    кто: 'кубик', t: 'Какая запись?',
-    say: 'Посмотри на картинку. Какая запись про неё?',
-    начало(st){ st.р = 0; },
+    кто: 'борька', t: 'Собери запись',
+    say: 'Посмотри, что случилось с корзинкой, и собери запись из карточек.',
+    начало(st){ st.р = 0; st.слоты = [null, null, null]; },
     рисуй(i, st){
-      const Р = [{ б: 'a', вар: ['a + 3', 'a − 3', '3 − a'], верн: 'a + 3' }, { б: 'c', вар: ['c + 2', 'c − 2', '2 − c'], верн: 'c − 2' }];
-      if (st.р >= Р.length) return сцена(`${вывеска(180, 50, 'a + 3 · c − 2', 230)}${коробка(60, 170, 110, { буква: 'a' })}${герой('кубик', 230, 296, 120, 'радуется')}${герой('пых', 312, 296, 100, 'радуется', 'прыг')}`, 'Кубик и Пых') +
-        готово('Положили в коробку — пишем плюс. Забрали из коробки — пишем минус. Буква стоит первой: сначала коробка, потом что с ней сделали.');
-      const R = Р[st.р], ключ = 'з' + st.р;
-      const тело = st.р === 0
-        ? `${коробка(54, 168, 116, { буква: 'a' })}
-           ${[0, 1, 2].map(k => игрушка('с', 236 + k * 36, 262, 62)).join('')}
-           <path d="M232,196 C214,178 200,172 186,170" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
-           <path d="M186,170 l12,-6 l-2,12 z" fill="#fff"/>
-           <text x="210" y="160" text-anchor="middle" class="плюс-б">+</text>`
-        : `${коробка(54, 168, 116, { буква: 'c', открыта: true, внутри: ['к', 'к', 'к'] })}
-           ${игрушка('к', 270, 214, 62, { класс: 'улетает' })}${игрушка('к', 318, 232, 62, { класс: 'улетает' })}
-           <path d="M200,150 C224,140 244,146 258,160" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
-           <path d="M258,160 l-3,-13 l-9,9 z" fill="#fff"/>
-           <text x="234" y="134" text-anchor="middle" class="плюс-б">−</text>`;
-      return сцена(вывеска(180, 40, st.р === 0 ? 'К коробке a добавили 3' : 'Из коробки c забрали 2', 280) + тело, 'Картинка к записи') +
-        задание('Какая запись подходит?') + ответы(i, ключ, R.вар, R.верн, st, st.р === 0
-          ? { 'a − 3': 'Солдатиков кладут В коробку — значит, плюс.', '3 − a': 'Сначала пишем коробку a, потом — что добавили.' }
-          : { 'c + 2': 'Куклы улетают ИЗ коробки — значит, минус.', '2 − c': 'Сначала пишем коробку c, потом — сколько забрали.' }) +
-        (st.о[ключ] != null ? готово(st.р === 0 ? 'a + 3: в коробке a, и к ней добавили три.' : 'c − 2: в коробке c, и из неё забрали две.') + кнопка(st.р < 1 ? 'Следующая картинка →' : 'Готово →', `ДС302.раунд(${i})`) : '');
+      const Р = [{ карты: ['3', 'a', '−', '+'] }, { карты: ['+', '2', 'c', '−'] }];
+      if (st.р >= Р.length) return сцена(`${вывеска(180, 40, 'a + 3   и   c − 2', 240)}${корзинка(30, 110, 130, { лист: true, буква: 'a' })}${герой('хрум', 230, 296, 130, st, 'ура')}${герой('борька', 316, 296, 124, st)}${облачко(st, 'борька', 300, 170)}`, 'Хрум и Борька') +
+        готово('Положили в корзинку — пишем плюс. Забрали — минус. Сначала пишем корзинку-букву, потом что с ней сделали.');
+      const R = Р[st.р], занятые = st.слоты.filter(Boolean);
+      const сюжет = st.р === 0
+        ? `${корзинка(26, 112, 124, { лист: true, буква: 'a' })}
+           ${[0, 1, 2].map(k => яблоко(172 + k * 28, 206, { s: 30, качается: true })).join('')}
+           <path d="M196,184 C176,160 162,154 146,156" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M146,156 l13,-6 l-2,13 z" fill="#fff"/>`
+        : `${корзинка(26, 112, 124, { яблоки: [0, 0, 0], ярлык: 'c' })}
+           ${яблоко(176, 150, { s: 30, качается: true })}${яблоко(208, 166, { s: 30, качается: true })}
+           <path d="M136,150 C150,136 160,136 168,142" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M168,142 l-3,-12 l-9,9 z" fill="#fff"/>`;
+      const слоты = [0, 1, 2].map(k => { const x = 112 + k * 58, т = st.слоты[k];
+        return т ? `<g transform="translate(${x},40)"><g class="хлоп">${карточкаТело(т)}</g></g>`
+                 : `${зона('слот' + k, x - 28, 8, 56, 64)}<rect x="${x - 21}" y="17" width="42" height="46" rx="10" fill="#fff4cf" stroke="#8a5a10" stroke-width="2.6" stroke-dasharray="6 4" class="мерцает"/><text x="${x}" y="49" text-anchor="middle" class="окно-т">?</text>`; }).join('');
+      const карты = R.карты.map((т, k) => занятые.includes(т) ? '' : тащ('с' + т, 40 + k * 46, 266, карточкаТело(т), { r: 26 })).join('');
+      const тело = `<g transform="translate(170,40)"><image href="${ДОСКА}doska.webp" x="-110" y="-36" width="220" height="72"/></g>${слоты}
+        ${сюжет}${карты}${герой('борька', 312, 296, 120, st, 'показ', null, i)}${облачко(st, 'борька', 296, 174)}`;
+      return сцена(тело, 'Картинка и карточки для записи', null, true);
     },
     готов: st => st.р >= 2,
-    делать: () => 'Выбери запись'
+    делать: () => 'Перетащи карточки в пустые окошки на доске',
+    подсказка: st => st.р === 0 ? 'Сначала корзинка a, потом: положили — это плюс, и сколько положили.' : 'Сначала корзинка c, потом: забрали — это минус, и сколько забрали.'
   },
   /* 6 · САМ ВЫБЕРИ a ───────────────────────────────────────────── */
   {
-    кто: 'пых', t: 'Сам выбери a',
-    say: 'Положи в коробку a сколько хочешь роботов — и смотри, чему равно a + 4!',
-    начало(st){ st.а = null; st.было = []; },
+    кто: 'хрум', t: 'Сам выбери a',
+    say: 'Клади в корзинку a сколько хочешь яблок — и вынимай обратно. Смотри, чему равно a + 4!',
+    начало(st){ st.а = 0; st.было = []; st.из = []; },
     рисуй(i, st){
       const а = st.а;
-      const тело = `${вывеска(180, 36, а == null ? 'a + 4' : `a + 4 = ${а} + 4 = ${а + 4}`, а == null ? 170 : 280, а == null ? 'вывеска-ч' : '')}
-        ${коробка(92, 150, 124, { буква: 'a', открыта: true, внутри: Array(а || 0).fill('р'), ярлык: а == null ? '' : 'a = ' + а, хлоп: а != null && st.t && (Date.now() - st.t) < ЛЁТ })}
-        ${[0, 1, 2, 3, 4, 5].map(n => `<g transform="translate(${36 + n * 58},266)" ${цель(`ДС302.выбрать(${i},${n})`)}>
-            <circle r="24" fill="transparent"/>
-            <circle r="20" cy="3" fill="rgba(40,20,5,.3)"/>
-            <circle r="19" fill="${n === а ? 'url(#мс-монета)' : 'url(#мс-окно)'}" stroke="${n === а ? '#8a5a10' : '#6b3f1e'}" stroke-width="${n === а ? 3 : 2}"/>
-            <text y="8" text-anchor="middle" class="жетон-ч">${n}</text></g>`).join('')}
-        ${герой('пых', 322, 226, 70, 'дышит', st.было.length >= 3 ? 'руки' : 'идёт')}`;
-      const разные = st.было.length;
-      return сцена(тело, 'Коробка a и жетоны от 0 до 5') +
-        (а != null ? запись(а, '+', 4, а + 4) : '') +
-        (разные >= 3 ? готово(`Ты попробовал ${разные} разных числа. Буква a меняется — меняется и значение a + 4. Буква — окошко для любого числа!`) : '');
+      const тело = `${вывеска(180, 30, `a = ${а},   a + 4 = ${а} + 4 = ${а + 4}`, 290)}
+        ${зона('корзинка', 112, 70, 170, 200)}${зона('куча', 6, 196, 116, 100)}
+        ${корзинка(124, 84, 150, { яблоки: Array(а).fill(0), нов: st.нов, тащЯблоки: а ? 'и' : null, ярлык: 'a = ' + а })}
+        ${КУЧА6.map(([x, y], k) => (st.из || []).includes(k) ? '' : яблоко(x, y, { что: 'к' + k, s: 30 })).join('')}
+        ${герой('хрум', 318, 296, 104, st, st.было.length >= 3 ? 'ура' : 'лупа', null, i)}${облачко(st, 'хрум', 296, 190)}`;
+      return сцена(тело, 'Корзинка a и яблоки рядом', null, true) + запись(а, '+', 4, а + 4) +
+        (st.было.length >= 3 ? готово(`Ты попробовал ${st.было.length} разных числа: ${st.было.join(', ')}. Буква a меняется — меняется и значение a + 4.`) : '');
     },
     готов: st => st.было.length >= 3,
-    делать: st => `Нажимай на жетоны внизу — попробуй три разных числа (${st.было.length} из 3)`
+    делать: st => `Клади яблоки в корзинку и вынимай обратно — попробуй три разных a (${Math.min(3, st.было.length)} из 3)`,
+    подсказка: () => 'Тащи яблоко в корзинку. А верхнее яблоко из корзинки можно вынуть обратно!'
   },
-  /* 7 · ГДЕ БОЛЬШЕ? ────────────────────────────────────────────── */
+  /* 7 · ГДЕ БОЛЬШЕ? — неси звезду ──────────────────────────────── */
   {
-    кто: 'кубик', t: 'Где больше?',
-    say: 'В коробках поровну, по a. Где игрушек больше? Нажми!',
-    начало(st){ st.р = 0; },
+    кто: 'борька', t: 'Где больше?',
+    say: 'Под листами поровну, по a яблок. Где яблок станет больше? Отнеси туда звезду!',
+    начало(st){ st.р = 0; st.выбор = null; },
     рисуй(i, st){
       const П = [{ л: ['a', '+', 2], п: ['a', '+', 5], верн: 'п' }, { л: ['b', '−', 1], п: ['b', '−', 3], верн: 'л' }];
-      if (st.р >= П.length) return сцена(`${вывеска(180, 50, 'a + 5 > a + 2', 240)}${герой('кубик', 110, 290, 130, 'радуется')}${герой('пых', 250, 290, 120, 'радуется', 'прыг')}`, 'Кубик и Пых') +
-        готово('Если коробки одинаковые, смотри, что с ними сделали: добавили больше — игрушек больше; забрали меньше — осталось больше.');
-      const Р = П[st.р], ключ = 'п' + st.р, отв = st.о[ключ], мимо = st.м[ключ] || [];
+      if (st.р >= П.length) return сцена(`${вывеска(180, 40, 'a + 5 > a + 2', 220)}${герой('хрум', 120, 292, 140, st, 'ура')}${герой('борька', 250, 292, 140, st)}`, 'Хрум и Борька') +
+        готово('Если под листами поровну, смотри, что сделали: добавили больше — яблок больше; забрали меньше — осталось больше.');
+      const Р = П[st.р], верно = st.выбор === Р.верн;
       const группа = (x0, Ч, сторона) => {
-        const плюс = Ч[1] === '+';
-        const игр = плюс ? Array.from({ length: Ч[2] }, (_, k) => игрушка('с', x0 + 18 + (k % 3) * 26, 284 - Math.floor(k / 3) * 12, 40)).join('')
-          : Array.from({ length: Ч[2] }, (_, k) => игрушка('с', x0 + 44 + k * 34, 146, 44, { класс: 'улетает' })).join('');
-        return `<g ${цель(`ДС302.больше(${i},'${сторона}','${Р.верн}')`)}>
-          <rect x="${x0}" y="64" width="164" height="232" rx="16" fill="${отв === сторона ? 'rgba(140,220,110,.35)' : мимо.includes(сторона) ? 'rgba(232,120,100,.3)' : 'rgba(255,255,255,.18)'}" stroke="${отв === сторона ? '#2f7a46' : '#fff'}" stroke-width="2.6" stroke-dasharray="${отв === сторона ? '0' : '7 6'}"/>
-          ${вывеска(x0 + 82, 90, Ч.join(' '), 130, 'вывеска-ч')}
-          ${коробка(x0 + 26, 176, 92, { буква: Ч[0] })}${игр}</g>`;
+        const плюс = Ч[1] === '+', горит = верно && st.выбор === сторона;
+        const ябл = плюс ? Array.from({ length: Ч[2] }, (_, k) => яблоко(x0 + 30 + k * 24, 266, { s: 26, зел: true })).join('')
+          : Array.from({ length: Ч[2] }, (_, k) => яблоко(x0 + 40 + k * 30, 124, { s: 26, качается: true })).join('');
+        return `${зона(сторона, x0, 64, 168, 232)}
+          <rect x="${x0}" y="64" width="168" height="232" rx="18" fill="${горит ? 'rgba(140,220,110,.35)' : 'rgba(255,255,255,.14)'}" stroke="${горит ? '#2f7a46' : '#fff'}" stroke-width="2.6" stroke-dasharray="${горит ? '0' : '7 6'}" pointer-events="none"/>
+          ${вывеска(x0 + 84, 92, Ч.join(' '), 124, 'вывеска-ч')}
+          ${корзинка(x0 + 32, 140, 104, { лист: true, буква: Ч[0] })}${ябл}
+          ${плюс ? `<text x="${x0 + 10}" y="258" class="плюс-б">+</text>` : `<text x="${x0 + 10}" y="134" class="плюс-б">−</text>`}
+          ${горит ? `<g transform="translate(${x0 + 142},${128})"><g class="хлоп"><image href="${ОБЩ}star.webp" x="-22" y="-22" width="44" height="44"/></g></g>` : ''}`;
       };
-      return сцена(группа(10, Р.л, 'л') + группа(186, Р.п, 'п'), 'Две одинаковые коробки') +
-        (мимо.length && отв == null ? `<p class="разбор">${st.р === 0 ? 'Коробки одинаковые. Смотри, сколько добавили: 2 или 5?' : 'Коробки одинаковые. Из какой забрали меньше — в той и осталось больше.'}</p>` : '') +
-        (отв != null ? готово(st.р === 0 ? 'a + 5 больше, чем a + 2: в коробках поровну, а добавили пять, а не два.' : 'b − 1 больше, чем b − 3: забрали всего одну игрушку, значит, осталось больше.') +
+      const звезда = верно ? '' : тащ('звезда', 180, 34, `<g class="мерцает-м"><image href="${ОБЩ}star.webp" x="-24" y="-24" width="48" height="48"/></g>`, { r: 28 });
+      return сцена(группа(6, Р.л, 'л') + группа(186, Р.п, 'п') + звезда + облачко(st, 'борька', 180, 70), 'Две одинаковые корзинки', null, !верно) +
+        (верно ? готово(st.р === 0 ? 'a + 5 больше, чем a + 2: под листами поровну, а добавили пять, а не два.' : 'b − 1 больше, чем b − 3: забрали всего одно яблоко — значит, осталось больше.') +
           кнопка(st.р < 1 ? 'Следующая пара →' : 'Готово →', `ДС302.раунд(${i})`) : '');
     },
     готов: st => st.р >= 2,
-    делать: () => 'Нажми туда, где игрушек больше'
+    делать: () => 'Перетащи звезду туда, где яблок станет больше',
+    подсказка: st => st.р === 0 ? 'Под листами одинаково. Посмотри, куда добавили больше.' : 'Под листами одинаково. Откуда забрали меньше — там и осталось больше.'
   },
-  /* 8 · МАШИНА ЗАГАДОК — тренажёр ─────────────────────────────── */
+  /* 8 · ЗАГАДКИ СОВЫ ───────────────────────────────────────────── */
   {
-    кто: 'пых', t: 'Машина загадок',
-    say: 'Шесть загадок! Поставь число вместо буквы и посчитай.',
-    начало(st){ st.з = 0; st.звёзд = 0; },
+    кто: 'сова', t: 'Загадки Совы',
+    say: 'Я Сова. У меня четыре загадки! Сними лист, посмотри, сколько под ним, и принеси ответ в окошко.',
+    начало(st){ st.з = 0; st.открыта = false; st.ответ = null; st.звёзд = 0; },
     рисуй(i, st){
-      const банка = `<g transform="translate(316,104) scale(.74)">
-        <path d="M-34,0 L-38,150 Q0,166 38,150 L34,0 Z" fill="rgba(220,240,255,.5)" stroke="#e8f4ff" stroke-width="3"/>
+      const банка = `<g transform="translate(330,150) scale(.62)">
+        <path d="M-34,0 L-38,150 Q0,166 38,150 L34,0 Z" fill="rgba(220,240,255,.55)" stroke="#e8f4ff" stroke-width="3"/>
         <rect x="-38" y="-14" width="76" height="16" rx="5" fill="#c98d56" stroke="#6b3f1e" stroke-width="2"/>
-        ${Array.from({ length: st.звёзд }, (_, k) => `<image href="${ЗВЕЗДА}" x="${-30 + (k % 3) * 20}" y="${120 - Math.floor(k / 3) * 22}" width="26" height="26"/>`).join('')}
-        <text y="190" text-anchor="middle" class="подпись-б">${st.звёзд} из 6</text></g>`;
-      if (st.з >= ЗАГАДКИ.length) return сцена(`${банка}${машина(40, 150, 'Готово!', {})}${герой('пых', 230, 296, 150, 'радуется', 'прыг')}`, 'Банка со звёздами') +
-        готово('Шесть из шести! Ты ставишь число на место буквы и считаешь — как настоящий мастер.');
-      const З = ЗАГАДКИ[st.з], n = знач(З), ключ = 'з' + st.з;
-      const рядом = Number(String(З.а) + String(З.ч)), обр = З.з === '+' ? З.а - З.ч : З.а + З.ч;
-      const вар = [...new Set([n, обр, рядом <= 99 ? рядом : n + 1, n + 1])].filter(v => v >= 0).slice(0, 3).sort((p, q) => p - q);
-      const разб = { [обр]: З.з === '+' ? 'Здесь плюс — значит, добавляем!' : 'Здесь минус — значит, забираем!', [рядом]: 'Числа не ставим рядом: между ними знак. Посчитай!', [n + 1]: 'Посчитай ещё раз, по одному.' };
-      const тело = `${машина(26, 140, `${З.б} ${З.з} ${З.ч}`, { гудит: st.о[ключ] != null })}
-        ${коробка(178, 186, 82, { буква: З.б, открыта: true, внутри: Array(З.а).fill(З.з === '+' ? 'с' : 'к'), ярлык: `${З.б} = ${З.а}` })}
-        ${вывеска(150, 50, `${З.б} ${З.з} ${З.ч},  ${З.б} = ${З.а}`, 250)}${банка}`;
-      return сцена(тело, 'Загадка: выражение с буквой') +
-        (st.о[ключ] == null ? запись(З.а, З.з, З.ч, null) + ответы(i, ключ, вар, n, st, разб)
-          : готово(`${З.б} ${З.з} ${З.ч} = ${З.а} ${З.з} ${З.ч} = ${n}. Звёздочка летит в банку!`) + кнопка(st.з < 5 ? 'Следующая загадка →' : 'Готово →', `ДС302.загадка(${i})`));
+        ${Array.from({ length: st.звёзд }, (_, k) => `<image href="${ОБЩ}star.webp" x="${-30 + (k % 2) * 30}" y="${118 - Math.floor(k / 2) * 30}" width="32" height="32"/>`).join('')}</g>`;
+      if (st.з >= ЗАГАДКИ.length) return сцена(`${банка}${герой('сова', 100, 292, 150, st)}${герой('хрум', 220, 292, 140, st, 'ура')}`, 'Сова и Хрум') +
+        готово('Четыре из четырёх! Ты снимаешь лист, ставишь число на место буквы и считаешь — Сова довольна.');
+      const З = ЗАГАДКИ[st.з], n = знач(З), верно = st.ответ === n;
+      const рядом = String(З.а) + String(З.ч), обр = З.з === '+' ? З.а - З.ч : З.а + З.ч;
+      const вар = [...new Set([String(n), String(обр), рядом.length <= 2 ? рядом : String(n + 1)])].sort((p, q) => +p - +q);
+      const тело = `${вывеска(150, 30, `${З.б} ${З.з} ${З.ч} = ?`, 170, 'вывеска-ч')}${лежит(st, З.б)}
+        ${корзинка(20, 96, 140, { яблоки: Array(З.а).fill(0), лист: !st.открыта, листТащ: true, буква: З.б, ярлык: st.открыта ? `${З.б} = ${З.а}` : '' })}
+        ${st.открыта ? `${верно ? '' : зона('окошко', 234, 0, 68, 62)}${окошко(268, 30, верно ? жетонТело(String(n), 20) : null)}
+          ${верно ? '' : вар.map((т, k) => т === String(st.ответ) ? '' : тащ('ж' + т, 196 + k * 46, 280, жетонТело(т, 19))).join('')}` : ''}
+        ${герой('сова', 232, 254, 118, st, null, null, i)}${банка}${облачко(st, 'сова', 232, 140)}`;
+      return сцена(тело, 'Загадка Совы', null, !верно) +
+        (верно ? запись(З.а, З.з, З.ч, n) + готово(`${З.б} = ${З.а}, значит ${З.б} ${З.з} ${З.ч} = ${З.а} ${З.з} ${З.ч} = ${n}. Звезда летит в банку!`) + кнопка(st.з < ЗАГАДКИ.length - 1 ? 'Следующая загадка →' : 'Готово →', `ДС302.загадка(${i})`) : '');
     },
     готов: st => st.з >= ЗАГАДКИ.length,
-    делать: () => 'Сколько получится?'
+    делать: st => !st.открыта ? 'Стащи лист с корзинки' : 'Принеси жетон с ответом в окошко',
+    подсказка: st => { const З = ЗАГАДКИ[Math.min(st.з, ЗАГАДКИ.length - 1)]; return !st.открыта ? 'Сначала узнай, что под листом.' : `Поставь ${З.а} вместо буквы. ${З.з === '+' ? 'Плюс — добавляем' : 'Минус — забираем'} ${З.ч}.`; }
   },
   /* 9 · ИТОГ ───────────────────────────────────────────────────── */
   {
-    кто: 'кубик', t: 'Подарок готов',
-    say: 'Подарок собран! Нажми на большую коробку — посмотрим, что внутри.',
+    кто: 'борька', t: 'Полная корзина',
+    say: 'Мы несём корзину! Стащи с неё лист — посмотрим, сколько мы собрали.',
     начало(st){ st.открыта = false; },
     рисуй(i, st){
       const отк = st.открыта;
-      const тело = `${коробка(96, 168, 150, { буква: 'a', открыта: отк, внутри: отк ? ['с', 'к', 'р', 'с', 'к'] : [], свет: !отк, хлоп: отк, клик: отк ? '' : `ДС302.подарок(${i})` })}
-        ${отк ? [[60, 40], [180, 24], [300, 46], [110, 78], [252, 82]].map(([x, y], k) => `<image href="${ЗВЕЗДА}" x="${x}" y="${y}" width="${22 + (k % 2) * 8}" height="${22 + (k % 2) * 8}" class="хлоп"/>`).join('') : ''}
-        ${герой('пых', 50, 298, 96, отк ? 'радуется' : 'дышит', отк ? 'прыг' : 'привет')}
-        ${герой('кубик', 318, 298, 104, отк ? 'радуется' : 'дышит')}`;
-      return сцена(тело, 'Большая коробка-подарок, Пых и Кубик') +
+      const ябл = [[154, 166], [176, 158], [198, 166], [165, 150], [187, 148]];
+      const тело = `<image href="${ДОСКА}druzya.webp" x="30" y="100" width="300" height="190" class="${отк ? 'радуется' : 'дышит'}"/>
+          ${отк ? ябл.map(([x, y], k) => яблоко(x, y, { s: 26, тень: false, зел: k % 2 })).join('') : тащ('лист', 176, 162, `<g class="покачивается">${лопухТело(46, 'a')}</g>`, { r: 46 })}
+        ${отк ? `<g class="хлоп"><image href="${ОБЩ}star.webp" x="60" y="34" width="34" height="34"/><image href="${ОБЩ}star.webp" x="270" y="40" width="30" height="30"/><image href="${ОБЩ}star.webp" x="158" y="14" width="42" height="42"/></g>` : ''}
+        ${облачко(st, 'борька', 250, 110)}`;
+      return сцена(тело, 'Хрум и Борька с корзиной', null, !отк) +
         `<div class="памятка">
           <div><b>3 + 2</b><span>выражение — запись того, что сделали</span></div>
           <div><b>5</b><span>значение — сколько получилось</span></div>
-          <div><b>a</b><span>буква — закрытая коробка, в ней любое число</span></div>
-          <div><b>a = 4 → 4 + 2 = 6</b><span>число ставим на место буквы и считаем</span></div>
+          <div><b>a</b><span>буква — корзинка под листом, в ней любое число</span></div>
+          <div><b>a = 4: 4 + 2 = 6</b><span>число ставим на место буквы и считаем</span></div>
         </div>` + (отк ? готово('Ура! Ты знаешь, что такое выражение и его значение, и умеешь ставить число вместо буквы.') : '');
     },
     готов: st => st.открыта,
-    делать: () => 'Нажми на коробку'
+    делать: () => 'Стащи лист с корзины',
+    подсказка: () => 'Прижми лист и сдвинь его!'
   }
   ];
+  function таблица(st){
+    return `<div class="таблица"><div class="тр шапка"><span>a</span><span>a + 3</span></div>${st.таблица.map(([a, b]) => `<div class="тр"><span>${a}</span><span>${b}</span></div>`).join('')}</div>`;
+  }
 
   /* ═══════════════════ ДЕЙСТВИЯ ═══════════════════ */
+  const СЧЁТ = ['Раз!', 'Два!', 'Три!', 'Четыре!', 'Пять!'];
   window.ДС302 = {
     сказать(){ try { if (window.VOICE && VOICE.say) VOICE.say(КАДРЫ[шаг()].say); } catch(e){} },
-    положить(i, тип, k){
-      const st = сост(i), с = тип === 'с' ? st.с : st.к;
-      if (с.includes(k)) return;
-      if (тип === 'к' && st.с.length < 3) return;                 /* сначала солдатики — так запись читается слева направо */
-      const [x, y] = (тип === 'с' ? СОЛДАТЫ : КУКЛЫ)[k];
-      с.push(k); st.нов = { j: st.с.length + st.к.length - 1, x, y: y - 20, t: Date.now() };
+    подсказка(i, кто){ const st = сост(i), к = КАДРЫ[i]; сказ(st, кто, к.подсказка ? к.подсказка(st) : к.say, кто === 'хрум' ? 'лупа' : кто === 'борька' ? 'показ' : null); перерисовать(); },
+    счёт(i, j){
+      const st = сост(i); if (st.сч.includes(j)) return;
+      st.сч.push(j);
+      const кто = i === 0 ? 'хрум' : 'борька';
+      if (st.сч.length === 5) сказ(st, кто, i === 0 ? 'Пять! Три и два — это пять. 3 + 2 = 5!' : 'Пять! Было семь, забрали два — осталось пять.', i === 0 ? 'ура' : null);
+      else сказ(st, кто, СЧЁТ[st.сч.length - 1]);
       перерисовать();
     },
-    открыть(i){ const st = сост(i); st.открыта = true; перерисовать(); },
-    вмашину(i, k){ const st = сост(i); if (st.в != null || st.сделано.includes(k)) return; st.в = k; перерисовать(); },
-    изМашины(i){ const st = сост(i); if (st.в == null) return; if (!st.сделано.includes(st.в)) st.сделано.push(st.в); st.в = null; перерисовать(); },
-    подставить(i){ const st = сост(i); st.встал = true; st.t = Date.now(); перерисовать(); },
-    отдать(i){
-      const st = сост(i); if (st.отдано.length >= 2) return;
-      const в = 7 - st.отдано.length, п = места(в, 132, 132 * .62)[в - 1];
-      st.отдано.push(1); st.нов = { x: 60 + п[0], y: 176 + п[1], t: Date.now() };
+    раунд(i){ const st = сост(i); st.р++; st.выбор = null; st.рк = null; перерисовать(); },
+    загадка(i){ const st = сост(i); st.з++; st.открыта = false; st.лист = null; st.ответ = null; st.рк = null; перерисовать(); },
+    проверить3(i){
+      const st = сост(i), a = ТРИ_А[st.р], n = st.д.length;
+      if (n === 3){
+        st.таблица.push([a, a + 3]); сказ(st, 'хрум', `Верно! a = ${a}, плюс три — стало ${a + 3}.`, 'ура');
+        st.р++; st.открыта = false; st.лист = null; st.д = [];
+      } else {
+        сказ(st, 'хрум', n < 3 ? `Маловато: ты положил ${n}. Нужно ровно три!` : `Многовато: ты положил ${n}. Нужно ровно три! Лишние я забрал.`, 'лупа');
+        if (n > 3) st.д = st.д.slice(0, 3);
+      }
       перерисовать();
     },
-    раунд(i){ const st = сост(i); st.р++; перерисовать(); },
-    выбрать(i, n){ const st = сост(i); st.а = n; st.t = Date.now(); if (!st.было.includes(n)) st.было.push(n); перерисовать(); },
-    больше(i, сторона, верная){
-      const st = сост(i), ключ = 'п' + st.р; if (st.о[ключ] != null) return;
-      if (сторона === верная) st.о[ключ] = сторона; else { st.м[ключ] = st.м[ключ] || []; if (!st.м[ключ].includes(сторона)) st.м[ключ].push(сторона); }
-      перерисовать();
+    /* касание без сдвига — запасной путь: делает то же, что и перенос к цели */
+    тап(i, что){
+      const st = сост(i);
+      const к = { 0: 'корзинка', 1: что === 'лист' ? 'прочь' : (что[0] === 'б' ? 'корзинка' : 'окошко'), 2: что === 'лист' ? 'прочь' : 'корзинка',
+        3: что === 'ж4' ? 'икс' : 'окошко', 4: что === 'лист' ? 'прочь' : 'тележка', 5: 'слот' + (st.слоты ? st.слоты.indexOf(null) : 0),
+        6: что[0] === 'и' ? 'прочь' : 'корзинка', 7: null, 8: что === 'лист' ? 'прочь' : 'окошко', 9: 'прочь' }[i];
+      if (к) this.бросить(i, что, к, null, null);
+      else { сказ(st, 'борька', 'Прижми звезду пальцем и неси её к корзинке!', 'показ'); перерисовать(); }
     },
-    ответ(i, ключ, n, верный){
-      const st = сост(i); if (st.о[ключ] != null) return;
-      if (n === верный){ st.о[ключ] = n; if (i === 8) st.звёзд++; }
-      else { st.м[ключ] = st.м[ключ] || []; if (!st.м[ключ].includes(n)) st.м[ключ].push(n); }
-      перерисовать();
-    },
-    загадка(i){ const st = сост(i); st.з++; перерисовать(); },
-    подарок(i){ const st = сост(i); st.открыта = true; перерисовать(); }
+    /* перенос закончен над зоной «зона» (или мимо — 'прочь'); x,y — где отпустили; вернуть true, если принято */
+    бросить(i, что, зона, x, y){
+      const st = сост(i);
+      const лист = что === 'лист' && зона !== 'корзинка';
+      let ок = false;
+      if (i === 0 && что[0] === 'я' && зона === 'корзинка'){
+        const k = +что.slice(1); if (st.в.includes(k)) return false;
+        st.в.push(k); const [ax, ay] = НА_ВЕТКЕ[k];
+        st.нов = { j: st.в.length - 1, x: x == null ? ax : x, y: y == null ? ay : y, t: Date.now() };
+        const кр = st.в.filter(q => !НА_ВЕТКЕ[q][2]).length, зл = st.в.length - кр;
+        сказ(st, 'хрум', st.в.length === 5 ? 'Все пять в корзинке! Теперь посчитай их — нажимай на каждое.' : НА_ВЕТКЕ[k][2] ? `Зелёное! Красных ${кр}, зелёных ${зл}.` : `Красное! Уже ${кр} ${кр === 1 ? 'красное' : 'красных'}.`, st.в.length === 5 ? 'ура' : null);
+        ок = true;
+      }
+      else if ([1, 2, 4, 8].includes(i) && лист && !st.открыта){
+        st.открыта = true; st.лист = [Math.max(36, Math.min(324, x == null ? 70 : x)), Math.max(70, Math.min(282, y == null ? 270 : y))];
+        if (i === 1) сказ(st, 'борька', 'Смотри: под листом 4 яблока. Значит, a = 4!', 'показ');
+        if (i === 2) сказ(st, 'хрум', `Под листом ${ТРИ_А[st.р]}. Значит, a = ${ТРИ_А[st.р]}. Добавь три!`, 'даёт');
+        if (i === 4) сказ(st, 'борька', 'Под листом 7 яблок: b = 7. Переложи два в мою тележку!', 'показ');
+        if (i === 8){ const З = ЗАГАДКИ[st.з]; сказ(st, 'сова', `Под листом ${З.а}. Значит, ${З.б} = ${З.а}.`); }
+        ок = true;
+      }
+      else if (i === 1 && что[0] === 'б' && зона === 'корзинка' && st.открыта){
+        const k = +что.slice(1); if (st.д.includes(k)) return false;
+        st.д.push(k); st.нов = { j: 3 + st.д.length, x: x == null ? БОРЬКИНЫ[k][0] : x, y: y == null ? БОРЬКИНЫ[k][1] : y, t: Date.now() };
+        сказ(st, 'борька', st.д.length === 2 ? 'Было 4, добавили 2. Сколько стало? Принеси жетон в окошко!' : 'Одно добавили! Ещё одно.', st.д.length === 2 ? 'показ' : null);
+        ок = true;
+      }
+      else if ([1, 3, 8].includes(i) && что[0] === 'ж' && !(i === 3 && что === 'ж4') && зона === 'окошко'){
+        const n = +что.slice(1);
+        const надо = i === 1 ? 6 : i === 3 ? 9 : знач(ЗАГАДКИ[st.з]);
+        if (n === надо){
+          st.ответ = n;
+          if (i === 1) сказ(st, 'борька', 'Шесть! a + 2 = 4 + 2 = 6. Молодец!');
+          if (i === 3) сказ(st, 'борька', 'Девять! Я ошибся: 4 и 5 не ставят рядом, их складывают.');
+          if (i === 8){ st.звёзд++; сказ(st, 'сова', 'Верно! Держи звезду.'); }
+          ок = true;
+        } else {
+          const З = i === 8 ? ЗАГАДКИ[st.з] : null;
+          const т2 = i === 1 ? (n === 42 ? 'Сорок два — это 4 и 2 рядом. А нам надо сложить: 4 + 2!' : 'Два — это только мои яблоки. А в корзинке ещё четыре!')
+            : i === 3 ? (n === 45 ? 'Вот и я так написал — 45. Но между 4 и 5 стоит плюс!' : 'Один — это 5 − 4. А у нас плюс!')
+            : (String(n) === String(З.а) + String(З.ч) ? 'Числа не ставят рядом — между ними знак!' : n === (З.з === '+' ? З.а - З.ч : З.а + З.ч) ? (З.з === '+' ? 'Тут плюс — добавляем!' : 'Тут минус — забираем!') : 'Посчитай ещё раз, по одному.');
+          сказ(st, i === 8 ? 'сова' : 'борька', т2, i === 8 ? null : 'показ');
+          перерисовать();
+        }
+      }
+      else if (i === 2 && что[0] === 'к' && зона === 'корзинка' && st.открыта){
+        const k = +что.slice(1), a = ТРИ_А[st.р];
+        st.д.push(k); st.нов = { j: a + st.д.length - 1, x: x == null ? КУЧА[k][0] : x, y: y == null ? КУЧА[k][1] : y, t: Date.now() };
+        сказ(st, 'хрум', ['Одно!', 'Два!', 'Три! Нажми «Готово».', 'Четыре… не многовато?', 'Пять!'][st.д.length - 1] || 'Ого!');
+        ок = true;
+      }
+      else if (i === 3 && что === 'ж4' && зона === 'икс' && !st.встал){
+        st.встал = true; сказ(st, 'борька', 'Четыре встало вместо x: 4 + 5. А сколько это? Принеси ответ в окошко!', 'показ'); ок = true;
+      }
+      else if (i === 4 && что[0] === 'и' && зона === 'тележка' && st.открыта && st.отдано < 2){
+        const в = 7 - st.отдано, п = горка(в, 156)[в - 1];
+        st.отдано++; st.нов = { x: x == null ? 24 + п[0] : x, y: y == null ? 104 + п[1] : y, t: Date.now() };
+        сказ(st, 'борька', st.отдано === 2 ? 'Два в тележке! Сколько осталось в корзинке? Посчитай!' : 'Одно есть! Ещё одно.', st.отдано === 2 ? 'показ' : null);
+        ок = true;
+      }
+      else if (i === 5 && что[0] === 'с' && /^слот\d$/.test(зона || '')){
+        const k = +зона.slice(4); if (st.слоты[k]) return false;
+        st.слоты[k] = что.slice(1);
+        if (st.слоты.every(Boolean)){
+          const верн = st.р === 0 ? ['a', '+', '3'] : ['c', '−', '2'];
+          if (st.слоты.join() === верн.join()){ сказ(st, 'борька', st.р === 0 ? 'Верно: a + 3! К корзинке a добавили три.' : 'Верно: c − 2! Из корзинки c забрали два.'); st.р++; st.слоты = [null, null, null]; }
+          else {
+            const плохо = st.слоты[1] !== верн[1] ? (st.р === 0 ? 'Яблоки кладут в корзинку — значит, плюс!' : 'Яблоки улетают из корзинки — значит, минус!') : 'Сначала пишем корзинку-букву, потом знак, потом число.';
+            сказ(st, 'борька', плохо + ' Попробуй ещё.', 'показ'); st.слоты = [null, null, null];
+          }
+        }
+        ок = true;
+      }
+      else if (i === 6){
+        if (что[0] === 'к' && зона === 'корзинка' && st.а < ПРЕДЕЛ6){ st.из = st.из || []; const k = +что.slice(1); if (st.из.includes(k)) return false; st.из.push(k); st.а++; st.нов = { j: st.а - 1, x: x == null ? 60 : x, y: y == null ? 250 : y, t: Date.now() }; ок = true; }
+        else if (что[0] === 'и' && зона !== 'корзинка' && st.а > 0){ st.а--; (st.из || []).pop(); ок = true; }
+        if (ок){
+          if (!st.было.includes(st.а)) st.было.push(st.а);
+          сказ(st, 'хрум', `a = ${st.а}, значит a + 4 = ${st.а} + 4 = ${st.а + 4}.` + (st.было.length === 3 ? ' Видишь? a меняется — и ответ меняется!' : ''), st.было.length >= 3 ? 'ура' : 'лупа');
+        }
+      }
+      else if (i === 7 && что === 'звезда' && (зона === 'л' || зона === 'п')){
+        const верн = st.р === 0 ? 'п' : 'л';
+        if (зона === верн){ st.выбор = зона; сказ(st, 'борька', 'Да! Здесь станет больше.'); ок = true; }
+        else { сказ(st, 'борька', st.р === 0 ? 'Под листами поровну. Здесь добавили только два, а там — пять!' : 'Отсюда забрали три, а оттуда только одно. Где осталось больше?', 'показ'); перерисовать(); }
+      }
+      else if (i === 9 && что === 'лист' && !st.открыта){ st.открыта = true; сказ(st, 'борька', 'Ура! Полная корзина яблок! Ты молодец!'); ок = true; }
+      if (ок) перерисовать();
+      return ок;
+    }
   };
 
+  /* ═══════════ ПЕРЕТАСКИВАНИЕ: один обработчик на документ ═══════════ */
+  let Т = null;
+  const точка = (el, e) => { const svg = el.ownerSVGElement || el; const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(el.getScreenCTM().inverse()); };
+  function над(svg, p){
+    let имя = null;
+    svg.querySelectorAll('[data-зона]').forEach(z => { const b = z.getBBox(); if (p.x >= b.x && p.x <= b.x + b.width && p.y >= b.y && p.y <= b.y + b.height) имя = z.getAttribute('data-зона'); });
+    return имя;
+  }
+  function подсветить(svg, имя){ svg.querySelectorAll('[data-зона]').forEach(z => z.classList.toggle('горит', z.getAttribute('data-зона') === имя)); }
+  if (!window.__дс302_тащ){
+    window.__дс302_тащ = true;
+    document.addEventListener('pointerdown', e => {
+      const g = e.target && e.target.closest ? e.target.closest('.' + К + ' .тащ') : null;
+      if (!g || Т) return;
+      const svg = g.ownerSVGElement, роди = g.parentNode;
+      const p = точка(роди, e), x0 = +g.getAttribute('data-x'), y0 = +g.getAttribute('data-y');
+      Т = { g, svg, роди, x0, y0, dx: p.x - x0, dy: p.y - y0, сх: e.clientX, су: e.clientY, сдвиг: false, id: e.pointerId };
+      g.classList.add('тащится');
+      try { g.setPointerCapture(e.pointerId); } catch(_){}
+      e.preventDefault();
+    }, { passive: false });
+    document.addEventListener('pointermove', e => {
+      if (!Т || e.pointerId !== Т.id) return;
+      if (Math.hypot(e.clientX - Т.сх, e.clientY - Т.су) > 6) Т.сдвиг = true;
+      if (!Т.сдвиг) return;
+      const p = точка(Т.роди, e);
+      Т.g.style.transform = `translate(${(p.x - Т.dx).toFixed(1)}px,${(p.y - Т.dy).toFixed(1)}px)`;
+      подсветить(Т.svg, над(Т.svg, точка(Т.svg, e)));
+      e.preventDefault();
+    }, { passive: false });
+    const конец = (e) => {
+      if (!Т || e.pointerId !== Т.id) return;
+      const t = Т; Т = null;
+      t.g.classList.remove('тащится'); подсветить(t.svg, null);
+      const что = t.g.getAttribute('data-что'), i = шаг();
+      if (!t.сдвиг || e.type === 'pointercancel'){ t.g.style.transform = ''; if (e.type !== 'pointercancel') ДС302.тап(i, что); return; }
+      const pa = точка(t.svg, e), имя = над(t.svg, pa) || ((что === 'лист' || что[0] === 'и') ? 'прочь' : null);
+      const ок = имя && ДС302.бросить(i, что, имя, pa.x, pa.y);
+      if (!ок && t.g.isConnected){
+        t.g.classList.add('назад'); t.g.style.transform = `translate(${t.x0}px,${t.y0}px)`;
+        setTimeout(() => { if (t.g.isConnected){ t.g.classList.remove('назад'); t.g.style.transform = ''; } }, 380);
+      }
+    };
+    document.addEventListener('pointerup', конец);
+    document.addEventListener('pointercancel', конец);
+  }
+
   /* ═══════════════════ СТИЛЬ ═══════════════════ */
+  const ШРИФТ = `'Nunito302','Nunito','Trebuchet MS',system-ui,sans-serif`;
   const СТИЛЬ = `
-  @font-face{font-family:'Pangolin302';src:url('fonts/Pangolin-ru.woff2') format('woff2');font-display:swap}
+  @font-face{font-family:'Nunito302';src:url('fonts/Nunito-ru.woff2') format('woff2');font-weight:200 1000;font-display:swap}
   #lvis .${К}{--контур:#4a2a10;--лист:#fff6e4;--чернила:#2a1d10;--верно:#2f7a46;--мимо:#c2412b;
-    font-family:'Pangolin302','Comic Sans MS',Georgia,serif;color:var(--чернила);display:flex;flex-direction:column;gap:12px;padding:2px}
+    font-family:${ШРИФТ};font-weight:700;color:var(--чернила);display:flex;flex-direction:column;gap:12px;padding:2px}
   #lvis .${К} *{box-sizing:border-box}
-  #lvis .${К} button,#lvis .${К} .цель{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+  #lvis .${К} button,#lvis .${К} .цель,#lvis .${К} .тащ{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
   #lvis .${К} .реплика{display:flex;align-items:center;gap:10px;padding:24px 26px 22px 24px;min-height:104px;
     background:url('${ДОСКА}ramka.webp') center/100% 100% no-repeat;filter:drop-shadow(0 4px 3px rgba(40,20,5,.25))}
   #lvis .${К} .аватар{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;width:58px}
   #lvis .${К} .аватар img{width:54px;height:62px;object-fit:contain}
-  #lvis .${К} .аватар span{font-size:13px;color:#7a4a20;line-height:1}
-  #lvis .${К} .реплика p{margin:0;font-size:18px;line-height:1.3;flex:1}
+  #lvis .${К} .аватар span{font-size:13px;font-weight:800;color:#7a4a20;line-height:1}
+  #lvis .${К} .реплика p{margin:0;font-size:18px;font-weight:700;line-height:1.35;flex:1}
   #lvis .${К} .слушать{flex:none;width:44px;height:44px;border-radius:50%;border:2.5px solid var(--контур);
     background:linear-gradient(180deg,#ffe58a,#f4b73c);font-size:19px;cursor:pointer;box-shadow:0 3px 0 #8a4f14}
   #lvis .${К} .слушать:active{transform:translateY(3px);box-shadow:none}
-  #lvis .${К} .сцена{border:3px solid var(--контур);border-radius:20px;overflow:hidden;background:#8a6a4a;box-shadow:0 5px 0 rgba(74,42,16,.25)}
+  #lvis .${К} .сцена{border:3px solid var(--контур);border-radius:20px;overflow:hidden;background:#cfe6b8;box-shadow:0 5px 0 rgba(74,42,16,.25)}
   #lvis .${К} .сцена svg{display:block;width:100%;height:auto}
+  #lvis .${К} .сцена.с-тащ svg{touch-action:none}
   #lvis .${К} .цель{cursor:pointer}
   #lvis .${К} .цель:focus{outline:none}
   #lvis .${К} image{pointer-events:none}
-  #lvis .${К} .лёт{animation:мс-лёт .62s cubic-bezier(.3,.7,.35,1) both}
-  #lvis .${К} .хлоп{animation:мс-хлоп .45s ease-out both;transform-box:fill-box;transform-origin:center}
-  #lvis .${К} .качается{animation:мс-качаться 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
-  #lvis .${К} .качается-к{animation:мс-качаться-к 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
-  #lvis .${К} .дышит{animation:мс-дышит 3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
-  #lvis .${К} .радуется{animation:мс-радость .9s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
-  #lvis .${К} .мерцает{animation:мс-мерцать 1.2s ease-in-out infinite}
-  #lvis .${К} .улетает{animation:мс-улетает 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-  #lvis .${К} .гудит{animation:мс-гудит .18s linear infinite}
-  #lvis .${К} .крутится{animation:мс-круг 2.4s linear infinite;transform-box:fill-box;transform-origin:center}
-  #lvis .${К} .крутится-м{animation:мс-круг 9s linear infinite;transform-box:fill-box;transform-origin:center}
-  #lvis .${К} .крутится-н{animation:мс-круг 1.6s linear infinite reverse;transform-box:fill-box;transform-origin:center}
-  @keyframes мс-лёт{0%{transform:translate(var(--dx),var(--dy)) scale(1.15)}50%{transform:translate(calc(var(--dx) * .45),calc(var(--dy) * .45 - 46px)) scale(1.25)}100%{transform:translate(0,0) scale(1)}}
-  @keyframes мс-хлоп{0%{transform:scale(.5)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
-  @keyframes мс-качаться{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-  @keyframes мс-качаться-к{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-  @keyframes мс-дышит{0%,100%{transform:scale(1,1)}50%{transform:scale(1.015,.985)}}
-  @keyframes мс-радость{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-  @keyframes мс-мерцать{0%,100%{opacity:.5}50%{opacity:1}}
-  @keyframes мс-улетает{0%,100%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(6px,-6px) rotate(6deg)}}
-  @keyframes мс-гудит{0%,100%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}75%{transform:translate(-1px,1px)}}
-  @keyframes мс-круг{to{transform:rotate(360deg)}}
-  #lvis .${К} svg text{font-family:'Pangolin302','Comic Sans MS',Georgia,serif}
-  #lvis .${К} .буква-к{fill:#2a55a8;font-style:italic}
-  #lvis .${К} .ярлык-т{font-size:15px;fill:#4a2a08}
-  #lvis .${К} .машина-т{font-size:24px;fill:#4a2a08;paint-order:stroke;stroke:#ffe9b8;stroke-width:3px}
-  #lvis .${К} .жетон-ч{font-size:27px;fill:#5a2a08}
-  #lvis .${К} .жетон-б{font-size:28px;fill:#fff;font-style:italic}
-  #lvis .${К} .облако-т{font-size:26px;fill:#b23a22}
-  #lvis .${К} .облако-т.зачёркнуто{text-decoration:line-through}
-  #lvis .${К} .плюс-б{font-size:40px;fill:#fff;paint-order:stroke;stroke:#2a5a1e;stroke-width:6px;stroke-linejoin:round}
-  #lvis .${К} .подпись-б{font-size:17px;fill:#fff;paint-order:stroke;stroke:#3a200c;stroke-width:4px;stroke-linejoin:round}
-  #lvis .${К} .вывеска-т{font-size:21px;fill:#4a2a08;paint-order:stroke;stroke:#ffe9b8;stroke-width:3px;stroke-linejoin:round}
-  #lvis .${К} .вывеска-ч{font-size:34px;fill:#4a2a08;paint-order:stroke;stroke:#ffe9b8;stroke-width:3px}
+  #lvis .${К} .тащ{cursor:grab}
+  #lvis .${К} .тащ.тащится{cursor:grabbing;filter:drop-shadow(0 8px 6px rgba(30,15,5,.45))}
+  #lvis .${К} .тащ.назад{transition:transform .36s cubic-bezier(.3,1.4,.5,1)}
+  #lvis .${К} .зона{fill:transparent;stroke:none}
+  #lvis .${К} .зона.горит{fill:rgba(255,230,120,.28);stroke:#ffd76a;stroke-width:3;stroke-dasharray:8 6}
+  #lvis .${К} .облачко{animation:кл-хлоп .35s ease-out both;transform-box:fill-box;transform-origin:50% 100%;pointer-events:none}
+  #lvis .${К} .лёт{animation:кл-лёт .6s cubic-bezier(.3,.7,.35,1) both}
+  #lvis .${К} .хлоп{animation:кл-хлоп .45s ease-out both;transform-box:fill-box;transform-origin:center}
+  #lvis .${К} .качается{animation:кл-качаться 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
+  #lvis .${К} .покачивается{animation:кл-покачиваться 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+  #lvis .${К} .дышит{animation:кл-дышит 3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+  #lvis .${К} .прыжок{animation:кл-прыжок .55s ease-out 2;transform-box:fill-box;transform-origin:50% 100%}
+  #lvis .${К} .радуется{animation:кл-радость .9s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+  #lvis .${К} .мерцает{animation:кл-мерцать 1.2s ease-in-out infinite}
+  #lvis .${К} .мерцает-м{animation:кл-пульс 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+  @keyframes кл-лёт{0%{transform:translate(var(--dx),var(--dy)) scale(1.1)}55%{transform:translate(calc(var(--dx) * .4),calc(var(--dy) * .4 - 34px)) scale(1.2)}100%{transform:translate(0,0) scale(1)}}
+  @keyframes кл-хлоп{0%{transform:scale(.5)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+  @keyframes кл-качаться{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+  @keyframes кл-покачиваться{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+  @keyframes кл-дышит{0%,100%{transform:scale(1,1)}50%{transform:scale(1.015,.985)}}
+  @keyframes кл-прыжок{0%,100%{transform:translateY(0) scale(1,1)}30%{transform:translateY(0) scale(1.06,.92)}60%{transform:translateY(-14px) scale(.97,1.04)}}
+  @keyframes кл-радость{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  @keyframes кл-мерцать{0%,100%{opacity:.55}50%{opacity:1}}
+  @keyframes кл-пульс{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.12) rotate(8deg)}}
+  #lvis .${К} svg text{font-family:${ШРИФТ}}
+  #lvis .${К} .буква-к{fill:#2a55a8;font-style:italic;font-weight:900}
+  #lvis .${К} .ярлык-т{font-size:15px;font-weight:800;fill:#4a2a08}
+  #lvis .${К} .счёт-ч{font-weight:900;fill:#5a2a08}
+  #lvis .${К} .жетон-ч{font-weight:900;fill:#5a2a08}
+  #lvis .${К} .жетон-б{font-weight:900;fill:#fff;font-style:italic}
+  #lvis .${К} .карточка-т{font-size:26px;font-weight:900}
+  #lvis .${К} .окно-т{font-size:24px;font-weight:900;fill:#b8740a}
+  #lvis .${К} .облако-т{font-size:13.5px;font-weight:800;fill:#3a240e}
+  #lvis .${К} .плюс-б{font-size:40px;font-weight:900;fill:#fff;paint-order:stroke;stroke:#2a5a1e;stroke-width:6px;stroke-linejoin:round}
+  #lvis .${К} .подпись-б{font-size:16px;font-weight:900;fill:#fff;paint-order:stroke;stroke:#3a200c;stroke-width:4px;stroke-linejoin:round}
+  #lvis .${К} .вывеска-т{font-size:18px;font-weight:900;fill:#4a2a08;paint-order:stroke;stroke:#ffe9b8;stroke-width:3px;stroke-linejoin:round}
+  #lvis .${К} .вывеска-ч{font-size:30px;font-weight:900;fill:#4a2a08;paint-order:stroke;stroke:#ffe9b8;stroke-width:3px}
   /* ── вывеска с примером ── */
   #lvis .${К} .вывеска{position:relative;align-self:center;padding-top:16px}
   #lvis .${К} .верёвка{position:absolute;top:0;width:3px;height:22px;background:repeating-linear-gradient(180deg,#c9a46a 0 4px,#8a6a3a 4px 7px);border-radius:2px}
@@ -565,27 +748,26 @@
   #lvis .${К} .верёвка:nth-child(2){right:22%}
   #lvis .${К} .запись{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;
     background:url('${ДОСКА}doska.webp') center/100% 100% no-repeat;padding:16px 26px 18px;filter:drop-shadow(0 5px 3px rgba(40,20,5,.35))}
-  #lvis .${К} .яч{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;
+  #lvis .${К} .яч{display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;
     background:radial-gradient(circle at 50% 30%,#fffdf3 0%,#fff0c8 60%,#f0cf86 100%);
     border:3px solid #6b3f1e;box-shadow:inset 0 -4px 0 rgba(160,100,30,.25),inset 0 3px 6px #fff,0 3px 0 rgba(60,30,5,.35);position:relative}
   #lvis .${К} .яч::after{content:'';position:absolute;left:12px;top:7px;width:22px;height:9px;border-radius:50%;background:rgba(255,255,255,.75)}
-  #lvis .${К} .яч i{font-style:normal;font-size:32px;line-height:1;color:#5a2a08;text-shadow:0 2px 0 #fff,0 3px 5px rgba(90,42,8,.25);position:relative;z-index:1}
+  #lvis .${К} .яч i{font-style:normal;font-size:30px;font-weight:900;line-height:1;color:#5a2a08;text-shadow:0 2px 0 #fff;position:relative;z-index:1}
   #lvis .${К} .яч.буква{background:radial-gradient(circle at 40% 30%,#8fb6f0,#3a68c0 65%,#24489a);border-color:#1d3a78}
   #lvis .${К} .яч.буква i{color:#fff;font-style:italic;text-shadow:0 2px 0 rgba(0,0,0,.3)}
   #lvis .${К} .яч.буква::after{background:rgba(255,255,255,.4)}
-  #lvis .${К} .яч.пусто{background:radial-gradient(circle at 50% 35%,#fffbe0,#ffe27a);border:3px dashed #c98a1a;animation:мс-окно-кн 1.4s ease-in-out infinite}
+  #lvis .${К} .яч.пусто{background:radial-gradient(circle at 50% 35%,#fffbe0,#ffe27a);border:3px dashed #c98a1a}
   #lvis .${К} .яч.пусто i{color:#b8740a}
-  #lvis .${К} .яч.итог{background:radial-gradient(circle at 50% 30%,#f2fff0,#bdeec6 60%,#7fd08f);border-color:#2f7a46;animation:мс-выпрыг .5s cubic-bezier(.3,1.6,.5,1) both}
+  #lvis .${К} .яч.итог{background:radial-gradient(circle at 50% 30%,#f2fff0,#bdeec6 60%,#7fd08f);border-color:#2f7a46;animation:кл-выпрыг .5s cubic-bezier(.3,1.6,.5,1) both}
   #lvis .${К} .яч.итог i{color:#1d6a34}
-  #lvis .${К} .зн{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;
+  #lvis .${К} .зн{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;
     border:2.5px solid rgba(0,0,0,.35);box-shadow:inset 0 3px 4px rgba(255,255,255,.55),0 2px 0 rgba(0,0,0,.3)}
-  #lvis .${К} .зн i{font-style:normal;font-size:28px;line-height:1;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.3);margin-top:-2px}
+  #lvis .${К} .зн i{font-style:normal;font-size:26px;font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.3);margin-top:-2px}
   #lvis .${К} .зн.плюс{background:radial-gradient(circle at 40% 30%,#9be27a,#3f9a2e)}
   #lvis .${К} .зн.минус{background:radial-gradient(circle at 40% 30%,#ff9a7a,#d0432a)}
   #lvis .${К} .зн.равно{background:radial-gradient(circle at 40% 30%,#ffe07a,#d99a1a)}
-  @keyframes мс-окно-кн{0%,100%{box-shadow:0 0 0 0 rgba(255,215,90,0),inset 0 3px 6px #fff}50%{box-shadow:0 0 0 7px rgba(255,215,90,.45),inset 0 3px 6px #fff}}
-  @keyframes мс-выпрыг{0%{transform:scale(.3)}70%{transform:scale(1.18)}100%{transform:scale(1)}}
-  /* ── кнопки-ответы: деревянная табличка, кремовое окошко ── */
+  @keyframes кл-выпрыг{0%{transform:scale(.3)}70%{transform:scale(1.18)}100%{transform:scale(1)}}
+  /* ── таблички тренажёра (jun_trener.js) ── */
   #lvis .${К} .числа{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding-top:4px}
   #lvis .${К} .число{appearance:none;position:relative;min-width:76px;min-height:76px;padding:6px;font-family:inherit;cursor:pointer;
     border:3px solid #5b3416;border-radius:20px;
@@ -594,49 +776,44 @@
   #lvis .${К} .число .окно{display:flex;align-items:center;justify-content:center;min-width:58px;height:58px;padding:0 8px;border-radius:14px;position:relative;
     background:radial-gradient(120% 90% at 50% 15%,#fffdf3 0%,#fff1c9 60%,#f3d58e 100%);
     box-shadow:inset 0 -5px 0 rgba(170,110,30,.22),inset 0 3px 6px #fff,0 0 0 2px rgba(91,52,22,.35);
-    font-size:36px;line-height:1;color:#5a2a08;text-shadow:0 2px 0 #fff,0 4px 6px rgba(90,42,8,.25);white-space:nowrap}
-  #lvis .${К} .число.слово .окно{font-size:28px;padding:0 12px}
+    font-size:34px;font-weight:900;line-height:1;color:#5a2a08;text-shadow:0 2px 0 #fff;white-space:nowrap}
   #lvis .${К} .число .окно::after{content:'';position:absolute;left:9px;right:9px;top:5px;height:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0))}
   #lvis .${К} .число:active{transform:translateY(6px);box-shadow:0 1px 0 #5b3416,0 3px 6px rgba(30,15,5,.3),inset 0 2px 0 rgba(255,255,255,.4)}
-  #lvis .${К} .число.верно{background:linear-gradient(180deg,#8fd46a,#3f8a2e);border-color:#2a5a1e;box-shadow:0 7px 0 #2a5a1e,0 0 0 5px rgba(140,220,110,.45),0 10px 14px rgba(30,15,5,.3);animation:мс-радость-кн .6s ease-out}
+  #lvis .${К} .число.верно{background:linear-gradient(180deg,#8fd46a,#3f8a2e);border-color:#2a5a1e;box-shadow:0 7px 0 #2a5a1e,0 0 0 5px rgba(140,220,110,.45),0 10px 14px rgba(30,15,5,.3)}
   #lvis .${К} .число.верно .окно{background:radial-gradient(120% 90% at 50% 15%,#f4fff0,#c7f0cc 65%,#86d49a);color:#1d6a34}
   #lvis .${К} .число.верно::after{content:'★';position:absolute;right:-10px;top:-12px;font-size:26px;color:#ffc93a;text-shadow:0 2px 0 #a3762a,0 0 6px #fff}
-  #lvis .${К} .число.мимо{background:linear-gradient(180deg,#e89a86,#b4553e);border-color:#7a2a18;box-shadow:0 7px 0 #7a2a18,0 10px 14px rgba(30,15,5,.25);animation:мс-дрожь .4s ease-in-out;cursor:default}
+  #lvis .${К} .число.мимо{background:linear-gradient(180deg,#e89a86,#b4553e);border-color:#7a2a18;box-shadow:0 7px 0 #7a2a18,0 10px 14px rgba(30,15,5,.25);animation:кл-дрожь .4s ease-in-out;cursor:default}
   #lvis .${К} .число.мимо .окно{background:radial-gradient(120% 90% at 50% 15%,#fff3ef,#f7d3c8);color:#b23a22;opacity:.85}
-  #lvis .${К} .число.мимо::after{content:'✗';position:absolute;right:-8px;top:-10px;width:24px;height:24px;border-radius:50%;background:#c2412b;color:#fff;
-    font-size:15px;line-height:24px;text-align:center;box-shadow:0 2px 0 #7a2a18}
+  #lvis .${К} .число.мимо::after{content:'✗';position:absolute;right:-8px;top:-10px;width:24px;height:24px;border-radius:50%;background:#c2412b;color:#fff;font-size:15px;line-height:24px;text-align:center;box-shadow:0 2px 0 #7a2a18}
   #lvis .${К} .число:disabled:not(.верно):not(.мимо){opacity:.55}
-  @keyframes мс-радость-кн{0%{transform:scale(1)}35%{transform:scale(1.15) translateY(-6px)}100%{transform:scale(1)}}
-  @keyframes мс-дрожь{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
-  #lvis .${К} .разбор{margin:0;font-size:18px;line-height:1.35;background:#fde3d9;border:2.5px solid var(--мимо);border-radius:14px;padding:10px 12px;color:#6a1e10}
-  #lvis .${К} .задание{margin:0;font-size:19px;line-height:1.3;text-align:center;color:#f2ead6}
-  #lvis .${К} .готово{display:flex;gap:8px;align-items:center;margin:0;font-size:19px;line-height:1.3;background:#c4ebcf;
+  @keyframes кл-дрожь{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  #lvis .${К} .разбор{margin:0;font-size:17px;font-weight:700;line-height:1.4;background:#fde3d9;border:2.5px solid var(--мимо);border-radius:14px;padding:10px 12px;color:#6a1e10}
+  #lvis .${К} .готово{display:flex;gap:8px;align-items:center;margin:0;font-size:17px;font-weight:700;line-height:1.4;background:#c4ebcf;
     border:2.5px solid var(--верно);border-radius:16px;padding:10px 14px;color:#1d5a32}
   #lvis .${К} .готово span{font-size:24px;color:#f0b23a}
   #lvis .${К} .ряд-кн{display:flex;justify-content:center}
-  #lvis .${К} .дальше-кн{appearance:none;min-height:56px;padding:0 20px;font-family:inherit;font-size:21px;border:3px solid var(--контур);
+  #lvis .${К} .дальше-кн{appearance:none;min-height:56px;padding:0 22px;font-family:inherit;font-size:20px;font-weight:900;border:3px solid var(--контур);
     border-radius:16px;background:linear-gradient(180deg,#ffe58a,#f4b73c);color:#4a2a0c;cursor:pointer;box-shadow:0 5px 0 #8a4f14}
   #lvis .${К} .дальше-кн:active{transform:translateY(5px);box-shadow:none}
   #lvis .${К} .таблица{align-self:center;display:flex;flex-direction:column;border:3px solid #5b3416;border-radius:14px;overflow:hidden;box-shadow:0 5px 0 #5b3416;min-width:200px}
   #lvis .${К} .тр{display:grid;grid-template-columns:1fr 1fr;background:#fff6e4}
   #lvis .${К} .тр+.тр{border-top:2px solid #d9b98a}
-  #lvis .${К} .тр span{text-align:center;font-size:26px;padding:4px 10px;color:#5a2a08}
+  #lvis .${К} .тр span{text-align:center;font-size:24px;font-weight:900;padding:4px 10px;color:#5a2a08}
   #lvis .${К} .тр span+span{border-left:2px solid #d9b98a}
   #lvis .${К} .тр.шапка{background:linear-gradient(180deg,#e8bf86,#c98f52)}
-  #lvis .${К} .тр.шапка span{font-size:22px;color:#2a55a8;font-style:italic}
+  #lvis .${К} .тр.шапка span{font-size:20px;color:#2a55a8;font-style:italic}
   #lvis .${К} .памятка{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   #lvis .${К} .памятка div{background:var(--лист);border:2.5px solid var(--контур);border-radius:14px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;box-shadow:0 3px 0 rgba(74,42,16,.2)}
-  #lvis .${К} .памятка b{font-size:21px;font-weight:normal}
-  #lvis .${К} .памятка span{font-size:15px;color:#5a4028;line-height:1.25}
-  #lvis .${К} .что-делать{margin:0;font-size:18px;text-align:center;color:#f2ead6;background:rgba(42,29,16,.5);border-radius:12px;padding:8px 12px}
-  #lvis .${К} .дт-лента{background:url('${ДОСКА}doska.webp') center/100% 100% no-repeat;border:none;box-shadow:none;padding:10px 28px 12px}
+  #lvis .${К} .памятка b{font-size:20px;font-weight:900}
+  #lvis .${К} .памятка span{font-size:14px;font-weight:700;color:#5a4028;line-height:1.3}
+  #lvis .${К} .что-делать{margin:0;font-size:17px;font-weight:800;text-align:center;color:#f2ead6;background:rgba(42,29,16,.5);border-radius:12px;padding:8px 12px}
+  #lvis .${К} .дт-лента{background:url('${ДОСКА}doska.webp') center/100% 100% no-repeat;border:none;box-shadow:none;padding:10px 28px 12px;font-weight:900}
   @media (max-width:370px){
     #lvis .${К} .реплика p{font-size:16px}
     #lvis .${К} .число{min-width:66px;min-height:66px;padding:5px}
-    #lvis .${К} .число .окно{min-width:50px;height:50px;font-size:30px}
-    #lvis .${К} .число.слово .окно{font-size:24px}
-    #lvis .${К} .яч{width:48px;height:48px}
-    #lvis .${К} .яч i{font-size:28px}
+    #lvis .${К} .число .окно{min-width:50px;height:50px;font-size:28px}
+    #lvis .${К} .яч{width:46px;height:46px}
+    #lvis .${К} .яч i{font-size:26px}
     #lvis .${К} .памятка{grid-template-columns:1fr}
   }
   @media (prefers-reduced-motion:reduce){#lvis .${К} *{animation:none !important;transition:none !important}}
@@ -648,7 +825,7 @@
 
   /* ═══════════════════ ОТРИСОВКА ═══════════════════ */
   function рисовать(el){
-    стиль();
+    стиль(); клип = 0;
     const i = шаг(), к = КАДРЫ[i], st = сост(i), гот = к.готов(st), Г = ГЕРОИ[к.кто];
     const делать = typeof к.делать === 'function' ? к.делать(st) : к.делать;
     el.innerHTML = `<div class="${К}">
@@ -660,32 +837,33 @@
   }
 
   /* ═══════════════════ ТРЕНАЖЁР В СТИЛЕ УРОКА ═══════════════════ */
-  const картинка = (б, а, тип, з, ч, кто) => сцена(`${вывеска(180, 44, `${б} ${з} ${ч},  ${б} = ${а}`, 250)}
-      ${коробка(70, 176, 120, { буква: б, открыта: true, внутри: Array(а).fill(тип), ярлык: `${б} = ${а}` })}
-      ${кто === 'кубик' ? герой('кубик', 312, 296, 112, 'дышит') : герой('пых', 312, 296, 100, 'дышит', 'думает')}`, 'Коробка с буквой');
+  const картинка = (б, а, з, ч, кто) => сцена(`${вывеска(180, 34, `${б} ${з} ${ч},   ${б} = ${а}`, 230)}
+      ${корзинка(40, 92, 156, { яблоки: Array(а).fill(0), ярлык: `${б} = ${а}` })}
+      ${кто === 'борька' ? герой('борька', 300, 296, 130, null, 'показ') : герой('хрум', 296, 296, 120, null, 'лупа')}`, 'Корзинка с буквой', 'fon_ogorod');
   if (window.ДТ) ДТ.подключить({
     ID, корень: К, стиль,
-    герой: { ф: ГЕРОИ.пых.ф, имя: 'Пых' }, герои: { кубик: { ф: ГЕРОИ.кубик.ф, имя: 'Кубик' } },
+    герой: { ф: ГЕРОИ.хрум.ф, имя: 'Хрум' }, герои: { борька: { ф: ГЕРОИ.борька.ф, имя: 'Борька' } },
     вопросы: {
       проверка: {
-        картинка: () => картинка('a', 6, 'с', '+', 2),
+        картинка: () => картинка('a', 6, '+', 2),
         разборы: { '4': 'Это 6 − 2. А у нас плюс — добавляем.', '62': 'Шесть и два рядом — это шестьдесят два. Между ними плюс: 6 + 2.', '12': 'Это 6 + 6. А прибавляем только два.' },
         итог: 'a = 6, значит a + 2 = 6 + 2 = 8.'
       },
       задачи: [
-        { кто: 'кубик', картинка: () => картинка('b', 9, 'к', '−', 3, 'кубик'),
-          разборы: { 12: 'Здесь минус — из коробки забирают!', 3: 'Три — это сколько забрали. А сколько осталось?', 5: 'Пересчитай: из девяти убери три.', 7: 'Пересчитай: из девяти убери три.' },
+        { кто: 'борька', картинка: () => картинка('b', 9, '−', 3, 'борька'),
+          разборы: { 12: 'Здесь минус — из корзинки забирают!', 3: 'Три — это сколько забрали. А сколько осталось?', 5: 'Пересчитай: из девяти убери три.', 7: 'Пересчитай: из девяти убери три.' },
           итог: 'b − 3 = 9 − 3 = 6.' },
-        { картинка: () => картинка('x', 4, 'р', '+', 5),
-          разборы: { '45': 'Так ошибся Кубик! Между 4 и 5 стоит плюс: 4 + 5.', '54': 'Числа не ставим рядом — складываем: 4 + 5.', '1': 'Это 5 − 4. А у нас плюс.' },
+        { картинка: () => картинка('x', 4, '+', 5),
+          разборы: { '45': 'Так ошибся Борька! Между 4 и 5 стоит плюс: 4 + 5.', '54': 'Числа не ставим рядом — складываем: 4 + 5.', '1': 'Это 5 − 4. А у нас плюс.' },
           итог: 'x + 5 = 4 + 5 = 9.' },
-        { кто: 'кубик', картинка: () => картинка('c', 7, 'с', '+', 3, 'кубик'),
-          разборы: { 4: 'Здесь плюс — добавляем!', 3: 'Три — это сколько добавили. А в коробке ещё семь.', 9: 'Досчитай от семи: восемь, девять, десять.' },
+        { кто: 'борька', картинка: () => картинка('c', 7, '+', 3, 'борька'),
+          разборы: { 4: 'Здесь плюс — добавляем!', 3: 'Три — это сколько добавили. А в корзинке ещё семь.', 9: 'Досчитай от семи: восемь, девять, десять.' },
           итог: 'c + 3 = 7 + 3 = 10.' }
       ]
     },
-    финал: () => сцена(`${коробка(96, 168, 150, { буква: 'a', открыта: true, внутри: ['с', 'к', 'р', 'с', 'к'] })}
-        ${герой('пых', 50, 298, 96, 'радуется', 'прыг')}${герой('кубик', 318, 298, 104, 'радуется')}`, 'Пых и Кубик празднуют')
+    финал: () => сцена(`<image href="${ДОСКА}druzya.webp" x="30" y="100" width="300" height="190" class="радуется"/>
+        ${[[154, 166], [176, 158], [198, 166], [165, 150], [187, 148]].map(([x, y], k) => яблоко(x, y, { s: 26, тень: false, зел: k % 2 })).join('')}
+        <g class="хлоп"><image href="${ОБЩ}star.webp" x="70" y="40" width="34" height="34"/><image href="${ОБЩ}star.webp" x="160" y="14" width="42" height="42"/><image href="${ОБЩ}star.webp" x="262" y="44" width="30" height="30"/></g>`, 'Хрум и Борька празднуют', 'fon_domik')
   });
 
   /* ═══════════════════ РЕГИСТРАЦИЯ ═══════════════════ */
