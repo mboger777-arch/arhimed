@@ -8,6 +8,7 @@
   const {frames, stations} = window.TRAIL257_CONTENT;
   const questions = stations.flatMap(s => s.tasks).map(t => [t.q, t.answer]);
   const lesson = window.ARH_LESSONS.find(l => l.id === ID);
+  if (!lesson) return;   /* урок не догрузился (обрыв сети) — не роняем остальное приложение */
   Object.assign(lesson, {
     title: 'Тропинка чисел: луч, сложение и вычитание',
     src: 'Начальная школа · 1 класс · Числовой луч: сложение и вычитание', subj: 'jun',
@@ -74,8 +75,10 @@
   window.renderLessonView = function () {
     if (LV.id !== ID) return previous.apply(this, arguments);
     if (!document.getElementById('lesson257-frame')) {
-      document.getElementById('screen').innerHTML =
-        '<iframe id="lesson257-frame" title="Урок 257 — Тропинка к дому" src="lessons/257/index.html?v=931" style="position:fixed;inset:0;width:100%;height:100%;height:100dvh;border:0;z-index:9000;background:#0b1712"></iframe>';
+      /* Урок встроен в обычный экран: шапка приложения, «← Книга знаний», название урока и нижнее
+         меню на месте; документ урока — в карточке, его шапка и 100svh сняты (js/lesson_embed.js). */
+      ВСТРОЕННЫЙ_УРОК.экран({ рамка: 'lesson257-frame', адрес: 'lessons/257/index.html?v=931', название: 'Урок 257 — Тропинка к дому',
+        подпись: lesson.src, css: 'header .brand,header #exit{display:none!important}header{position:absolute!important;top:6px;right:8px;border:0!important;padding:0!important;min-height:0!important;z-index:6}.lesson-shell{position:relative!important}.heading{padding-right:56px}.eyebrow{display:none!important}.heading{margin-top:0!important}.lesson-shell{padding-top:8px!important}' });
     }
     hud();
   };
