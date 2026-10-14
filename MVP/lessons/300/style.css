@@ -38,3 +38,24 @@ body{font-weight:600;line-height:1.45}button,input{font-weight:700}h1{font-size:
  .trainer-question{font-size:16px;line-height:1.3;margin:6px 0}.trainer-task .ten-frame{max-width:220px}
  .trainer-feedback{font-size:14px;line-height:1.3}.trainer-equation{margin:8px 0}
 }
+
+/* Action scenes: one nut in Ryzhik's paw plus the visible reserve equals the remainder. */
+.handoff-scene{display:flex;justify-content:center;align-items:flex-end;max-width:390px;margin:auto;position:relative}
+.giving-hero{position:relative;border:0;background:transparent;color:#49311a;width:190px;flex-shrink:0;padding:0;min-height:44px}
+.giving-hero>img{display:block;width:100%;filter:drop-shadow(0 4px 2px #49311a38)}
+.giving-hero>span:last-child{display:block;font-size:14px;font-weight:900;background:#fff0ce;border-radius:8px;padding:4px}
+.paw-origin{position:absolute;left:12%;top:43%;width:20px;height:20px}.passing img{opacity:.65}.giving-hero:disabled{opacity:1}
+.reserve{flex:1;text-align:center;align-self:flex-end;padding-bottom:27px}.reserve>b{display:block;font-size:14px;background:#fff1cf;border-radius:7px;padding:3px}
+.reserve-basket{display:flex;align-content:center;justify-content:center;flex-wrap:wrap;min-height:110px;padding:20px 12px;background:url('assets/basket-empty.webp') center/100% 100% no-repeat}
+.reserve-basket .nut{width:32px;height:35px}.reserve-total{text-align:center;font-size:14px;font-weight:800;color:#49311a;background:#fff0d0e8;border-radius:8px;padding:3px 8px;width:fit-content;margin:4px auto}
+.arrival-scene{display:flex;align-items:center;justify-content:center;gap:10px}.arrival-scene>img{width:145px;height:145px;object-fit:contain}.arrival-scene>div{text-align:center;background:#fff0d9ee;border-radius:12px;padding:10px}.remaining-nuts{display:flex;justify-content:center}.arrival-scene b,.arrival-scene span{font-size:16px}
+.actor-card{display:flex;align-items:center;justify-content:center;gap:5px;border:0;background:transparent;margin:4px auto;color:#49311a;min-height:44px;width:100%;max-width:320px}.actor-card img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 3px 2px #49311a38)}.actor-card span{max-width:160px;background:#fff0d7ef;border:1px solid #c7a569;border-radius:14px;padding:10px;font-size:14px}
+.trainer-actor{display:flex;align-items:center;justify-content:center;gap:8px}.trainer-friend{border:0;background:none;min-width:64px;min-height:64px;padding:0}.trainer-friend img{width:76px;height:76px;object-fit:contain}.trainer-actor h3{margin:0!important;text-align:left}
+@media(max-width:650px){.handoff-scene{max-width:280px}.giving-hero{width:145px}.reserve-basket{min-height:100px;padding:15px 12px}.reserve-basket .nut{width:29px;height:32px}.arrival-scene>img{width:110px;height:110px}.actor-card img{width:100px;height:100px}.actor-card{margin:0 auto}.trainer-actor h3{font-size:20px}}
+@media(max-width:650px) and (max-height:720px){.giving-hero{width:115px}.reserve-basket{min-height:85px}.actor-card img{width:80px;height:80px}.arrival-scene>img{width:90px;height:90px}.trainer-friend img{width:60px;height:60px}}
+@media(prefers-reduced-motion:reduce){.passing img{opacity:1}}
+
+@media(max-width:650px) and (max-height:720px){.scene:has(.handoff-scene) .math-card{display:none}.giving-hero>span:last-child{font-size:12px;white-space:nowrap;padding:3px}.reserve-total{margin:2px auto}.hint-button{min-height:44px}.trainer-home{min-height:44px}}
+
+.show-empty .slot.empty:after{outline:3px solid #70a04f;background:#f8ffd7;color:#31512c}
+@media(max-width:650px) and (max-height:720px){.lesson-heading p{display:none}.giving-hero{width:105px}}

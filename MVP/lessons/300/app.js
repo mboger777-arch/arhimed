@@ -10,9 +10,9 @@
   let animationVersion = 0;
   const lesson = [
     {label:'НАША ИСТОРИЯ',title:'Поможем Рыжику?',copy:'В лотке <strong>8 орехов</strong>, а в корзинке ещё <strong>5</strong>. Как быстро узнать, сколько их вместе?',speech:'Помоги нам сосчитать все орешки для посылки!',mentor:'Удобнее считать, когда сначала собираешь полный десяток.',next:'Начать приключение →'},
-    {label:'СОБИРАЕМ ДЕСЯТОК',title:'Два места ждут орешки',copy:'Нажимай на корзинку. Одно нажатие — один орешек. Заполни пустые места, чтобы получилось <strong>10</strong>.',speech:'Нажимай на корзинку, пока в лотке не станет 10 орешков.',mentor:'В лотке два ряда по пять мест. Полный лоток — это 10.',next:'Посчитать остаток →'},
+    {label:'СОБИРАЕМ ДЕСЯТОК',title:'Два места ждут орешки',copy:'Нажимай на Рыжика. Он подаст один орешек за раз. Заполни пустые места, чтобы получилось <strong>10</strong>.',speech:'Нажимай на Рыжика, пока в лотке не станет 10 орешков.',mentor:'В лотке два ряда по пять мест. Полный лоток — это 10.',next:'Посчитать остаток →'},
     {label:'НАШЕ ОТКРЫТИЕ',title:'Десяток и ещё…',copy:'В лотке теперь <strong>10</strong>, а в корзинке осталось <strong>3</strong>. Сколько орехов всего?',speech:'Два орешка дополнили десяток. А ещё три остались в корзинке!',mentor:'Мы ничего не добавляли и не убирали. Только переложили.',next:'Попробовать самому →'},
-    {label:'ТЕПЕРЬ ТВОЯ ОЧЕРЕДЬ',title:'Новая посылка: 7 + 6',copy:'Сначала дополни лоток до десяти. Нажимай на корзинку: одно нажатие — один орешек.',speech:'А эту посылку соберёшь сам? Здесь 7 орешков, в корзинке — 6.',mentor:'Сколько пустых мест в лотке? Столько орехов и переложи.',next:'Я готов к следующему →'},
+    {label:'ТЕПЕРЬ ТВОЯ ОЧЕРЕДЬ',title:'Новая посылка: 7 + 6',copy:'Сначала дополни лоток до десяти. Нажимай на Рыжика: одно нажатие — один орешек.',speech:'А эту посылку соберёшь сам? Здесь 7 орешков, в корзинке — 6.',mentor:'Сколько пустых мест в лотке? Столько орехов и переложи.',next:'Я готов к следующему →'},
     {label:'ЧУТЬ БОЛЬШЕ САМОСТОЯТЕЛЬНОСТИ',title:'Справишься в уме?',copy:'Тоша принёс <strong>9 орехов и ещё 4</strong>. Сколько получится? Вспомни секрет десятка.',speech:'Теперь попробуем без перекладывания. Если трудно — Тоша поможет!',mentor:'До десяти девятке не хватает всего одного.',next:'Открыть главный секрет →'},
     {label:'ГЛАВНЫЙ СЕКРЕТ',title:'Как разделить семёрку?',copy:'Нужно решить <strong>8 + 7</strong>. Как разделить 7, чтобы первой частью дополнить 8 до 10?',speech:'Последняя посылка! Выбери удобные части — и всё получится.',mentor:'Первая часть заполняет пустые места. Вторую прибавляем к десяти.',next:'Перейти к тренажёрам →'},
     {label:'ПРИКЛЮЧЕНИЕ ПРОЙДЕНО',title:'Ты подружился с десятком!',copy:'Теперь ты умеешь складывать через десяток. Рыжик отправит посылки друзьям!',speech:'Спасибо! Теперь большие примеры мне не страшны. Ты настоящий помощник!',mentor:'Объясни кому-нибудь свой секрет: сначала до 10, потом остаток.',next:'Пройти ещё раз ↻'}
@@ -21,10 +21,20 @@
   try{const saved=bridge?.load();if(saved&&Number.isInteger(saved.step)&&saved.step>=0&&saved.step<7&&saved.states&&typeof saved.states==='object'&&Number.isInteger(saved.unlocked)&&saved.unlocked>=saved.step&&saved.unlocked<7)state=saved;}catch{}
   function nut(cls=''){return `<span class="nut ${cls}" aria-hidden="true"></span>`;}
   function frame(count,added=0){return `<div class="ten-frame" aria-label="В лотке ${count} орехов из 10">${Array.from({length:10},(_,i)=>`<div class="slot ${i>=count?'empty':''} ${i>=count-added&&i<count?'new':''}">${i<count?nut(i>=count-added?'new-nut':''):''}</div>`).join('')}</div>`;}
+  function actorCard(pose,text,action='hint') {
+    return `<button class="actor-card" data-actor="${action}" aria-label="${text}"><img src="assets/${pose}.webp" alt=""><span>${text}</span></button>`;
+  }
   function tray(a,b,s,interactive=false){
     const n=a+s.moved,full=n===10,remaining=b-s.moved,k=Array.from({length:b},(_,i)=>i).find(i=>!s.used.includes(i));
-    return `<div class="tableau tray-tableau"><div class="tableau-header"><h3>Лоток на 10</h3><span class="tiny-pill">${full?'Собран!':`${n} из 10`}</span></div>${frame(n,s.moved)}${full?'<div class="pack-label">✓ Один целый десяток <b>10</b></div>':''}</div>
-    <div class="duet-tableau"><div class="basket-caption">В корзинке: <b>${remaining} ${word(remaining)}</b></div><div class="duet-group"><img class="duet-art" src="assets/friends-with-basket.webp" alt="Рыжик и Тоша стоят рядом и вместе держат корзинку"><div class="held-nuts" data-count="${remaining}" aria-label="В корзинке ${remaining} ${word(remaining)}">${Array.from({length:remaining},()=>nut()).join('')}</div>${interactive&&!full?`<button type="button" class="basket-target" data-nut="${k}" aria-label="Переложить один орешек в лоток"></button>`:''}</div>${interactive&&!full?'<p class="transfer-note">Нажми на корзинку — переложи 1 орешек</p>':''}</div>`;
+    const board=`<div class="tableau tray-tableau"><div class="tableau-header"><h3>Лоток на 10</h3><span class="tiny-pill">${full?'Собран!':`${n} из 10`}</span></div>${frame(n,s.moved)}${full?'<div class="pack-label">✓ Один целый десяток <b>10</b></div>':''}</div>`;
+    if(interactive&&!full) return board+`<div class="handoff-scene"><div class="reserve"><b>В корзинке: ${remaining-1}</b><div class="reserve-basket">${Array.from({length:remaining-1},()=>nut()).join('')}</div></div><button class="giving-hero" data-nut="${k}" aria-label="Рыжик: переложить один орешек в лоток"><img src="assets/ryzhik-give.webp" alt="Рыжик протягивает один орешек"><span class="paw-origin" aria-hidden="true"></span><span>В лапке: 1</span></button></div><p class="reserve-total">Осталось: ${remaining-1} + 1 = ${remaining}</p>`;
+    if([1,3].includes(state.step)&&full) return board+`<div class="arrival-scene"><img src="assets/ryzhik-happy.webp" alt="Рыжик радуется полному десятку"><div><b>Осталось ${remaining}</b><div class="remaining-nuts">${Array.from({length:remaining},()=>nut()).join('')}</div><span>10 и ещё ${remaining}</span></div></div>`;
+    return board+`<div class="duet-tableau"><div class="basket-caption">В корзинке: <b>${remaining} ${word(remaining)}</b></div><div class="duet-group"><img class="duet-art" src="assets/friends-with-basket.webp" alt="Рыжик и Тоша стоят рядом и вместе держат корзинку"><div class="held-nuts" data-count="${remaining}" aria-label="В корзинке ${remaining} ${word(remaining)}">${Array.from({length:remaining},()=>nut()).join('')}</div></div></div>`;
+  }
+  function reactHero(success=false){
+    const img=document.querySelector('.dialogue>img');img.src=`assets/${success?'ryzhik-happy':'tosha-point'}.webp`;
+    document.querySelector('.speaker').textContent=success?'РЫЖИК РАДУЕТСЯ':'ТОША ПОМОГАЕТ';
+    document.querySelectorAll('.actor-card img').forEach(e=>e.src=`assets/${success?'ryzhik-happy':state.step===5?'ryzhik-search':'tosha-point'}.webp`);
   }
   function word(n){return n===1?'орех':n>1&&n<5?'ореха':'орехов';}
   function equation(a,b,result=false){return `<div class="equation"><span>${a}</span><span class="sign">+</span><span class="part">${b}</span><span class="sign">=</span>${result!==false?`<span class="result">${result}</span>`:'<span class="answer">?</span>'}</div>`;}
@@ -32,8 +42,10 @@
   function setFeedback(text,success=false){$('feedback').textContent=text;$('feedback').className='feedback'+(success?' success':'');}
   function ready(){const s=stepState();return state.step===0||state.step===6||state.step===1&&s.moved===2||s.answer;}
   function render(){
-    animationVersion++;moving=false;
+    animationVersion++;moving=false;document.querySelectorAll('.celebrate').forEach(e=>e.remove());
     const i=state.step,s=stepState(),d=lesson[i];
+    const speaker=i===4||s.hint?'tosha-point':i===5?'ryzhik-search':s.answer?'ryzhik-happy':'ryzhik-squirrel';
+    document.querySelector('.dialogue>img').src=`assets/${speaker}.webp`;document.querySelector('.speaker').textContent=speaker.startsWith('tosha')?'ТОША':'РЫЖИК';
     $('footer-note').textContent='Сначала соберём десяток. Затем прибавим остаток.';
     document.querySelector('.scene').dataset.step=i;
     document.querySelector('.scene').classList.toggle('training-scene',i===6);
@@ -66,12 +78,13 @@
       });
       bindGame();save();return;
     }
-    if(i===4||i===5)game+='<div class="duet-group quiet-duet"><img class="duet-art" src="assets/friends-with-basket.webp" alt="Рыжик и Тоша вместе держат корзинку"></div>';
+    if(i===4||i===5)game+=actorCard(s.answer?'ryzhik-happy':i===4?'tosha-point':'ryzhik-search',s.answer?'Ура! Ответ найден':i===4?'Тоша, покажи секрет десятка':'Рыжик, помоги разделить число',s.answer?'cheer':'hint');
     $('game-area').innerHTML=game;
     $('mobile-instruction').textContent=$('guide-copy').textContent;
     bindGame();save();
   }
   function bindGame(){
+    document.querySelectorAll('[data-actor]').forEach(b=>b.onclick=()=>{if(b.dataset.actor==='hint')$('hint').click();else celebrate();});
     document.querySelectorAll('#chapters [data-step]').forEach(b=>b.onclick=()=>go(Number(b.dataset.step)));
     document.querySelectorAll('[data-nut]').forEach(b=>b.onclick=()=>transfer(Number(b.dataset.nut),b));
     document.querySelectorAll('[data-total]').forEach(b=>b.onclick=()=>answer(Number(b.dataset.total),b));
@@ -84,11 +97,11 @@
     const s=stepState(),a=state.step===1?8:7,b=state.step===1?5:6;
     if(![1,3].includes(state.step)||s.moved>=10-a||s.used.includes(k)||k<0||k>=b)return;
     moving=true;
-    const start=button.getBoundingClientRect(),target=document.querySelector('.slot.empty')?.getBoundingClientRect();
+    const start=(button.querySelector('.paw-origin')||button).getBoundingClientRect(),target=document.querySelector('.slot.empty')?.getBoundingClientRect();
     s.used.push(k);s.moved++;save();
     const token=animationVersion;
     if(target&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
-      const flyer=document.createElement('div');flyer.className='flying-nut';flyer.innerHTML=nut();flyer.style.left=`${start.x+start.width/2-15}px`;flyer.style.top=`${start.y+start.height/2-18}px`;document.body.appendChild(flyer);button.style.visibility='hidden';
+      const flyer=document.createElement('div');flyer.className='flying-nut';flyer.innerHTML=nut();flyer.style.left=`${start.x+start.width/2-15}px`;flyer.style.top=`${start.y+start.height/2-18}px`;document.body.appendChild(flyer);button.disabled=true;button.classList.add('passing');const hand=button.querySelector('img');if(hand)hand.src='assets/ryzhik-happy.webp';
       const dx=target.x+target.width/2-(start.x+start.width/2),dy=target.y+target.height/2-(start.y+start.height/2);
       const anim=flyer.animate([{transform:'translate(0,0) rotate(0)'},{transform:`translate(${dx*.5}px,${dy*.5-55}px) rotate(20deg)`},{transform:`translate(${dx}px,${dy}px) rotate(-7deg)`}],{duration:480,easing:'ease-in-out'});
       anim.finished.then(()=>{flyer.remove();if(token===animationVersion)render();}).catch(()=>flyer.remove());
@@ -106,16 +119,16 @@
     else if(n===correct-1)message=`Начни после десяти: 11, 12, 13${correct===15?', 14, 15':''}. Сам десяток второй раз не считаем.`;
     else if(n===correct+1)message='Кажется, один орешек посчитали дважды. Начни с 10 и добавляй по одному.';
     else if(i===4)message='Девятке нужен 1 орех до десяти. Из четырёх останутся 3. Сколько будет 10 + 3?';
-    setFeedback(message);
+    reactHero(false);setFeedback(message);
   }
   function split(value,button){const s=stepState();if(state.step!==5||s.split)return;if(value==='2 + 5'){s.split=true;render();setFeedback('Да! Именно 2 не хватает восьмёрке до десяти.',true);}else{button.classList.add('wrong');setFeedback(value==='3 + 4'?'3 + 4 — тоже 7. Но 8 + 3 = 11. Чтобы получить ровно 10, нужна другая первая часть.':'1 + 6 — тоже 7. Но 8 + 1 = 9. До десятка пока не хватает ещё одного.');}}
-  function celebrate(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const wrap=document.createElement('div');wrap.className='celebrate';wrap.innerHTML=Array.from({length:20},(_,i)=>`<span class="confetti" style="left:${i*5}%;background:${['#e1b74e','#72995b','#f7df97','#cb8352'][i%4]};animation-delay:${(i%5)*.08}s;transform:rotate(${i*17}deg)"></span>`).join('');document.querySelector('.scene').appendChild(wrap);setTimeout(()=>wrap.remove(),2800);}
+  function celebrate(){reactHero(true);if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const wrap=document.createElement('div');wrap.className='celebrate';wrap.innerHTML=Array.from({length:20},(_,i)=>`<span class="confetti" style="left:${i*5}%;background:${['#e1b74e','#72995b','#f7df97','#cb8352'][i%4]};animation-delay:${(i%5)*.08}s;transform:rotate(${i*17}deg)"></span>`).join('');document.querySelector('.scene').appendChild(wrap);setTimeout(()=>wrap.remove(),2800);}
   function cancelSpeech(){if('speechSynthesis'in window)speechSynthesis.cancel();$('sound').setAttribute('aria-pressed','false');}
   function reset(){cancelSpeech();state=fresh();render();}
   $('next').onclick=()=>{if(!ready())return;if(state.step===6){bridge?.exit(true);return;}cancelSpeech();state.step++;state.unlocked=Math.max(state.unlocked,state.step);render();if(innerWidth<960)document.querySelector('.adventure').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});};
   $('exit').onclick=()=>{cancelSpeech();bridge?.exit(false);};
   $('back').onclick=()=>go(state.step-1);$('restart').onclick=reset;
-  $('hint').onclick=()=>{const s=stepState();s.hint=true;$('mentor').hidden=false;if(state.step===4){render();setFeedback('Возьми из четырёх один: 9 + 1 = 10. Сколько осталось прибавить?');}else{setFeedback(lesson[state.step].mentor);}save();};
+  $('hint').onclick=()=>{reactHero(false);const s=stepState();s.hint=true;$('mentor').hidden=false;if(state.step===4){render();setFeedback('Возьми из четырёх один: 9 + 1 = 10. Сколько осталось прибавить?');}else{setFeedback(lesson[state.step].mentor);}save();};
   $('sound').onclick=()=>{if(!('speechSynthesis'in window)){setFeedback('Озвучка недоступна в этом браузере. Всё задание написано на экране.');return;}if(speechSynthesis.speaking){cancelSpeech();return;}const task=document.querySelector('.trainer-question');const spoken=task?[document.querySelector('.trainer-task h3').textContent,task.textContent,document.querySelector('.trainer-equation')?.textContent||''].join('. ').replace(/\?/g,'неизвестное число'):$('speech').textContent+' '+$('guide-copy').textContent;const speech=new SpeechSynthesisUtterance(spoken);speech.lang='ru-RU';speech.rate=.85;const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('ru'));if(v)speech.voice=v;speech.onend=speech.onerror=()=>{$('sound').setAttribute('aria-pressed','false');};$('sound').setAttribute('aria-pressed','true');speechSynthesis.speak(speech);};
   window.addEventListener('pagehide',cancelSpeech);
   if(!bridge){location.replace('../../index.html#lesson-300');return;}

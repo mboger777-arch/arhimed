@@ -33,18 +33,44 @@
     if (f.mode === 'distance') return `${f.start} + ${s.solved ? f.answer : '?'} = ${f.goal}`;
     return `${f.start} ${sign} ${Math.abs(delta)} = ${s.solved ? f.goal : '?'}`;
   }
+  // Poses describe the current mathematical action; the shared lesson-256 art stays intact.
+  const heroNames = {right:'Пых шагает вправо',left:'Пых шагает влево',jump:'Пых прыгает через три деления',think:'Пых размышляет',stay:'Пых остаётся на месте',happy:'Пых радуется'};
+  function heroPose(f,s) {
+    if(s.solved)return f.start===f.goal?'stay':'happy';
+    if(f.start===f.goal)return 'stay';
+    if(['missing','choice'].includes(f.mode)||(f.mode==='predict'&&!s.predicted)||(f.mode==='distance'&&s.pos===f.goal))return 'think';
+    return (f.goal<s.pos || f.jump<0)?'left':'right';
+  }
+  function companion(f,s) {
+    const search=f.mode==='missing'||(f.mode==='predict'&&!s.predicted);
+    const delivery=f.mode==='free';
+    const name=search?'Рыжик':'Тоша';
+    const art=s.solved?(delivery?'tosha-parcel':'ryzhik-happy'):(search?'ryzhik-search':'tosha-point');
+    const task=s.solved?'Получилось! Идём дальше.':search?'Помогу найти число.':delivery?'Жду письмо у флажка!':f.mode==='groups'?'Один прыжок — три деления.':f.start===f.goal?'Ноль: лапки остаются на месте.':f.goal<f.start?'Покажу, как идти влево.':'Покажу, как считать шаги.';
+    return `<button class="friend-help" id="friend-help" ${s.solved?'disabled':''} aria-label="${s.solved?'Задание выполнено':`Подсказка героя: ${name}`}"><img src="../300/assets/${art}.webp" alt=""><span><b>${s.solved?(delivery?'ТОША':'РЫЖИК'):name.toUpperCase()}</b>${task}${s.solved?'':'<small>Нажми на героя — получишь подсказку</small>'}</span></button>`;
+  }
   function line(f, s) {
     let min = f.min ?? Math.max(0, Math.min(f.start, f.goal)-1);
     if (f.mode === 'free') min = Math.max(0, Math.min(s.pos, Math.max(s.pos,f.goal)-5));
     if (f.mode === 'groups') min = Math.max(0, s.pos-3);
     if (f.mode === 'explore') min = s.pos<=5?0:Math.max(0,Math.min(15,s.pos-3));
     if (Math.max(f.start, f.goal)-min > 5 && !['explore','groups','free'].includes(f.mode)) min = Math.min(f.start, f.goal);
-    const x = n => 24 + (n-min)*60;
+    const x = n => 44 + (n-min)*54;
     const visible = n => n >= min && n <= min+5;
     const hidden = f.mode === 'missing' && !s.solved ? f.missing : null;
     const animated = lastPosition !== null && visible(lastPosition) && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pose=heroPose(f,s);
+    const actor=f.mode==='missing'?'Рыжик':f.mode==='choice'&&f.start!==f.goal?'Тоша':'Пых';
+    const art=actor==='Рыжик'?`../300/assets/ryzhik-${s.solved?'happy':'search'}.webp`:actor==='Тоша'?`../300/assets/tosha-${s.solved?'parcel':'point'}.webp`:`assets/pykh-${pose}.webp`;
+    const travel=lastPosition!==null && Math.abs(s.pos-lastPosition)>1?'jump':lastPosition>s.pos?'left':'right';
+    const duration=travel==='jump'?'.62s':'.42s';
+    // Alpha bounds keep the feet on y=155 in every independently drawn pose.
+    const groundY={right:62.9,left:64.1,jump:68,think:67.1,stay:65.9,happy:63.5};
+    const restingY=actor==='Рыжик'?(s.solved?61.16:62.12):actor==='Тоша'?(s.solved?61.4:62.6):groundY[pose];
     const showGoal = !['explore','missing'].includes(f.mode) && !(f.mode==='predict'&&!s.predicted) && !(f.mode==='choice'&&!/\?\s*=/.test(f.equation||''));
     const goalFlag = showGoal && f.goal !== f.start && visible(f.goal);
+    const canMove=!s.solved&&!['choice','missing'].includes(f.mode)&&!(f.mode==='predict'&&!s.predicted)&&!(f.mode==='distance'&&s.pos===f.goal);
+    const heroDelta=f.jump||(f.goal<s.pos?-1:1);
     const steps = Math.abs(s.pos-f.start);
     const arcs = [];
     if (['walk','distance','predict'].includes(f.mode)) {
@@ -55,17 +81,25 @@
       }
     }
     if(f.mode==='groups'&&s.pos>0){const a=x(s.pos-3),b=x(s.pos);arcs.push(`<path marker-end="url(#step-arrow)" class="trail-arc" d="M${a} 151 Q${(a+b)/2} 64 ${b} 151"/><rect x="${(a+b)/2-15}" y="194" width="30" height="22" rx="8" fill="#fff1d5"/><text x="${(a+b)/2}" y="211" text-anchor="middle" fill="#49311a" font-size="14" font-weight="900">+3</text>`);}
-    return `<div class="forest-scene"><span class="line-label">${f.mode==='missing'?'Найди соседа':`Старт: ${f.start}`}</span>${goalFlag?`<span class="line-label target">Флажок: ${f.goal}</span>`:''}
-      <svg viewBox="0 0 360 220" role="img" aria-label="Числовой луч от ${min} до ${min+5}. Пых на числе ${s.pos}.${goalFlag?` Флажок на ${f.goal}.`:''}">
+    return `<div class="forest-scene scene-${f.mode}" data-pose="${pose}"><span class="line-label">${f.mode==='missing'?'Найди соседа':`Старт: ${f.start}`}</span>${goalFlag?`<span class="line-label target">Флажок: ${f.goal}</span>`:''}
+      <svg viewBox="0 0 360 220" role="img" aria-label="Числовой луч от ${min} до ${min+5}. ${actor==='Пых'?heroNames[pose]:actor+' помогает решить задачу'}. ${actor} на числе ${s.pos}.${goalFlag?` Флажок на ${f.goal}.`:''}">
         <defs><linearGradient id="stone" x2="0" y2="1"><stop stop-color="#fff0c9"/><stop offset=".5" stop-color="#dcba7c"/><stop offset="1" stop-color="#a67c45"/></linearGradient><marker id="step-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10" fill="none" stroke="#985d20" stroke-width="2"/></marker></defs>
         <path d="M2 175 H358 l-7 -6 m7 6 l-7 6" class="trail-arrow"/>
         ${Array.from({length:6},(_,i)=>{const n=min+i;return `<ellipse cx="${x(n)}" cy="188" rx="25" ry="7" fill="#4c402a30"/><rect class="stone ${n===s.pos?'current':''} ${showGoal&&n===f.goal?'goal':''}" x="${x(n)-24}" y="155" width="48" height="37" rx="13"/><text class="number" x="${x(n)}" y="182">${n===hidden?'?':n}</text>`;}).join('')}
         ${arcs.join('')}
         ${goalFlag?`<path d="M${x(f.goal)+19} 153 V92 l22 7 -22 9" fill="#719d58" stroke="#3f6340" stroke-width="2"/>`:''}
-        <g transform="translate(${x(s.pos)} 0)">${animated?`<animateTransform attributeName="transform" type="translate" from="${x(lastPosition)} 0" to="${x(s.pos)} 0" dur=".38s" fill="freeze"/>`:''}<ellipse cx="0" cy="157" rx="25" ry="6" fill="#44381f42"/><image href="../../img/l256/pykh.webp" x="-32" y="70" width="64" height="90"/></g>
-      </svg>${arcs.length?'':`<span class="trail-tail">дальше →</span>`}</div>`;
+        <g transform="translate(${x(s.pos)} 0)">
+          ${animated?`<animateTransform attributeName="transform" type="translate" from="${x(lastPosition)} 0" to="${x(s.pos)} 0" dur="${duration}" fill="freeze"/>`:''}
+          <ellipse cx="0" cy="155" rx="21" ry="4" fill="#44381f42"/>
+          <g>${animated?`<animateTransform attributeName="transform" type="translate" values="0 0;0 ${travel==='jump'?-30:-10};0 0" keyTimes="0;.5;1" dur="${duration}"/>`:''}
+            <image id="pykh-pose" data-character="${actor}" transform="scale(${actor==='Тоша'&&f.goal>f.start?-1:1} 1)" href="${art}" x="-48" y="${restingY}" width="96" height="96">${animated?`<animate attributeName="opacity" values="0;0;1" keyTimes="0;.99;1" dur="${duration}"/>`:''}</image>
+            ${animated?`<image href="assets/pykh-${travel}.webp" x="-48" y="${groundY[travel]}" width="96" height="96" opacity="0"><animate attributeName="opacity" values="1;1;0" keyTimes="0;.99;1" dur="${duration}"/></image>`:''}
+          </g>
+          ${f.mode==='free'&&!s.solved?'<g aria-label="Письмо"><rect x="13" y="117" width="23" height="16" rx="2" fill="#fff1ca" stroke="#8c6134"/><path d="m13 117 11 9 12-9" fill="none" stroke="#8c6134"/></g>':''}
+        </g>
+      </svg>${!s.solved?`<button class="hero-touch" style="left:${x(s.pos)/360*100}%" ${canMove?`data-move="${heroDelta}"`:'data-ask-hero'} aria-label="${canMove?`Пых: ${heroDelta===3?'прыгнуть на три':heroDelta<0?'шаг влево':'шаг вправо'}`:`${actor}: помоги решить`}"></button>`:''}${arcs.length?'':`<span class="trail-tail">дальше →</span>`}</div>`;
   }
-  function say(text, success=false) { feedback=text;good=success;const e=$('feedback');if(e){e.textContent=text;e.classList.toggle('success',success);} }
+  function say(text, success=false) { const c=context();if(c&&!c.st.solved&&c.frame.start!==c.frame.goal){const hero=$('pykh-pose');if(hero?.dataset.character==='Пых'){hero.setAttribute('href','assets/pykh-think.webp');hero.setAttribute('y','67.1');}} feedback=text;good=success;const e=$('feedback');if(e){e.textContent=text;e.classList.toggle('success',success);} }
   function win(c) {
     if (c.st.solved) return;
     c.st.solved=true;
@@ -88,7 +122,7 @@
     $('next').hidden=false;
     if (training && state.training.stations.every(p=>p.index===4)) {
       state.completed=true;save();
-      $('lesson-body').innerHTML=`<div class="finish"><img src="../../img/l256/pykh.webp" alt="Радостный Пых"><img src="../300/assets/parcel-ready.webp" alt="Доставленная посылка"><div class="paper"><p class="eyebrow">ВСЕ МАРШРУТЫ ПРОЙДЕНЫ</p><h2>Знаток тропинок!</h2><p class="stars" aria-label="12 звёзд">★ ★ ★ ★ ★ ★<br>★ ★ ★ ★ ★ ★</p><p><strong>12 из 12 заданий решены.</strong></p><p>Вправо — прибавляем.<br>Влево — вычитаем.<br>Считаем шаги между числами.</p></div></div>`;
+      $('lesson-body').innerHTML=`<div class="finish"><img src="assets/pykh-happy.webp" alt="Радостный Пых"><img src="../300/assets/parcel-ready.webp" alt="Доставленная посылка"><div class="paper"><p class="eyebrow">ВСЕ МАРШРУТЫ ПРОЙДЕНЫ</p><h2>Знаток тропинок!</h2><p class="stars" aria-label="12 звёзд">★ ★ ★ ★ ★ ★<br>★ ★ ★ ★ ★ ★</p><p><strong>12 из 12 заданий решены.</strong></p><p>Вправо — прибавляем.<br>Влево — вычитаем.<br>Считаем шаги между числами.</p></div></div>`;
       $('next').disabled=false;$('next').textContent='Готово! Дальше →';return;
     }
     if (training && !c) {
@@ -103,7 +137,7 @@
     if (f.mode==='groups') counter=`Больших прыжков: ${s.moves} из 3`;
     if (f.mode==='explore') counter=`Шагов от нуля: ${s.pos}`;
     if (f.mode==='free') counter=s.pos===f.goal?'Пых дома!':`До флажка: ${Math.abs(f.goal-s.pos)} ${f.goal>s.pos?'вправо':'влево'}`;
-    $('lesson-body').innerHTML=`${training?`<div class="trainer-top"><button id="stations-back">← Станции</button><span>${stations[c.station].title} · ${c.index+1}/4</span></div>`:''}<div class="instruction paper"><div><h2>${esc(f.title||stations[c.station].title)}</h2><p id="instruction-text">${esc(f.say||f.q)}</p></div><button class="speak" id="speak" aria-label="Послушать задание">♫</button></div>${line(f,s)}<div class="readout"><span class="equation">${esc(equation(f,s))}</span>${counter?`<span class="counter">${counter}</span>`:''}</div>${controls(f,s)}<p id="feedback" class="feedback ${good||s.solved?'success':''}" role="status" aria-live="polite">${esc(text)}</p>${!s.solved?'<div class="help-row"><button class="hint" id="hint">✦ Помоги мне</button></div>':''}`;
+    $('lesson-body').innerHTML=`${training?`<div class="trainer-top"><button id="stations-back">← Станции</button><span>${stations[c.station].title} · ${c.index+1}/4</span></div>`:''}<div class="instruction paper"><div><h2>${esc(f.title||stations[c.station].title)}</h2><p id="instruction-text">${esc(f.say||f.q)}</p></div><button class="speak" id="speak" aria-label="Послушать задание">♫</button></div>${line(f,s)}<div class="readout"><span class="equation">${esc(equation(f,s))}</span>${counter?`<span class="counter">${counter}</span>`:''}</div>${controls(f,s)}<p id="feedback" class="feedback ${good||s.solved?'success':''}" role="status" aria-live="polite">${esc(text)}</p>${companion(f,s)}`;
     $('next').disabled=!s.solved;
     $('next').textContent=training?(c.index===3?'Станция пройдена →':'Следующее задание →'):(state.step===frames.length-1?'К тренажёрам →':'Дальше →');
     lastPosition=null;bind();save();
@@ -141,11 +175,12 @@
     render();
   }
   function bind() {
+    document.querySelectorAll('[data-ask-hero]').forEach(b=>b.onclick=()=>$('friend-help')?.click());
     document.querySelectorAll('[data-move]').forEach(b=>b.onclick=()=>move(+b.dataset.move));
     document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>answer(+b.dataset.answer));
     document.querySelectorAll('[data-station]').forEach(b=>b.onclick=()=>{silence();state.training.active=+b.dataset.station;feedback='';render();});
     if($('stations-back'))$('stations-back').onclick=()=>{silence();const c=context();if(c?.st.solved)progress().index++;state.training.active=null;feedback='';save();render();};
-    if($('hint'))$('hint').onclick=()=>{const c=context();c.st.hinted=true;save();say(c.frame.hint);};
+    if($('friend-help'))$('friend-help').onclick=()=>{const c=context();c.st.hinted=true;save();say(c.frame.hint);document.querySelector('.forest-scene').classList.add('show-route');};
     if($('speak'))$('speak').onclick=()=>{
       if(!('speechSynthesis'in window)){say('Задание написано на пергаменте. Озвучка недоступна в этом браузере.');return;}
       if(speechSynthesis.speaking){silence();return;}
