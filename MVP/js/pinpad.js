@@ -26,10 +26,12 @@
     .pp-bg { position:fixed; inset:0; z-index:150; display:flex; align-items:center; justify-content:center;
       padding:max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
       background:radial-gradient(120% 80% at 50% 0%, rgba(26,50,38,.97) 0%, rgba(4,9,6,.98) 62%);
-      -webkit-backdrop-filter:blur(7px); backdrop-filter:blur(7px); }
+      -webkit-backdrop-filter:blur(7px); backdrop-filter:blur(7px);
+      touch-action:none; overscroll-behavior:contain; -webkit-user-select:none; user-select:none; }
     .pp-card { width:100%; max-width:400px; max-height:calc(100vh - 20px); max-height:calc(100dvh - 20px); overflow:auto; position:relative;
       background:linear-gradient(180deg,#1a3226,#101f18); border:1px solid rgba(217,164,65,.5); border-radius:22px;
-      padding:20px 16px 14px; box-shadow:0 24px 70px rgba(0,0,0,.7); animation:ppIn .28s cubic-bezier(.2,.9,.25,1) both; }
+      padding:20px 16px 14px; box-shadow:0 24px 70px rgba(0,0,0,.7); animation:ppIn .28s cubic-bezier(.2,.9,.25,1) both;
+      touch-action:manipulation; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; outline:none; }
     .pp-card::before { content:''; position:absolute; left:20px; right:20px; top:0; height:3px; border-radius:0 0 4px 4px;
       background:linear-gradient(90deg,rgba(255,215,106,0),#ffd76a,rgba(255,215,106,0)); }
     .pp-ava { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center;
@@ -56,8 +58,9 @@
     .pp-key { font-family:Georgia,'Times New Roman',serif; font-size:24px; color:#e8e0cc;
       background:linear-gradient(180deg,#22402f,#16291f);
       border:1px solid #3d5c49; border-radius:16px; min-height:56px; min-width:0; cursor:pointer; transition:.12s;
-      display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; }
-    .pp-key:hover { border-color:rgba(255,215,106,.7); background:linear-gradient(180deg,#2a4c39,#1a3125); }
+      display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; outline:none; }
+    @media (hover:hover) and (pointer:fine){ .pp-key:hover { border-color:rgba(255,215,106,.7); background:linear-gradient(180deg,#2a4c39,#1a3125); } }
     .pp-key:active { transform:scale(.96); }
     .pp-key:focus-visible { outline:2px solid #ffd76a; outline-offset:2px; }
     .pp-key.act { color:#d9a441; font-size:22px; }
@@ -66,7 +69,7 @@
       border-color:rgba(255,240,200,.55); }
     .pp-key.go.ready { animation:ppPulse 1.6s ease-in-out infinite; }
     .pp-key.go:disabled { opacity:.38; cursor:default; animation:none; filter:grayscale(.25); }
-    .pp-key.go:disabled:hover { border-color:rgba(255,240,200,.55); background:linear-gradient(180deg,#f3d58a,#d9a441 55%,#b9852c); }
+    .pp-key.go:disabled, .pp-key.go:disabled:hover { border-color:rgba(255,240,200,.55); background:linear-gradient(180deg,#f3d58a,#d9a441 55%,#b9852c); }
     .pp-cancel { display:block; width:100%; margin-top:10px; background:none; border:0; cursor:pointer;
       color:#8fa08f; font-family:inherit; font-size:13px; min-height:40px; text-align:center; }
     .pp-cancel:hover { color:#d9a441; }
@@ -195,9 +198,12 @@
       <div class="pp-foot" id="ppFoot">${o.foot || 'Клавиатура тоже работает · Enter = Ввод'}</div>
     </div>`;
     paint();
+    /* Раньше фокус ставился на кнопку «5» — на телефоне она при открытии выглядела нажатой.
+       Ввод с клавиатуры ловит обработчик на document, фокус кнопке не нужен: фокусируем саму
+       карточку (без прокрутки), чтобы ни одна цифра не выглядела активной. */
     try{
-      const first = el.querySelector('.pp-key[data-k="5"]') || el.querySelector('.pp-key');
-      if (first) first.focus();
+      const card = el.querySelector('.pp-card');
+      if (card){ card.setAttribute('tabindex', '-1'); card.focus({ preventScroll: true }); }
     }catch(e){}
   }
 
@@ -281,11 +287,31 @@
     }
   }
 
+  /* Окно PIN не должно «уезжать» на телефоне: страница под ним замораживается (position:fixed
+     со сдвигом на текущую прокрутку — iOS не слушается overflow:hidden), а протягивание пальцем
+     по фону и по карточке, которой некуда прокручиваться, гасится. */
+  function lockPage(){
+    const b = document.body, y = window.scrollY || window.pageYOffset || 0;
+    S.lock = { y, pos: b.style.position, top: b.style.top, left: b.style.left, right: b.style.right, width: b.style.width, ov: b.style.overflow };
+    b.style.position = 'fixed'; b.style.top = (-y) + 'px'; b.style.left = '0'; b.style.right = '0'; b.style.width = '100%'; b.style.overflow = 'hidden';
+  }
+  function unlockPage(){
+    const L = S.lock; if (!L) return; S.lock = null;
+    const b = document.body;
+    b.style.position = L.pos; b.style.top = L.top; b.style.left = L.left; b.style.right = L.right; b.style.width = L.width; b.style.overflow = L.ov;
+    try{ window.scrollTo(0, L.y); }catch(e){}
+  }
+  function noMove(e){
+    const card = e.target && e.target.closest ? e.target.closest('.pp-card') : null;
+    if (card && card.scrollHeight > card.clientHeight + 1) return;   /* длинной карточке прокрутка нужна */
+    e.preventDefault();
+  }
+
   function hide(){
     const el = document.getElementById(ID);
     if (el) el.remove();
     document.removeEventListener('keydown', key, true);
-    try{ document.body.style.overflow = S.prevOverflow || ''; }catch(e){}
+    try{ unlockPage(); }catch(e){}
     S.busy = false; S.pin = ''; S.resolve = null;
   }
 
@@ -293,9 +319,11 @@
     css();
     hide();
     S.opts = opts || {}; S.pin = ''; S.busy = false;
-    try{ S.prevOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; }catch(e){}
+    try{ lockPage(); }catch(e){}
     document.addEventListener('keydown', key, true);
-    return new Promise(res => { S.resolve = res; render(); });
+    return new Promise(res => { S.resolve = res; render();
+      const el = document.getElementById(ID);
+      if (el) el.addEventListener('touchmove', noMove, { passive: false }); });
   }
 
   window.PinPad = {
