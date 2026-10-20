@@ -1,0 +1,5 @@
+shots/
+__pycache__/
+*.pyc
+tools/voice4.log
+tools/voice5.log
