@@ -294,8 +294,16 @@
     const b = document.body, y = window.scrollY || window.pageYOffset || 0;
     S.lock = { y, pos: b.style.position, top: b.style.top, left: b.style.left, right: b.style.right, width: b.style.width, ov: b.style.overflow };
     b.style.position = 'fixed'; b.style.top = (-y) + 'px'; b.style.left = '0'; b.style.right = '0'; b.style.width = '100%'; b.style.overflow = 'hidden';
+    /* страховка: если окно убрали со страницы мимо hide() (чужой код, расширение, тест),
+       заморозку всё равно снимаем — иначе страница перестала бы прокручиваться */
+    try{
+      if (S.watch) S.watch.disconnect();
+      S.watch = new MutationObserver(() => { if (!document.getElementById(ID)) { S.watch.disconnect(); S.watch = null; unlockPage(); } });
+      S.watch.observe(document.body, { childList: true });
+    }catch(e){}
   }
   function unlockPage(){
+    if (S.watch){ try{ S.watch.disconnect(); }catch(e){} S.watch = null; }
     const L = S.lock; if (!L) return; S.lock = null;
     const b = document.body;
     b.style.position = L.pos; b.style.top = L.top; b.style.left = L.left; b.style.right = L.right; b.style.width = L.width; b.style.overflow = L.ov;
