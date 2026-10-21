@@ -1,7 +1,7 @@
 /* АРХИМЕД MVP · service worker
    HTML/JS всегда с сети. В Cache API не кладём код — иначе залипает старый урок.
    Картинки можно из кэша. */
-const CACHE='arhimed-mvp-v947';
+const CACHE='arhimed-mvp-v948';
 /* В кэш кладём только то, что реально есть в репозитории.
    Раньше здесь был путь вне MVP (../МОБ_ПРИЛОЖЕНИЕ/...), его на сервере нет —
    addAll падал, и service worker вообще не устанавливался. */
@@ -77,8 +77,11 @@ self.addEventListener('fetch',e=>{
      каталога. Браузер дождался бы их сам, это воркер обрывал загрузку.
      Если сети действительно нет, fetch отклонится сам, и мы уйдём в catch. */
   if(isCode(req.url) && req.mode!=='navigate'){
+    /* Код с номером версии (?v=NNN) — через обычный HTTP-кэш браузера: сервер отдаёт его
+       с immutable на год, а при выкладке номер меняется. Раньше и он шёл с no-store —
+       каждое открытие заново качало 24 МБ скриптов. Код без версии — по-прежнему мимо кэша. */
     e.respondWith(
-      fetch(req, {cache:'no-store'})
+      fetch(req, /[?&]v=\d+/.test(req.url) ? {} : {cache:'no-store'})
         .catch(()=>caches.match(req).then(hit=>hit || new Response('', {status:504, statusText:'offline'})))
     );
     return;

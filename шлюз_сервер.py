@@ -10,7 +10,7 @@
 Благодаря одному порту работает и в локальной сети (http://IP:8130/MVP/),
 и через публичный туннель (cloudflared/ngrok) со звуком и агентом.
 """
-import asyncio, base64, hashlib, json, os, re, secrets, sys, time
+import asyncio, base64, gzip, hashlib, json, mimetypes, os, re, secrets, sys, time
 from aiohttp import web, ClientSession, WSMsgType
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -523,14 +523,20 @@ def path_denied(rel):
     return False
 
 
-def apply_cache(resp, path):
-    """HTML/JS/SW — не кэшировать. Картинки — можно."""
+def apply_cache(resp, path, request=None):
+    """HTML/SW — не кэшировать. Код с номером версии (?v=NNN) — хранить год: при выкладке номер меняется
+    во всех ссылках index.html, старый файл просто больше не запрашивается. Код без версии — не кэшировать.
+    Картинки — неделю.
+    21.10.2026: раньше и версионный код шёл с no-store — первый вход ученика качал 48 МБ (24 МБ скриптов
+    дважды: загрузка и перезагрузка ?b=), каждый следующий — снова 24 МБ; на 4G экран готов через 96 с."""
     low = str(path).lower()
     base = os.path.basename(low)
     if low.endswith(('.html', '.htm')) or base == 'sw.js' or low.endswith('.webmanifest'):
         resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
         resp.headers['Pragma'] = 'no-cache'
         resp.headers['Expires'] = '0'
+    elif low.endswith(('.js', '.css', '.json', '.mjs', '.map')) and request is not None and re.fullmatch(r'\d{1,6}', request.query.get('v', '')):
+        resp.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
     elif low.endswith(('.js', '.css', '.json', '.mjs', '.map')):
         resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
         resp.headers['Pragma'] = 'no-cache'
@@ -542,8 +548,39 @@ def apply_cache(resp, path):
     return resp
 
 
+# Сжатие текстовых файлов. nginx на сервере сжимает только text/html (gzip_types не задан), поэтому
+# скрипты уходили как есть: 2,4 МБ vis_wk.js вместо 0,47 МБ. Сжимаем здесь, сжатое держим в памяти
+# до изменения файла (ключ — время изменения и размер); nginx уже сжатое не трогает.
+СЖИМАТЬ = ('.js', '.mjs', '.css', '.json', '.html', '.htm', '.svg', '.webmanifest', '.txt', '.map')
+_СЖАТОЕ = {}
+
+
+def file_response(request, path):
+    low = path.lower()
+    if not low.endswith(СЖИМАТЬ) or 'gzip' not in request.headers.get('Accept-Encoding', ''):
+        return web.FileResponse(path)
+    st = os.stat(path)
+    if st.st_size < 1024:
+        return web.FileResponse(path)
+    ключ = (st.st_mtime_ns, st.st_size)
+    было = _СЖАТОЕ.get(path)
+    if not было or было[0] != ключ:
+        with open(path, 'rb') as f:
+            было = (ключ, gzip.compress(f.read(), 6))
+        _СЖАТОЕ[path] = было
+    if low.endswith('.webmanifest'):
+        тип = 'application/manifest+json'
+    else:
+        тип = mimetypes.guess_type(path)[0] or 'application/octet-stream'
+    resp = web.Response(body=было[1], content_type=тип,
+                        charset='utf-8' if тип.startswith('text/') or тип.endswith(('javascript', 'json', 'xml')) else None)
+    resp.headers['Content-Encoding'] = 'gzip'
+    resp.headers['Vary'] = 'Accept-Encoding'
+    return resp
+
+
 async def index(request):
-    resp = web.FileResponse(os.path.join(ROOT, 'index.html'))
+    resp = file_response(request, os.path.join(ROOT, 'index.html'))
     return apply_cache(resp, 'index.html')
 
 
@@ -565,7 +602,7 @@ async def static_handler(request):
     if rel and path_denied(rel):
         raise web.HTTPNotFound()
     if not rel:
-        resp = web.FileResponse(os.path.join(ROOT, 'index.html'))
+        resp = file_response(request, os.path.join(ROOT, 'index.html'))
         return apply_cache(resp, 'index.html')
     path = os.path.normpath(os.path.join(ROOT, rel))
     if not path.startswith(ROOT):
@@ -573,7 +610,7 @@ async def static_handler(request):
     if os.path.isdir(path):
         candidate = os.path.join(path, 'index.html')
         if os.path.isfile(candidate):
-            resp = web.FileResponse(candidate)
+            resp = file_response(request, candidate)
             return apply_cache(resp, candidate)
         # листинг папки
         items = sorted(os.listdir(path))
@@ -581,8 +618,8 @@ async def static_handler(request):
         resp = web.Response(text=f'<meta charset="utf-8"><body style="font-family:Georgia;background:#0b1712;color:#e8e0cc;padding:20px"><h2>АРХИМЕД</h2>{links}</body>', content_type='text/html')
         return apply_cache(resp, 'index.html')
     if os.path.isfile(path):
-        resp = web.FileResponse(path)
-        return apply_cache(resp, path)
+        resp = file_response(request, path)
+        return apply_cache(resp, path, request)
     raise web.HTTPNotFound()
 
 
