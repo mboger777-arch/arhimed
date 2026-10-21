@@ -1,0 +1,26 @@
+{
+  "nori-idle": [
+    321,
+    500
+  ],
+  "nori-action": [
+    334,
+    500
+  ],
+  "nori-happy": [
+    334,
+    500
+  ],
+  "klepa-idle": [
+    290,
+    500
+  ],
+  "klepa-action": [
+    346,
+    500
+  ],
+  "klepa-happy": [
+    293,
+    500
+  ]
+}

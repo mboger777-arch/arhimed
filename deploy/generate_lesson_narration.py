@@ -2,6 +2,7 @@
 Each phrase has its own tempo, pitch and pause. No runtime TTS dependency.
 """
 import array
+import argparse
 import asyncio
 import hashlib
 import json
@@ -30,10 +31,10 @@ def trim_silence(samples):
     return samples[max(0, audible[0] - margin):min(len(samples), audible[-1] + margin + 1)]
 
 
-async def main():
+async def main(lessons):
     semaphore = asyncio.Semaphore(4)
     jobs = {}
-    for lesson in ['257', '300']:
+    for lesson in lessons:
         spec = json.loads((ROOT / lesson / 'narration.json').read_text())
         manifest = {}
         for key, clip in spec['clips'].items():
@@ -86,4 +87,6 @@ async def main():
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument('lessons', nargs='*', default=['257', '300'])
+    asyncio.run(main(parser.parse_args().lessons))
