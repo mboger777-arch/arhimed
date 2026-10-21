@@ -45,6 +45,10 @@ function kidPost(payload){ return kidFetch(payload, 12000); }
 function kidEnsure(){
   const k = kidSt();
   if (kidReady() || k.busy) return Promise.resolve(k);
+  /* Пока идёт знакомство, кода нет. Раньше он заводился сразу при открытии и показывался
+     на экране знакомства, а после «В путь» сундук нового ученика давал ДРУГОЙ код:
+     родитель, записавший первый, входил в пустой кабинет, а на сервере копились пустые записи. */
+  if (!DB.profile) return Promise.resolve(k);
   k.busy = 1;
   return kidPost({act: 'new'}).then(r => {
     delete k.busy;
@@ -281,7 +285,7 @@ function kidRender(){
   const notes = kidNoteNew();
   const parts = [];
   /* при первом входе сразу показываем код: родителю его надо увидеть и записать */
-  if (k.code && !k.introShown){
+  if (k.code && !k.introShown && DB.profile){
     parts.push(`<div class="card" style="border-color:rgba(255,215,106,.6);margin-bottom:10px">
       <div class="small" style="color:var(--brass);font-size:11.5px">🎁 Твой код для родителя</div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px">

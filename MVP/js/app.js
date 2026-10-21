@@ -89,7 +89,8 @@ function hud(){
 }
 /* ---------- ОНБОРДИНГ ---------- */
 let chosenCol=COLORS[0], chosenGender='boy';
-let chosenKlass=7, chosenLevel='novice';
+/* класс заранее не выбран (владелец 21.10.2026): раньше стоял 7 — малыш нажимал «Далее», не заметив */
+let chosenKlass=null, chosenLevel='novice';
 function figSVG(g){
   return g==='girl' ? girlSVG(chosenCol) : boySVG(chosenCol);
 }
@@ -205,6 +206,7 @@ function girlSVG(c){
   </svg>`;
 }
 function renderOnboard(){
+  chosenKlass=null;   /* новый ученик выбирает класс сам — не наследует класс того, кто вышел */
   const s=document.getElementById('screen');
   s.innerHTML=`<div class="onboard"><div class="card">
     <div class="ob-top">
@@ -225,7 +227,7 @@ function renderOnboard(){
       </div>
       <div class="ob-cap">🎓 Мой класс</div>
       <div class="obk-grid">${[1,2,3,4,5,6,7,8,9].map(k=>`<button type="button" class="obk ${k===chosenKlass?'sel':''}" data-k="${k}" onclick="pickKlass(this)"><b>${k}</b><span>КЛАСС</span></button>`).join('')}</div>
-      <div class="ob-hint" id="klassTip">${chosenKlass===6?'🎁 Для 6 класса открыты задачи 5–8 классов':'Уроки и задания — только твоего класса'}</div>
+      <div class="ob-hint" id="klassTip">Нажми на свой класс — уроки и задания будут только для него</div>
       <div class="ob-cta"><button class="btn" onclick="obNext()">Далее →</button></div>
     </div>
 
@@ -265,7 +267,15 @@ function obGo(n){
 function obNext(){
   const inp=document.getElementById('obName');
   if(inp && !inp.value.trim()){ toast('Архимед ждёт твоё имя!'); focusObName(); return; }
+  if(!chosenKlass){ obKlassNudge(); return; }
   obGo(2);
+}
+/* класс не выбран: подсказка и встряхнуть сетку классов */
+function obKlassNudge(){
+  toast('Выбери свой класс!');
+  const g=document.querySelector('.obk-grid'); if(!g) return;
+  g.scrollIntoView({block:'center', behavior:'smooth'});
+  g.classList.remove('obk-ждёт'); void g.offsetWidth; g.classList.add('obk-ждёт');
 }
 function focusObName(){ try{ const el=document.getElementById('obName'); if(el) el.focus(); }catch(e){} }
 
@@ -546,6 +556,7 @@ function obMagic(){
 
 function pickKlass(el){
   chosenKlass=+el.dataset.k;
+  const g=document.querySelector('.obk-grid'); if(g) g.classList.remove('obk-ждёт');
   document.querySelectorAll('.obk').forEach(b=>b.classList.toggle('sel', +b.dataset.k===chosenKlass));
   const tip=document.getElementById('klassTip');
   if(tip) tip.textContent = chosenKlass===6 ? '🎁 Для 6 класса открыты задачи 5–8 классов' : 'Уроки и задания — только твоего класса';
@@ -576,6 +587,7 @@ function shade(hex){
 function finishOnboard(){
   const name=document.getElementById('obName').value.trim();
   if(!name){ toast('Архимед ждёт твоё имя!'); return; }
+  if(!chosenKlass){ obGo(1); obKlassNudge(); return; }
   DB.profile={ name, color:chosenCol, gender:chosenGender,
     klass:String(chosenKlass),
     level:chosenLevel,
