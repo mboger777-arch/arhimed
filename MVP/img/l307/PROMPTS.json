@@ -1,0 +1,45 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "name": "runa-sheet",
+      "prompt": "Use case: illustration-story. Production game asset for a premium Russian children's educational storybook app, warm dimensional hand-painted 3D illustration, tactile velvet and fur, expressive friendly eyes, rich muted plum, amber, midnight teal; polished high-detail but clear silhouette. No lettering, no watermark. A transparent horizontal sprite strip containing EXACTLY THREE separate full-body poses of the SAME original adorable young lynx theater director Runa: tawny spotted fur, tufted ears, cream muzzle, plum velvet short cape, teal waistcoat, small golden crescent brooch, tiny ankle boots. Left: welcoming open palm; center: leaning and pointing with one paw at a clue held in other paw (blank cream card); right: delighted bow with paw on heart. All stand firmly on same baseline, full feet visible, equal height, no overlapping, generous transparent gaps between 3 poses, evenly spaced in 3 equal columns. No scenery, no floor, no embedded shadows. Reference image is STYLE ONLY, use entirely different lynx identity and theatrical clothing.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-90a339ab-bfc8-4ed3-94d8-44b8fc591cea.png"
+    },
+    {
+      "name": "tim-sheet",
+      "prompt": "Use case: illustration-story. Production game asset for a premium Russian children's educational storybook app, warm dimensional hand-painted 3D illustration, tactile velvet and fur, expressive friendly eyes, rich muted plum, amber, midnight teal; polished high-detail but clear silhouette. No lettering, no watermark. A transparent horizontal sprite strip containing EXACTLY THREE separate full-body poses of the SAME original cute little mole theater musician Tim: soft slate gray fur, velvety round nose, tiny round brass glasses, ochre linen dungarees over ivory shirt, a russet bow tie, small rounded paws, brown slippers. Left: curious welcoming gesture; center: actively playing small burgundy snare drum strapped at waist, two drumsticks raised asymmetrically; right: joyful thumbs-up. All stand on same baseline, feet visible, equal height, no overlapping, generous transparent gaps, evenly spaced in three equal columns. No scenery, floor or embedded shadows. Reference image is STYLE ONLY, new mole identity.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-fb4a1e16-aee9-4d8e-a95f-4e83bc89695d.png"
+    },
+    {
+      "name": "li-sheet",
+      "prompt": "Use case: illustration-story. Production game asset for a premium Russian children's educational storybook app, warm dimensional hand-painted 3D illustration, tactile velvet and fur, expressive friendly eyes, rich muted plum, amber, midnight teal; polished high-detail but clear silhouette. No lettering, no watermark. A transparent horizontal sprite strip containing EXACTLY THREE separate full-body poses of the SAME original adorable tiny silver mouse flautist Li: huge round pink inner ears, cream face, teal pinafore, coral scarf, small soft plum shoes, thin curled tail. Left: attentive welcoming palm; center: actively playing a small gold transverse flute held to mouth, both paws properly holding flute; right: happy curtsy with eyes sparkling. Same design across poses, full body and feet, equal height, aligned baseline, no overlap, generous transparent gaps in three equal columns. No scenery, floor or embedded shadows. Reference image is STYLE ONLY, new mouse identity.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-60659c3f-fc93-47b6-a2f5-06427e3379e1.png"
+    },
+    {
+      "name": "stage",
+      "prompt": "Use case: illustration-story. Production game asset for a premium Russian children's educational storybook app, warm dimensional hand-painted 3D illustration, tactile velvet and fur, expressive friendly eyes, rich muted plum, amber, midnight teal; polished high-detail but clear silhouette. No lettering, no watermark. Background only, landscape 6:5 framing, cozy magical woodland moon theater stage, velvet plum curtains gathered at the sides, carved warm walnut proscenium with tiny brass stars, glowing crescent high at center, a dark teal embroidered night sky backdrop. Broad clean honey-colored wooden stage floor occupying bottom quarter, completely empty usable stage in center, subtle lantern glow at edges. Camera front-on eye-level, no animals, no people, no text, no UI. Strong compositional simplicity in center for game overlays.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-e2b2789b-4a50-426d-89f3-3f50b9d8e21f.png"
+    },
+    {
+      "name": "backstage",
+      "prompt": "Use case: illustration-story. Production game asset for a premium Russian children's educational storybook app, warm dimensional hand-painted 3D illustration, tactile velvet and fur, expressive friendly eyes, rich muted plum, amber, midnight teal; polished high-detail but clear silhouette. No lettering, no watermark. Background only, landscape 6:5 framing, backstage dressing atelier of a tiny woodland theater. Rich muted teal walls, plum velvet at far left, warm walnut wood floor bottom quarter. At the edges beautiful sewing basket and small mirror ringed with warm bulbs, star costume on wall edge. Broad empty calm center wall and empty center floor for interactive game overlays. Front-on eye-level storybook stage perspective. Cozy amber lighting, no people, animals, text or UI.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-89299916-c479-4c67-829e-5734a9f94bc4.png"
+    },
+    {
+      "name": "window",
+      "prompt": "Use case: ui-mockup. Single premium children's storybook game UI speech panel asset. Transparent background. Wide horizontal rectangle, ratio 2:1, front-on. Very thin carved walnut outer border, delicate brass crescent at TOP CENTER, plum velvet corners, warm ivory parchment inner surface completely EMPTY, flat clean light cream center occupying 86% width and 80% height for live text. Soft material texture only at rim, no lines, no text, no characters, no props, no oversized ornaments. Elegant dimensional handpainted style with realistic tactile wood and cloth. Symmetric border supports nine-slice stretching. Entire frame visible, no extra margin.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-8c89f0ab-4892-44b5-91ae-67c598626e41.png"
+    },
+    {
+      "name": "button",
+      "prompt": "Use case: ui-mockup. Single new premium mobile children's woodland theater game button, transparent background. Wide horizontal 3:1 rounded rectangular button front-on. Thin sculpted walnut rim, thin polished warm brass inner piping. Completely empty flat ivory enamel face with subtle pearl highlights, large clear rectangular inner text space. Plum velvet bottom bevel, subtle dimensional depth, symmetric and beautifully crafted. Nine-slice friendly, no center icon or text, no symbols, no extra elements. Not a screen, one isolated button only.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-82a2bb95-a027-4bfe-90bd-bbc6ce11a82c.png"
+    },
+    {
+      "name": "runa-lantern",
+      "prompt": "Use case: identity-preserve. Edit this character into a performance action pose, preserving exact young lynx identity, face, spots, tufted ears, teal waistcoat, plum velvet cape, crescent brooch, brown boots, hand-painted dimensional storybook style. Full body stands firmly on BOTH feet. Hold a beautiful small brass lantern in one extended paw by its handle, warm amber glass light. Other paw inviting audience to watch. Friendly confident smile, eyes open. Transparent background, no scene, no floor, no text, generous margins, all feet and lantern visible.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-565c0ed7-efc5-4099-8255-b5b3ef70c7d3.png"
+    }
+  ]
+}
