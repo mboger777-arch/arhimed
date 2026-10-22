@@ -10,10 +10,10 @@
 # Какая игра к какому уроку — MVP/js/lesson_games.js (таблица ИГРЫ).
 #
 # Запуск из корня репозитория:  bash deploy/игры_обновить.sh [папка ...]
-# Без аргументов обновляет все тринадцать. После — ритуал версии и выкладка как обычно.
+# Без аргументов обновляет все пятнадцать. После — ритуал версии и выкладка как обычно.
 set -e
 cd "$(dirname "$0")/.."
-GAMES=${*:-"desyat-fonarei vesy-znaki chasy sto-monetok sad-umnozheniya tsyplyata-parami igrushki-na-polkah polovina-yabloka kubicheskiy-mir gonka-za-sotymi yarmarka-podskazok prostye-kristally ostrov-hitryh-igr"}
+GAMES=${*:-"desyat-fonarei vesy-znaki chasy sto-monetok sad-umnozheniya tsyplyata-parami igrushki-na-polkah polovina-yabloka kubicheskiy-mir gonka-za-sotymi yarmarka-podskazok prostye-kristally ostrov-hitryh-igr zvezdnaya-pesnya tima-i-glyuk"}
 TMPD=$(mktemp -d)
 for g in $GAMES; do
   echo "--- $g"

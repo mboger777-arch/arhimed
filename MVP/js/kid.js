@@ -30,6 +30,10 @@ function kidApiUrl(){
 }
 function kidSt(){ DB.kid = DB.kid || {}; return DB.kid; }
 function kidReady(){ const k = kidSt(); return !!(k.code && k.token); }
+/* «Гость» — профиль, который приложение само заводит, когда урок открыли по ссылке #lesson-N без входа
+   (MVP/index.html). Ему код для родителя не нужен: 22.10.2026 на сервере нашлось 426 пустых кодов —
+   от таких ссылок и от прежнего бага знакомства. Старые гостевые профили флага не имеют: имя «Гость» без createdAt. */
+function kidGuest(){ const п = DB.profile; return !!(п && (п.guest || (п.name === 'Гость' && !п.createdAt))); }
 function kidCode(){ const k = kidSt(); return k.code || ''; }
 
 function kidFetch(payload, timeoutMs){
@@ -48,7 +52,7 @@ function kidEnsure(){
   /* Пока идёт знакомство, кода нет. Раньше он заводился сразу при открытии и показывался
      на экране знакомства, а после «В путь» сундук нового ученика давал ДРУГОЙ код:
      родитель, записавший первый, входил в пустой кабинет, а на сервере копились пустые записи. */
-  if (!DB.profile) return Promise.resolve(k);
+  if (!DB.profile || kidGuest()) return Promise.resolve(k);
   k.busy = 1;
   return kidPost({act: 'new'}).then(r => {
     delete k.busy;
@@ -243,7 +247,8 @@ function kidCopyCode(){
 }
 function kidCodeCard(){
   const k = kidSt();
-  if (!k.code) return `<div class="card"><div class="small">Код для родителя появится, когда устройство будет в сети.</div></div>`;
+  if (!k.code) return kidGuest() ? `<div class="card"><div class="small">Ты зашёл гостем. Чтобы родитель видел твои занятия, выйди и назови себя — появится код для родителя.</div></div>`
+    : `<div class="card"><div class="small">Код для родителя появится, когда устройство будет в сети.</div></div>`;
   const lim = kidLimit(), mins = kidTodayMin();
   return `<div class="card" style="margin-bottom:10px">
     <div class="small" style="color:var(--muted);font-size:11.5px">Код для родителя · приложение «Родитель»</div>
@@ -337,7 +342,7 @@ function kidRender(){
       <div class="small">⏱ Сегодня ${kidTodayMin()} мин из ${kidLimit()} — идёшь по плану.</div>
     </div>`);
   }
-  if (!k.code){
+  if (!k.code && !kidGuest()){
     parts.push(`<div class="card" style="margin-bottom:10px"><div class="small">Код для родителя появится, когда устройство будет в сети.</div></div>`);
   }
   if (!parts.length){ if (el) el.remove(); return; }
