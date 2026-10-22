@@ -1,0 +1,53 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "name": "bruno",
+      "transparent": true,
+      "prompt": "Use case: illustration-story. Premium Russian children's learning app, original storybook game art, beautifully sculpted hand-painted 3D watercolor finish, tactile fur and linen, warm gentle eyes, soft daylight, sage green, pear gold and terracotta palette, polished high detail, clear silhouettes. NO text, lettering or watermarks. ONE horizontal transparent sprite sheet, EXACTLY THREE full-body poses side-by-side in equal cells, large transparent gaps, same scale and baseline. SAME friendly stout badger cook Bruno in sage linen apron with small pear-shaped brass pin, cream shirt, burgundy neckerchief, brown little boots. Left welcoming open paw, center carefully carrying an empty wicker picnic basket with both paws at waist, right joyful arms raised smiling. Feet entirely visible firmly planted. No background or cast shadow, no extra props.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-5a64d9ac-6190-421c-973b-356ed24e389f.png"
+    },
+    {
+      "name": "iris",
+      "transparent": true,
+      "prompt": "Use case: illustration-story. Premium Russian children's learning app, original storybook game art, beautifully sculpted hand-painted 3D watercolor finish, tactile fur and linen, warm gentle eyes, soft daylight, sage green, pear gold and terracotta palette, polished high detail, clear silhouettes. NO text, lettering or watermarks. ONE horizontal transparent sprite sheet, EXACTLY THREE full-body poses side-by-side in equal cells, large transparent gaps, same scale and baseline. SAME adorable cream rabbit courier Iris, two long ears with peach inner fur, terracotta corduroy overalls, cream puff-sleeve blouse, sage shoes, little blue neckerchief. Left curious friendly greeting, center kneeling and pointing down-right at a map held with other paw (map blank, no text), right joyful small curtsy. No background or cast shadow. Entire feet and ears visible, no clipping, clear separations.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-95a7b89d-ea17-4f16-bb70-ac3260492ada.png"
+    },
+    {
+      "name": "tori",
+      "transparent": true,
+      "prompt": "Use case: illustration-story. Premium Russian children's learning app, original storybook game art, beautifully sculpted hand-painted 3D watercolor finish, tactile fur and linen, warm gentle eyes, soft daylight, sage green, pear gold and terracotta palette, polished high detail, clear silhouettes. NO text, lettering or watermarks. ONE horizontal transparent sprite sheet, EXACTLY THREE full-body poses side-by-side in equal cells, large transparent gaps, same scale and baseline. SAME adorable small upright turtle gardener Tori, sage skin, golden olive patterned shell, linen mustard waistcoat, turquoise shoulder satchel, tiny straw hat with leaf. Left attentive open-handed greeting, center holding a large plain golden key in both hands showing it proudly, right happy clapping. Full body feet visible, no background or cast shadow, no clipping.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-8bb022bd-469e-4e4c-89a4-a03c15b9d175.png"
+    },
+    {
+      "name": "garden",
+      "transparent": false,
+      "prompt": "Use case: illustration-story. Premium Russian children's learning app, original storybook game art, beautifully sculpted hand-painted 3D watercolor finish, tactile fur and linen, warm gentle eyes, soft daylight, sage green, pear gold and terracotta palette, polished high detail, clear silhouettes. NO text, lettering or watermarks. Background only, landscape 3:2. Enchanting pear orchard picnic clearing at golden afternoon. Magnificent ancient pear tree at back right, warm small cottage and herb garden at left distance, hand-laid flat stone patio occupying bottom third. A few luminous pears on branches high edges. Center wide OPEN clear patio with no objects for gameplay overlays. Low horizon, front eye-level camera. Painterly layered foliage, soft blue sky, dappled warm sunlight. NO characters, NO table in foreground, NO interface.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-fb37375b-7a58-46ba-aac8-f2d20f447c54.png"
+    },
+    {
+      "name": "workshop",
+      "transparent": false,
+      "prompt": "Use case: illustration-story. Premium Russian children's learning app, original storybook game art, beautifully sculpted hand-painted 3D watercolor finish, tactile fur and linen, warm gentle eyes, soft daylight, sage green, pear gold and terracotta palette, polished high detail, clear silhouettes. NO text, lettering or watermarks. Background only landscape 3:2. Cozy open-air garden kitchen under timber pergola, pear orchard distant, shelves of ceramic teacups at far sides, hanging herbs near top, ivory plaster wall, sage cupboard. Broad warm wood workbench at bottom third, entirely EMPTY in center for game objects. Front-on eye-level. Small brass details, warm daylight, breathable simple center. NO characters, NO lettering, NO interface.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-4221b72d-722b-47f4-b45c-bd699bda7414.png"
+    },
+    {
+      "name": "panel",
+      "transparent": true,
+      "prompt": "Use case: illustration-story. Premium Russian children's learning app, original storybook game art, beautifully sculpted hand-painted 3D watercolor finish, tactile fur and linen, warm gentle eyes, soft daylight, sage green, pear gold and terracotta palette, polished high detail, clear silhouettes. NO text, lettering or watermarks. ONE isolated game dialogue panel on transparent background, landscape 3:2, front-on flat UI asset. Beautiful thin hand-carved pear-wood rectangular rounded frame, ivory parchment perfectly blank inside, tasteful sage enamel inlay, small golden pear at top center, 2 delicate leaves at upper corners. Very thin edges less than 8 percent, broad flat empty light cream writing area 85 percent, no icons, no decorations over writing area, minimal translucent shadow. Rectangular stretches cleanly as nine-slice.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-5d8f2f80-08ac-40fd-a5bf-2505608a03af.png"
+    },
+    {
+      "name": "button",
+      "transparent": true,
+      "prompt": "Use case: illustration-story. Premium Russian children's learning app, original storybook game art, beautifully sculpted hand-painted 3D watercolor finish, tactile fur and linen, warm gentle eyes, soft daylight, sage green, pear gold and terracotta palette, polished high detail, clear silhouettes. NO text, lettering or watermarks. ONE isolated beautifully crafted game button on transparent background. Wide horizontal 4:1 rounded rectangle, front-on orthographic. Flat blank light ivory inset, thin pear-wood frame with sage enamel edge, fine brass trim, subtle warm bottom bevel. Symmetrical top and bottom blank usable area, clean restrained ornate corners only. No icons or text. Fit nearly entire image with small transparent margin. Clean nine-slice button suitable for long Russian labels.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-690b11eb-59b3-41d8-abce-3eaff6a8513d.png"
+    },
+    {
+      "name": "bruno-action-final",
+      "tool": "Built-in image_gen",
+      "prompt": "Use case: precise-object-edit. Edit this game sprite. Preserve EXACTLY same friendly badger Bruno identity, sage apron, ivory shirt, burgundy neckerchief, boots, full-body standing pose and premium hand-painted 3D storybook style. Replace the entire wicker basket with a shallow smooth wooden serving tray holding TWO clearly visible empty ivory ceramic teacups. Both paws naturally support the tray from below at waist level. No basket, no wicker material, no apples. Fully transparent background, full feet, no shadow, no text. Everything else unchanged.",
+      "path": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-acb83ad9-9432-4015-9902-4eb555b57a66.png"
+    }
+  ]
+}
