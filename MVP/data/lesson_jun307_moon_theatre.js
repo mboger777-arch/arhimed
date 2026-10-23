@@ -56,7 +56,7 @@
   if(action==='select'&&['match','doors','order','swap'].includes(c.kind)){
    if(!Number.isInteger(value)||value<0||value>=n)return false;
    if(c.kind==='swap'&&s.selected!==null&&s.selected!==value){[s.map[s.selected],s.map[value]]=[s.map[value],s.map[s.selected]];s.selected=null;s.fb='Вещи поменялись местами. Проверь обе подсказки.';}
-   else{s.selected=s.selected===value?null:value;s.fb=s.selected===null?'Выбор отменён.':c.kind==='match'?`Выбрано: ${item(c.itemsList[value])}. Теперь нажми артиста.`:c.kind==='swap'?'Теперь нажми второго артиста для обмена.':`Выбран ${actors[people[value]]}. Теперь выбери ${c.kind==='doors'?'дверь':'место'}.`;}
+   else{s.selected=s.selected===value?null:value;s.fb=s.selected===null?'Выбор отменён.':c.kind==='match'?`Выбрано: ${item(c.itemsList[value])}. Теперь нажми артиста.`:c.kind==='swap'?'Теперь нажми второго артиста для обмена.':`Артист: ${actors[people[value]]}. Выбери ${c.kind==='doors'?'нужную дверь':'нужное место'}.`;}
    return true;
   }
   if(action==='place'&&['match','doors','order'].includes(c.kind)){
@@ -83,17 +83,17 @@
  function stage(c,s){
   const ps=c.people||[0,1,2],map=c.kind==='verdict'?c.solution:s.map;
   const bg=c.bg||'stage';
-  return `<div class="moon-stage ${c.kind==='show'?'moon-performance':''} ${s.ok?'is-complete':''}" role="img" aria-label="${esc(c.t)}"><div class="moon-stage-title">${c.kind==='show'?(s.ok?'ПРЕМЬЕРА!':'ПРИГЛАШАЕМ АРТИСТОВ'):c.kind==='order'?'ОЧЕРЕДЬ НА СЦЕНУ':c.kind==='doors'?'ТЕАТРАЛЬНЫЕ ГРИМЁРКИ':'ЛУННЫЙ ТЕАТР'}</div><img class="moon-backdrop" src="${A}${bg}.webp" alt="">${c.kind==='show'?'<div class="moon-curtain left"></div><div class="moon-curtain right"></div>':''}<div class="moon-cast">${ps.map((p,j)=>{const present=c.kind!=='show'||j<s.count;const pose=c.kind==='show'&&present?(p===0?'lantern':'action'):s.ok?'happy':p===0&&c.who===p?'action':'idle';return `<div class="moon-actor ${present?'':'waiting'}">${portrait(p,pose)}<span class="moon-name">${actors[p]}</span>${map?.[j]!==null&&map?.[j]!==undefined&&c.itemsList&&!['doors','order'].includes(c.kind)?`<span class="moon-held">${emblem(c.itemsList[map[j]])}</span>`:''}</div>`;}).join('')}</div>${c.show?`<div class="moon-prop">${emblem(c.show)}</div>`:''}</div>`;
+  return `<div class="moon-stage ${c.kind==='show'?'moon-performance':''} ${s.ok?'is-complete':''}" role="img" aria-label="${esc(c.t)}"><div class="moon-stage-title">${c.kind==='show'?(s.ok?'Премьера!':'Приглашаем артистов'):c.kind==='order'?'Очередь на сцену':c.kind==='doors'?'Театральные гримёрки':'Лунный театр'}</div><img class="moon-backdrop" src="${A}${bg}.webp" alt="">${c.kind==='show'?'<div class="moon-curtain left"></div><div class="moon-curtain right"></div>':''}<div class="moon-cast">${ps.map((p,j)=>{const present=c.kind!=='show'||j<s.count;const pose=c.kind==='show'&&present?(p===0?'lantern':'action'):s.ok?'happy':p===0&&c.who===p?'action':'idle';return `<div class="moon-actor ${present?'':'waiting'}">${portrait(p,pose)}<span class="moon-name">${actors[p]}</span>${map?.[j]!==null&&map?.[j]!==undefined&&c.itemsList&&!['doors','order'].includes(c.kind)?`<span class="moon-held">${emblem(c.itemsList[map[j]])}</span>`:''}</div>`;}).join('')}</div>${c.show?`<div class="moon-prop">${emblem(c.show)}</div>`:''}</div>`;
  }
- function clues(c,s){return c.clues?.length?`<div class="moon-evidence"><div class="moon-label">ПОДСКАЗКИ СЫЩИКА</div>${c.clues.map((cl,i)=>`<p class="${s.bad===i?'conflict':''}"><span aria-hidden="true">${s.ok?'✓':i+1}</span>${esc(cl.text)}</p>`).join('')}${['match','doors','swap'].includes(c.kind)?'<small>У каждого — своё. Повторов нет.</small>':''}</div>`:'';}
+ function clues(c,s){return c.clues?.length?`<div class="moon-evidence"><div class="moon-label">Что известно</div>${c.clues.map((cl,i)=>`<p class="${s.bad===i?'conflict':''}"><span aria-hidden="true">${s.ok?'✓':i+1}</span>${esc(cl.text)}</p>`).join('')}${['match','doors','swap'].includes(c.kind)?'<small>У каждого — своё. Повторов нет.</small>':''}</div>`:'';}
  function renderGame(c,s,scope,i){
   const b=(label,action,value,cls='',pressed)=>button(scope,i,label,action,value,s.ok,cls,pressed);
   const ps=c.people||[0,1,2];let game='';
-  if(c.kind==='choose'||c.kind==='verdict')game=`<div class="moon-options ${c.items?'item-options':''}">${c.opts.map((v,j)=>b(c.heroChoices?portrait(j,s.ok&&j===c.answer?'happy':'idle')+`<span>${esc(v)}</span>`:c.items?emblem(v)+`<span>${item(v)}</span>`:esc(v),'choose',j,(s.picked===j?'chosen ':'')+(c.heroChoices?'hero-choice':''))).join('')}</div>`;
+  if(c.kind==='choose'||c.kind==='verdict')game=`<div class="moon-options ${c.items?'item-options':''}">${c.opts.map((v,j)=>b(c.heroChoices?portrait(j,s.ok&&j===c.answer?'happy':'idle')+`<span>${esc(v)}</span>`:c.items?emblem(v)+`<span>${item(v)}</span>`:esc(v),'choose',j,(s.picked===j?'chosen ':'')+(c.heroChoices?'hero-choice':''),s.picked===j)).join('')}</div>`;
   if(c.kind==='grid'){
    game='<div class="moon-table" role="group" aria-label="Артисты и вещи"><div class="moon-corner">Кто?</div>'+c.itemsList.map(k=>`<div class="moon-col">${emblem(k)}<span>${item(k)}</span></div>`).join('');
    for(let r=0;r<3;r++){game+=`<div class="moon-row-label">${actors[r]}</div>`;for(let col=0;col<3;col++){let mark=s.ok?(r===c.cell[0]&&col===c.cell[1]?'✓':r===c.cell[0]||col===c.cell[1]?'×':'?'):'?';game+=button(scope,i,`<span aria-hidden="true">${mark}</span><span class="moon-sr">${actors[r]}, ${item(c.itemsList[col])}${s.ok?', '+(mark==='✓'?'да':mark==='×'?'нет':'неизвестно'):''}</span>`,'cell',[r,col],s.ok,'moon-cell '+(mark==='✓'?'yes':mark==='×'?'no':''));}}
-   game+='</div><p class="moon-legend">✓ — точно да · × — точно нет · ? — пока не знаем</p>';
+   game+='</div><p class="moon-legend"><span>✓ — точно да</span><span>× — точно нет</span><span>? — пока не знаем</span></p>';
   }
   if(c.kind==='match')game=`<div class="moon-items">${c.itemsList.map((k,j)=>b(emblem(k)+`<span>${item(k)}</span>`,'select',j,'item-choice',s.selected===j)).join('')}</div><div class="moon-destinations">${ps.map((p,j)=>b(`<strong>${actors[p]}</strong><span>${s.map[j]===null?'Отдать сюда':item(c.itemsList[s.map[j]])}</span>`,'place',j,'destination')).join('')}</div>`;
   if(c.kind==='doors'||c.kind==='order'){
@@ -102,11 +102,18 @@
   if(c.kind==='swap')game=`<div class="moon-swap">${ps.map((p,j)=>b(`<strong>${actors[p]}</strong>${emblem(c.itemsList[s.map[j]])}<span>${item(c.itemsList[s.map[j]])}</span>`,'select',j,'swap-card',s.selected===j)).join('')}</div>`;
   if(c.kind==='show')game=`<div class="moon-cues">${['lamp','drum','flute'].map((k,j)=>`<div class="${j<s.count?'played':j===s.count?'current':''}">${emblem(k)}<span>${j<s.count?'✓':j+1}</span></div>`).join('')}</div>`+(s.ok?'':`<div class="moon-select-actors">${ps.map((p,j)=>button(scope,i,actors[p],'call',j,j<s.count)).join('')}</div>`);
   if(['match','doors','order','swap'].includes(c.kind))game+=`<div class="moon-check-row">${button(scope,i,'Проверить','check',null,s.ok||s.map.includes(null),'check-button')}</div>`;
-  return `<div class="moon-game" data-game="${c.kind}">${stage(c,s)}${clues(c,s)}${game}<p class="moon-feedback ${s.ok?'success':''}" role="status" aria-live="polite">${esc(s.fb||(['match','doors','order','swap'].includes(c.kind)?'Нажимай, чтобы перемещать. Можно менять решение до проверки.':'Найди ответ по подсказке.'))}</p>${s.ok?'':button(scope,i,'Нужна подсказка','hint',null,false,'moon-help')}</div>`;
+  const instruction=s.ok?'':c.kind==='match'?(s.selected!==null?`Выбрано: «${item(c.itemsList[s.selected])}». Нажми имя артиста, которому отдашь эту вещь.`:s.map.includes(null)?'Выбери вещь на полке, затем имя артиста.':'Все вещи у артистов. Проверь подсказки.'):
+   c.kind==='doors'||c.kind==='order'?(s.selected!==null?`Артист: ${actors[ps[s.selected]]}. Нажми ${c.kind==='doors'?'нужную дверь':'нужное место в очереди'}.`:s.map.includes(null)?`Выбери артиста, затем ${c.kind==='doors'?'его дверь':'место в очереди'}.`:'Все на местах. Проверь подсказки.'):
+   c.kind==='swap'?(s.selected!==null?'Теперь выбери второго артиста — они обменяются вещами.':'Выбери двух артистов, которым нужно обменяться вещами.') : '';
+  const selectionFeedback=s.selected!==null&&(
+   c.kind==='match'&&s.fb===`Выбрано: ${item(c.itemsList[s.selected])}. Теперь нажми артиста.`||
+   c.kind==='swap'&&s.fb==='Теперь нажми второго артиста для обмена.'||
+   ['doors','order'].includes(c.kind)&&s.fb===`Артист: ${actors[ps[s.selected]]}. Выбери ${c.kind==='doors'?'нужную дверь':'нужное место'}.`);
+  return `<div class="moon-game" data-game="${c.kind}">${stage(c,s)}${clues(c,s)}${instruction?`<p class="moon-action" aria-live="polite">${esc(instruction)}</p>`:''}${game}${s.fb&&!selectionFeedback?`<p class="moon-feedback ${s.ok?'success':''}" role="status" aria-live="polite">${esc(s.fb)}</p>`:''}${s.ok?'':button(scope,i,`Подсказка ${['Руны','Тима','Ли'][c.who]}`,'hint',null,false,'moon-help')}</div>`;
  }
  const taskAnswer=t=>t.kind==='choose'||t.kind==='verdict'?t.answer:1;
  tasks.forEach(t=>{t.opts||=['Ещё думаю','Готово','Нужна помощь'];t.answer=taskAnswer(t);});
- const frames=scenes.map((c,i)=>({кто:keys[c.who],t:c.t,say:c.q,hint:c.hint,success:c.sol,начало:s=>Object.assign(s,initial(c)),готов:s=>s.ok===true,рисуй:s=>`<div class="moon-chapter"><span>ТАЙНА ЛУННОГО ТЕАТРА</span><span>${i+1} / ${scenes.length}</span></div><h3 class="moon-heading">${c.t}</h3>`+renderGame(c,s,'story',i),делать:'',подсказка:()=>c.hint,клики:{action(s,a,v){apply(c,s,a,v);}}}));
+ const frames=scenes.map((c,i)=>({кто:keys[c.who],t:c.t,say:c.q,hint:c.hint,success:c.sol,начало:s=>Object.assign(s,initial(c)),готов:s=>s.ok===true,рисуй:s=>`<div class="moon-chapter"><span>Тайна лунного театра</span><span>${i+1} / ${scenes.length}</span></div><h3 class="moon-heading">${c.t}</h3>`+renderGame(c,s,'story',i),делать:'',подсказка:()=>c.hint,клики:{action(s,a,v){apply(c,s,a,v);}}}));
  function practiceState(i){const rec=lrec();rec.moonTheatre||={version:1,frames:{}};rec.moonTheatre.practice||={};return rec.moonTheatre.practice[i]||=initial(tasks[i]);}
  function act(scope,i,a,v){
   if(typeof LV==='undefined'||LV.id!==ID||!Number.isInteger(i))return;
@@ -132,36 +139,36 @@
  const css=document.createElement('style');css.textContent=`
  @font-face{font-family:MoonHand307;src:url('fonts/Pangolin-ru.woff2') format('woff2');font-weight:400;font-display:swap}
  body:has(.дк307) #asst,#screen:has(.дк307)>.card>.arch{display:none}
- #screen:has(.дк307){font-family:'NunitoДК',sans-serif}#screen:has(.дк307)>.card{padding:6px;background:transparent;border:0}
- #screen:has(.дк307)>h2{max-width:640px;margin:12px auto;color:#f3dfb4;font:800 19px/1.3 'NunitoДК',sans-serif}
- #lvis .дк.дк307{width:100%;max-width:640px;margin:auto;gap:12px;--чернила:#443750;--контур:#95744f;min-width:0}
+ #screen:has(.дк307){font-family:MoonHand307,sans-serif}#screen:has(.дк307)>.card{padding:6px;background:transparent;border:0}
+ #screen:has(.дк307)>h2{max-width:640px;margin:12px auto;color:#f3dfb4;font:400 19px/1.3 MoonHand307,sans-serif}
+ #lvis .дк.дк307{width:100%;max-width:640px;margin:auto;gap:12px;--чернила:#443750;--контур:#95744f;min-width:0;font-family:MoonHand307,sans-serif;font-weight:400;font-synthesis:none}
  #lvis .дк.дк307 *{box-sizing:border-box}#lvis .дк.дк307 p{margin:0}
  #lvis .дк.дк307 .реплика{display:grid;grid-template-columns:1fr 44px;gap:8px;background:none;border:20px solid transparent;border-image:url('img/l307/window-v2.webp') 15% 12% fill / 20px stretch;padding:2px 4px 6px;min-height:0;filter:drop-shadow(0 4px 7px #0c071c44)}
  #lvis .дк.дк307 .реплика .аватар{grid-column:1;grid-row:1;display:flex;flex-direction:row;justify-content:start;align-items:center;width:auto;gap:8px}
  #lvis .дк.дк307 .реплика .аватар img{height:42px;width:34px;object-fit:contain}#lvis .дк.дк307 .реплика .аватар span{font-size:16px;color:#705170}
- #lvis .дк.дк307 .реплика p{grid-column:1/-1;grid-row:2;font:600 18px/1.5 'NunitoДК',sans-serif;color:#443750}
+ #lvis .дк.дк307 .реплика p{grid-column:1/-1;grid-row:2;font:400 18px/1.5 MoonHand307,sans-serif;color:#443750}
  #lvis .дк.дк307 .слушать{grid-column:2;grid-row:1;width:44px;height:44px;min-height:44px;border:2px solid #c4a16b;border-radius:50%;background:linear-gradient(#9473a4,#5b416d);color:#fff3d4;font-size:20px;box-shadow:0 2px 0 #3c2c4b}
- #lvis .дк.дк307 .moon-chapter{display:flex;justify-content:space-between;gap:12px;color:#dec3e3;font-size:12px;letter-spacing:.04em;font-weight:800}
- #lvis .дк.дк307 .moon-heading{font:400 26px/1.25 'MoonHand307','NunitoДК',sans-serif;color:#f8e7c1;text-align:center;margin:0}
+ #lvis .дк.дк307 .moon-chapter{display:flex;justify-content:space-between;gap:12px;color:#dec3e3;font-size:12px;letter-spacing:.04em;font-weight:400}
+ #lvis .дк.дк307 .moon-heading{font:400 26px/1.25 MoonHand307,sans-serif;color:#f8e7c1;text-align:center;margin:0}
  #lvis .дк.дк307 .moon-game,#lvis .дк.дк307 .moon-practice{display:grid;gap:12px;min-width:0}
  #lvis .дк.дк307 .moon-stage{position:relative;aspect-ratio:1.6;overflow:hidden;border:3px solid #b99a69;border-radius:22px;box-shadow:0 4px 0 #3d284a,0 10px 22px #120d2580;isolation:isolate}
  #lvis .дк.дк307 .moon-backdrop{position:absolute;width:100%;height:100%;object-fit:cover;inset:0;z-index:-2}
- #lvis .дк.дк307 .moon-stage-title{position:absolute;top:8px;left:50%;transform:translateX(-50%);max-width:90%;white-space:nowrap;border:1px solid #aa8c66;border-radius:20px;padding:5px 12px;background:#332b43e8;color:#f8e6b7;font-size:10px;letter-spacing:.08em;font-weight:900}
+ #lvis .дк.дк307 .moon-stage-title{position:absolute;top:8px;left:50%;transform:translateX(-50%);max-width:90%;white-space:nowrap;border:1px solid #aa8c66;border-radius:20px;padding:5px 12px;background:#332b43e8;color:#f8e6b7;font-size:10px;letter-spacing:.08em;font-weight:400}
  #lvis .дк.дк307 .moon-cast{position:absolute;inset:20% 5% 4%;display:flex;justify-content:space-around;align-items:end;gap:4px}
  #lvis .дк.дк307 .moon-actor{height:100%;flex:1;min-width:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:end}
  #lvis .дк.дк307 .moon-actor:before{content:'';position:absolute;bottom:24px;width:65%;height:9%;border-radius:50%;background:#2d172b66;filter:blur(3px);z-index:-1}
  #lvis .дк.дк307 .moon-actor>img{max-width:100%;width:auto;height:calc(100% - 25px);object-fit:contain;object-position:bottom;filter:drop-shadow(0 3px 2px #2a163966)}
  #lvis .дк.дк307 .moon-actor:nth-child(2)>img{height:calc(88% - 25px)}#lvis .дк.дк307 .moon-actor:nth-child(3)>img{height:calc(80% - 25px)}
- #lvis .дк.дк307 .moon-name{background:#fff0d2;color:#4c3b4b;border:1px solid #b69a6b;border-radius:10px;font-size:13px;line-height:20px;padding:0 10px;font-weight:900;z-index:2}
+ #lvis .дк.дк307 .moon-name{background:#fff0d2;color:#4c3b4b;border:1px solid #b69a6b;border-radius:10px;font-size:13px;line-height:20px;padding:0 10px;font-weight:400;z-index:2}
  #lvis .дк.дк307 .moon-held{position:absolute;left:0;bottom:23%;width:43%;height:36%;padding:2px;border-radius:12px;background:#fff1d9e8;border:1px solid #c9ad7b;animation:moon-place .3s ease-out both}
  #lvis .дк.дк307 .moon-held svg{width:100%;height:100%}#lvis .дк.дк307 .moon-prop{position:absolute;right:6px;top:38px;width:45px;height:45px;background:#fff3d8;border-radius:13px;padding:4px;border:2px solid #c7a879}
  #lvis .дк.дк307 .moon-prop svg{width:100%;height:100%}
  #lvis .дк.дк307 .moon-evidence{padding:15px 16px;background:linear-gradient(115deg,#fff8e8,#eadbc0);border:1px solid #c3a97d;box-shadow:inset 0 0 0 4px #fff8e566,0 3px 0 #574354;border-radius:18px;color:#4a3e50;display:grid;gap:9px}
- #lvis .дк.дк307 .moon-label{font-size:11px;font-weight:900;letter-spacing:.08em;color:#886188}
- #lvis .дк.дк307 .moon-evidence p{display:flex;align-items:center;gap:9px;font-size:17px;line-height:1.4;font-weight:700}
+ #lvis .дк.дк307 .moon-label{font-size:11px;font-weight:400;letter-spacing:.08em;color:#886188}
+ #lvis .дк.дк307 .moon-evidence p{display:flex;align-items:center;gap:9px;font-size:17px;line-height:1.4;font-weight:400}
  #lvis .дк.дк307 .moon-evidence p>span{flex:0 0 25px;width:25px;height:25px;text-align:center;border-radius:50%;background:#775880;color:#fff5d8;font-size:14px;line-height:25px}
  #lvis .дк.дк307 .moon-evidence small{font-size:13px;color:#6d6170}#lvis .дк.дк307 .moon-evidence .conflict{color:#994c4c}
- #lvis .дк.дк307 button.moon-button,#lvis .дк.дк307 .число,#lvis .дк.дк307 .дальше-кн,#lvis .дк.дк307 .дт-подск,#screen:has(.дк307)>.btnrow>button,#screen:has(.дк307)>button{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-align:center;white-space:normal;min-height:56px;min-width:0;max-width:100%;padding:2px 10px 5px;border:solid transparent;border-width:10px 12px 20px;border-image:url('img/l307/button-v2.webp') 24% 12% 30% 12% fill / 10px 12px 20px stretch;background:none;box-shadow:none;color:#59415d;font:800 17px/1.3 'NunitoДК',sans-serif;cursor:pointer;touch-action:manipulation;filter:drop-shadow(0 3px 2px #150d2655);transition:transform .12s}
+ #lvis .дк.дк307 button.moon-button,#lvis .дк.дк307 .число,#lvis .дк.дк307 .дальше-кн,#lvis .дк.дк307 .дт-подск,#screen:has(.дк307)>.btnrow>button,#screen:has(.дк307)>button{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-align:center;white-space:normal;min-height:56px;min-width:0;max-width:100%;padding:2px 10px 5px;border:solid transparent;border-width:10px 12px 20px;border-image:url('img/l307/button-v2.webp') 24% 12% 30% 12% fill / 10px 12px 20px stretch;background:none;box-shadow:none;color:#59415d;font:400 17px/1.3 MoonHand307,sans-serif;cursor:pointer;touch-action:manipulation;filter:drop-shadow(0 3px 2px #150d2655);transition:transform .12s}
  #lvis .дк.дк307 button:focus-visible,#screen:has(.дк307) button:focus-visible{outline:3px solid #a8dbd0;outline-offset:3px}
  #lvis .дк.дк307 button:not(:disabled):active{transform:translateY(2px)}#lvis .дк.дк307 button:disabled{cursor:default;opacity:.65}
  #lvis .дк.дк307 button[aria-pressed=true]{outline:3px solid #e2b9ef;outline-offset:1px;filter:drop-shadow(0 0 6px #d6a1e6)}
@@ -172,12 +179,12 @@
  #lvis .дк.дк307 .hero-choice img{height:78px;width:100%;object-fit:contain}#lvis .дк.дк307 .item-options svg,#lvis .дк.дк307 .item-choice svg,#lvis .дк.дк307 .swap-card svg{height:48px;width:48px}
  #lvis .дк.дк307 .destination{min-height:78px!important}#lvis .дк.дк307 .destination span{font-size:14px}
  #lvis .дк.дк307 .moon-table{display:grid;grid-template-columns:60px repeat(3,minmax(0,1fr));gap:5px;padding:12px 8px;border-radius:20px;background:#ede0c8;border:2px solid #b29670;color:#514155;align-items:stretch}
- #lvis .дк.дк307 .moon-col{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px;font-weight:900;justify-content:center}
- #lvis .дк.дк307 .moon-col svg{width:36px;height:36px}#lvis .дк.дк307 .moon-row-label,#lvis .дк.дк307 .moon-corner{display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900}
+ #lvis .дк.дк307 .moon-col{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px;font-weight:400;justify-content:center}
+ #lvis .дк.дк307 .moon-col svg{width:36px;height:36px}#lvis .дк.дк307 .moon-row-label,#lvis .дк.дк307 .moon-corner{display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:400}
  #lvis .дк.дк307 button.moon-cell{min-height:54px;border:1px solid #b9a17d;border-radius:11px;background:linear-gradient(#fffaf0,#f5ead5);padding:5px;font-size:25px;color:#82738a;filter:none}
  #lvis .дк.дк307 button.moon-cell.yes{background:#d9edcf;color:#356b4d;opacity:1}#lvis .дк.дк307 button.moon-cell.no{color:#a15c65;opacity:1}
  #lvis .дк.дк307 .moon-legend{font-size:13px;text-align:center;color:#e0d1e1}
- #lvis .дк.дк307 .moon-feedback,#lvis .дк.дк307 .готово,#lvis .дк.дк307 .разбор,#lvis .дк.дк307 .дт-совет{border:1px solid #bba184;border-left:5px solid #94729d;padding:13px 15px;background:#f9f0df;border-radius:15px;color:#514357;font:600 16px/1.45 'NunitoДК',sans-serif;min-height:52px}
+ #lvis .дк.дк307 .moon-feedback,#lvis .дк.дк307 .готово,#lvis .дк.дк307 .разбор,#lvis .дк.дк307 .дт-совет{border:1px solid #bba184;border-left:5px solid #94729d;padding:13px 15px;background:#f9f0df;border-radius:15px;color:#514357;font:400 16px/1.45 MoonHand307,sans-serif;min-height:52px}
  #lvis .дк.дк307 .moon-feedback.success,#lvis .дк.дк307 .готово{border-left-color:#6d9b80;background:#e9f2df;color:#3c6048}
  #lvis .дк.дк307 .moon-check-row{display:flex;justify-content:center}#lvis .дк.дк307 button.check-button{min-width:180px}
  #lvis .дк.дк307 button.moon-help{justify-self:center;font-size:14px;min-height:48px;color:#5e5a70}
@@ -201,7 +208,8 @@
  #lvis .дк.дк307 .moon-name,#lvis .дк.дк307 .moon-col,#lvis .дк.дк307 .moon-row-label,#lvis .дк.дк307 .moon-legend{font-family:MoonHand307,sans-serif;font-weight:400}
  #lvis .дк.дк307 .item-options button,#lvis .дк.дк307 button.item-choice,#lvis .дк.дк307 button.swap-card{padding-bottom:7px;min-height:110px}
  #lvis .дк.дк307 button.destination{padding-top:5px;padding-bottom:8px;min-height:88px}
- #lvis .дк.дк307 button strong{font-weight:400}
+ #lvis .дк.дк307 strong,#lvis .дк.дк307 b{font-weight:400}
+ #lvis .дк.дк307 svg text{font-family:MoonHand307,sans-serif;font-weight:400}
  @media(max-width:360px){#lvis .дк.дк307 .реплика p,#lvis .дк.дк307 .moon-feedback,#lvis .дк.дк307 .moon-evidence p{font-size:17px}#lvis .дк.дк307 button.item-choice,#lvis .дк.дк307 .item-options button,#lvis .дк.дк307 button.swap-card{font-size:16px}#lvis .дк.дк307 .moon-heading{font-size:25px}}
  #lvis .дк.дк307 button.moon-place{font-size:15px;padding-left:2px;padding-right:2px;border-width:3px;line-height:1.25}
  #lvis .дк.дк307 .число.верно:after,#lvis .дк.дк307 .число.мимо:after{right:1px;top:1px;width:18px;height:18px;font-size:12px;line-height:18px}
@@ -213,6 +221,40 @@
  #lvis .дк.дк307 .is-complete .moon-curtain.right{animation:moon-curtain-right 1.2s ease-out both}
  @keyframes moon-curtain-left{from{transform:translateX(-80%)}to{transform:translateX(-100%)}}
  @keyframes moon-curtain-right{from{transform:translateX(80%)}to{transform:translateX(100%)}}
+
+ /* The prop shelf, actor labels and dressing-room doors are different physical places. */
+ #lvis .дк.дк307 .moon-chapter{align-items:baseline;font-size:13px;letter-spacing:0;line-height:1.4}
+ #lvis .дк.дк307 .moon-chapter>span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+ #lvis .дк.дк307 .moon-heading{font-size:clamp(25px,6.7vw,29px);line-height:1.35;text-wrap:balance}
+ #lvis .дк.дк307 .реплика p,#lvis .дк.дк307 .moon-evidence p,#lvis .дк.дк307 .moon-feedback{line-height:1.55;overflow-wrap:break-word}
+ #lvis .дк.дк307 .moon-stage-title{border:0;border-radius:0;background:#332b43e8;padding:4px 9px;font:400 14px/1.2 MoonHand307,sans-serif;letter-spacing:0;white-space:normal;text-align:center}
+ #lvis .дк.дк307 .moon-stage{aspect-ratio:1.45}
+ #lvis .дк.дк307 .moon-name{font-size:15px;line-height:23px;padding:0 8px;border-radius:3px 3px 7px 7px}
+ #lvis .дк.дк307 .moon-evidence{position:relative;padding:13px 14px 15px 22px;border:0;border-left:3px solid #b69b6a;border-radius:0 9px 9px 0;box-shadow:none;background:#f2e6cd;gap:10px}
+ #lvis .дк.дк307 .moon-label{font:400 17px/1.3 MoonHand307,sans-serif;letter-spacing:0;color:#6f4d6e}
+ #lvis .дк.дк307 .moon-evidence p{align-items:flex-start;gap:10px}
+ #lvis .дк.дк307 .moon-evidence p>span{margin-top:2px;border-radius:0;background:none;border-bottom:2px solid #a58b69;color:#6b4d6d;font:400 18px/24px MoonHand307,sans-serif}
+ #lvis .дк.дк307 .moon-evidence small{font:400 15px/1.4 MoonHand307,sans-serif}
+ #lvis .дк.дк307 .moon-action{color:#f2e2bf;font:400 18px/1.5 MoonHand307,sans-serif;padding:2px 3px;text-wrap:pretty}
+ #lvis .дк.дк307 .moon-items,#lvis .дк.дк307 .item-options{gap:9px;padding:0 0 8px;border-bottom:5px solid #947652;box-shadow:0 3px 0 #3d2c35}
+ #lvis .дк.дк307 button.item-choice,#lvis .дк.дк307 .item-options button{border:1px solid #b79a6d;border-image:none;border-radius:28px 28px 5px 5px;padding:8px 3px 9px;background:#eee0c2;filter:none;box-shadow:inset 0 -3px #c9b18a;min-height:108px;font-size:18px;line-height:1.3}
+ #lvis .дк.дк307 .item-options svg,#lvis .дк.дк307 .item-choice svg{width:47px;height:47px;flex-shrink:0}
+ #lvis .дк.дк307 button.destination{border:1px solid #a48a63;border-image:none;border-radius:4px 4px 13px 13px;padding:9px 4px 11px;background:#e8ddc4;filter:none;box-shadow:inset 0 -4px #c9b595;gap:7px;min-height:91px}
+ #lvis .дк.дк307 button.destination strong{font-size:20px;line-height:1.2}
+ #lvis .дк.дк307 button.destination span{font-size:16px;line-height:1.25}
+ #lvis .дк.дк307 button.swap-card{border:2px solid #b19b75;border-image:none;border-radius:4px;padding:10px 3px;background:#f0e2c5;filter:none;font-size:18px;line-height:1.3;min-height:130px}
+ #lvis .дк.дк307 button[aria-pressed=true]{outline:2px solid #f0d293;outline-offset:2px;filter:none;background-color:#e5d1a8}
+ #lvis .дк.дк307 .moon-game:has(.moon-feedback.success) button.chosen{background-color:#d7e9d5;color:#315b44;opacity:1}
+ #lvis .дк.дк307 .moon-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;font-size:15px;line-height:1.4}
+ #lvis .дк.дк307 .moon-legend span{white-space:nowrap}
+ #lvis .дк.дк307 .moon-feedback,#lvis .дк.дк307 .разбор,#lvis .дк.дк307 .дт-совет{border:0;border-left:3px solid #ad8a66;border-radius:0 10px 10px 0;padding:13px 15px;background:#f5ead6;min-height:0;font-size:18px;line-height:1.5;overflow-wrap:break-word}
+ #lvis .дк.дк307 button.moon-help{justify-self:start;border:0;border-image:none;border-bottom:1px solid #b99d6f;border-radius:0;min-height:48px;padding:8px 3px;background:none;color:#e5cca5;filter:none;font-size:17px}
+ #lvis .дк.дк307 .moon-table{border-radius:8px;padding:10px 6px;gap:4px;grid-template-columns:48px repeat(3,minmax(0,1fr))}
+ #lvis .дк.дк307 .moon-col{font-size:14px;line-height:1.25;min-width:0}
+ #lvis .дк.дк307 button.moon-cell{min-width:44px;min-height:54px;border-radius:4px}
+ #lvis .дк.дк307 .дт-подсказки{display:flex;flex-wrap:wrap;gap:8px}
+ #lvis .дк.дк307 .дт-подсказки>button{min-height:48px;max-width:100%;white-space:normal}
+ @media(max-width:360px){#lvis .дк.дк307 .реплика p,#lvis .дк.дк307 .moon-feedback,#lvis .дк.дк307 .moon-evidence p{font-size:18px}#lvis .дк.дк307 .moon-stage-title{font-size:13px}#lvis .дк.дк307 button.item-choice,#lvis .дк.дк307 .item-options button,#lvis .дк.дк307 button.swap-card{font-size:17px}#lvis .дк.дк307 .moon-evidence{padding-left:17px;padding-right:12px}}
  @media(prefers-reduced-motion:reduce){#lvis .дк.дк307 *{animation:none!important;transition:none!important}}
  `;document.head.appendChild(css);
 })();

@@ -85,6 +85,10 @@ function apply(c,s,a,v){
 const items=(k,n)=>Array.from({length:n},()=>icon(k)).join('');
 function btn(scope,i,label,a,v,disabled=false,cls='',pressed){return `<button type="button" class="pic-button ${cls}" ${disabled?'disabled':''} ${pressed===undefined?'':`aria-pressed="${pressed}"`} onclick="${esc(`PIC308.act('${scope}',${i},'${a}',${JSON.stringify(v)})`)}">${label}</button>`;}
 function cast(c,s){return `<div class="pic-cast ${s.ok?'celebrate':''}">${(c.kind==='serve'||c.view==='shared'?[0,1,2]:[c.who]).map(p=>`<div>${portrait(p,s.ok?(c.view==='boxes'&&!c.prize?'action':'happy'):(c.kind==='route'||c.kind==='pack')?'action':'idle')}<span>${actors[p]}</span></div>`).join('')}</div>`;}
+function nextAction(c){
+ const cues={count:'Посчитай группы. Затем набери общее количество.',missing:'Посмотри, сколько видно. Набери, сколько спрятано.',pack:'Собери только предметы из списка.',race:'Сначала выполни обгон, затем выбери новое место Ирис.',route:'Начни от флажка. Нажимай соседние сухие камни.',reveal:'Открой оба мешочка, затем сравни печенье.',share:'Переложи печенье с полной тарелки на другую.',trips:'Поставь чашки на поднос, затем отнеси их.',serve:'Поставь чашки друзьям и наполни обе тарелки.'};
+ return cues[c.kind]||(c.view==='boxes'?'Проверь цвет и форму каждой коробочки.':'Рассмотри предметы и выбери ответ.');
+}
 function renderGame(c,s,scope,i){
  const b=(text,a,v,cls='',disabled=s.ok,pressed)=>btn(scope,i,text,a,v,disabled,cls,pressed);
  const check=()=>`<div class="pic-controls">${b('Проверить','check',null,'primary')}${b('Сначала','reset',null,'secondary')}</div>`;
@@ -96,10 +100,10 @@ function renderGame(c,s,scope,i){
   if(c.view==='shared')work=`<div class="pic-shared"><div class="pic-single-pot">${icon('pot')}</div><span>Один общий стол</span></div>`;
   if(c.view==='family')work=`<div class="pic-family">${['Брат 1','Брат 2','Брат 3','Сестра'].map((t,j)=>`<div><img src="${A}child-${j}.webp" alt=""><span>${t}</span></div>`).join('')}</div>`;
   if(c.view==='claim')work=`<div class="pic-two"><div class="pic-dish"><div>${items('cookie',4)}</div><span>Левая тарелка</span></div><div class="pic-dish"><div>${items('cookie',2)}</div><span>Правая тарелка</span></div></div>`;
-  if(c.view==='boxes')work+=`<div class="pic-boxes">${c.boxes.map((x,j)=>b(`<span class="pic-box ${x[3]}" style="--box:${x[2]}">${s.ok&&j===c.answer?icon(c.prize||'key'):'?'}</span><span>${x[0]}<br>${x[1]}</span>`,'choose',j,'box-button '+(s.picked===j?'chosen':''))).join('')}</div>`;
+  if(c.view==='boxes')work+=`<div class="pic-boxes">${c.boxes.map((x,j)=>b(`<span class="pic-box ${x[3]}" style="--box:${x[2]}">${s.ok&&j===c.answer?icon(c.prize||'key'):'?'}</span><span class="box-name">${x[0]}<br>${x[1]}</span>`,'choose',j,'box-button '+(s.picked===j?'chosen':''))).join('')}</div>`;
   else work+=`<div class="pic-options">${c.opts.map((x,j)=>b(esc(x),'choose',j,s.picked===j?'chosen':'')).join('')}</div>`;
  }
- if(c.kind==='pack')work=`<div class="pic-list">В набор: ${Object.entries(c.need).map(([k,n])=>`<span>${icon(k)} × ${n}</span>`).join('')}</div><div class="pic-shelf">${c.items.map((k,j)=>b(icon(k)+`<span>${names[k]} ${c.items.slice(0,j+1).filter(x=>x===k).length}</span>`,'toggle',j,'shelf-item',s.ok,s.selected.includes(j))).join('')}</div>${check()}`;
+ if(c.kind==='pack')work=`<div class="pic-list">В набор: ${Object.entries(c.need).map(([k,n])=>`<span>${icon(k)} × ${n}</span>`).join('')}</div><div class="pic-shelf">${c.items.map((k,j)=>b(icon(k)+`<span>${names[k]}<small>№ ${c.items.slice(0,j+1).filter(x=>x===k).length}</small></span>`,'toggle',j,'shelf-item',s.ok,s.selected.includes(j))).join('')}</div>${check()}`;
  if(c.kind==='race'){
   const order=c.order.slice();if(s.moved)[order[c.from-1],order[c.from]]=[order[c.from],order[c.from-1]];
   work=`<div class="pic-race"><div class="pic-finish">Впереди →</div>${order.map((p,j)=>`<div class="pic-runner ${s.moved&&p===1?'overtaken':''}" style="--place:${j}">${portrait(p,s.ok?'happy':'idle')}<span>${j+1}. ${actors[p]}</span></div>`).join('')}</div>${b(s.moved?'Обгон выполнен':'Обогнать','overtake',null,'primary',s.ok||s.moved)}<div class="pic-options">${c.opts.map((x,j)=>b(x,'choose',j,s.picked===j?'chosen':'',s.ok||!s.moved)).join('')}</div>`;
@@ -109,11 +113,11 @@ function renderGame(c,s,scope,i){
  if(c.kind==='share')work=`<div class="pic-total">Всего: ${s.bowls[0]+s.bowls[1]} печений</div><div class="pic-two">${s.bowls.map((n,j)=>`<div class="pic-dish"><div>${items('cookie',n)}</div><span>${j?'Справа':'Слева'}: ${n}</span></div>`).join('')}</div><div class="pic-controls">${b('← Перенести','transfer',1,'',s.ok||!s.bowls[1])}${b('Перенести →','transfer',0,'',s.ok||!s.bowls[0])}</div>${check()}`;
  if(c.kind==='trips')work=`<div class="pic-stats"><span>Нужно: <b>${c.total}</b></span><span>Доставлено: <b>${s.delivered}</b></span><span>Ходок: <b>${s.trips}</b></span></div><div class="pic-tray" aria-label="Чашки на подносе"><div>${items('cup',s.tray)||'<span>Поднос пуст</span>'}</div></div>${counter('load',s.tray,'на подносе',Math.min(c.capacity,c.total-s.delivered))}${b('Отнести','deliver',null,'primary',s.ok||!s.tray)}<div class="pic-arrived">На столе: <span>${items('cup',s.delivered)||'пока пусто'}</span></div>${check()}`;
  if(c.kind==='serve')work=`<div class="pic-tablecloth"><div class="pic-guests">${Array.from({length:c.guests},(_,j)=>b(`<strong>${actors[j]}</strong><span class="pic-place-setting">${s.cups[j]?icon('cup'):'+'}</span><span>${s.cups[j]?'Убрать чашку':'Поставить чашку'}</span>`,'cup',j,'guest-place')).join('')}</div><div class="pic-two">${s.plates.map((n,j)=>`<div class="plate-panel"><strong>Тарелка ${j+1}</strong><div class="pic-dish"><div>${items('cookie',n)||'Пусто'}</div></div><span>${n} из ${c.per}</span><div class="plate-controls">${b(`<span aria-hidden="true">−</span><span class="pic-sr">Убрать печенье с тарелки ${j+1}</span>`,'unplate',j,'plate-step',s.ok||!n)}${b(`<span aria-hidden="true">+</span><span class="pic-sr">Добавить печенье на тарелку ${j+1}</span>`,'plate',j,'plate-step',s.ok||n>=c.per+2)}</div></div>`).join('')}</div></div><p class="pic-note">Чашку можно поставить и убрать. Печенье: «+» добавить, «−» убрать.</p>${check()}`;
- return `<div class="pic-game" data-game="${c.kind}"><div class="pic-world" style="--world:url('${A}${c.bg||'garden'}.webp')">${cast(c,s)}<div class="pic-work">${work}</div></div><p class="pic-feedback ${s.ok?'success':''}" role="status" aria-live="polite">${esc(s.fb||'Попробуй! Если ошибёшься, можно исправить.')}</p>${s.ok?'':b('Нужна подсказка','hint',null,'pic-help',false)}</div>`;
+ return `<div class="pic-game" data-game="${c.kind}"><div class="pic-world" style="--world:url('${A}${c.bg||'garden'}.webp')">${cast(c,s)}<div class="pic-work">${work}</div></div><p class="pic-feedback ${s.ok?'success':s.fb===c.hint?'hint':''}" role="status" aria-live="polite">${esc(s.fb||nextAction(c))}</p>${s.ok?'':b('Нужна подсказка','hint',null,'pic-help',false)}</div>`;
 }
 const answer=t=>['choose','race','reveal'].includes(t.kind)?t.answer:1;
 tasks.forEach(t=>{t.opts||=['Ещё думаю','Готово','Нужна помощь'];t.answer=answer(t);});
-const frames=scenes.map((c,i)=>({кто:keys[c.who],t:c.t,say:c.q,hint:c.hint,success:c.sol,начало:s=>Object.assign(s,initial(c)),готов:s=>s.ok===true,рисуй:s=>`<div class="pic-chapter"><span>ПИКНИК У ВЕЛИКОЙ ГРУШИ</span><span>${i+1} / ${scenes.length}</span></div><h3 class="pic-heading">${c.t}</h3>`+renderGame(c,s,'story',i),делать:'',подсказка:()=>c.hint,клики:{action(s,a,v){apply(c,s,a,v);}}}));
+const frames=scenes.map((c,i)=>({кто:keys[c.who],t:c.t,say:c.q,hint:c.hint,success:c.sol,начало:s=>Object.assign(s,initial(c)),готов:s=>s.ok===true,рисуй:s=>`<div class="pic-chapter"><span>Пикник у Великой груши</span><span>${i+1} / ${scenes.length}</span></div><h3 class="pic-heading">${c.t}</h3>`+renderGame(c,s,'story',i),делать:'',подсказка:()=>c.hint,клики:{action(s,a,v){apply(c,s,a,v);}}}));
 function practiceState(i){const rec=lrec();rec.picnic||={version:1,frames:{}};rec.picnic.practice||={};return rec.picnic.practice[i]||=initial(tasks[i]);}
 function act(scope,i,a,v){
  if(typeof LV==='undefined'||LV.id!==ID||!Number.isInteger(i))return;
@@ -139,22 +143,22 @@ const css=document.createElement('style');css.textContent=`
 body:has(.дк308) #asst,#screen:has(.дк308)>.card>.arch{display:none}
 #screen:has(.дк308)>.card{padding:6px;background:transparent;border:0}
 #screen:has(.дк308)>h2{max-width:650px;margin:12px auto;color:#f8e9ba;font:400 25px/1.3 PicTitle308,cursive}
-#lvis .дк.дк308{width:100%;max-width:650px;min-width:0;margin:auto;gap:14px;--чернила:#3b4c3f;--контур:#9b8658;font-family:PicHand308,sans-serif}
+#lvis .дк.дк308{width:100%;max-width:650px;min-width:0;margin:auto;gap:14px;--чернила:#3b4c3f;--контур:#9b8658;font:400 18px/1.5 PicHand308,sans-serif}
 #lvis .дк.дк308 *{box-sizing:border-box}#lvis .дк.дк308 p{margin:0}
-#lvis .дк.дк308 .реплика{display:grid;grid-template-columns:1fr 44px;gap:7px;background:none;border:20px solid transparent;border-image:url('img/l308/panel.webp') 14% 9% fill / 20px stretch;padding:4px 5px 7px;min-height:0;filter:drop-shadow(0 3px 4px #1117)}
+#lvis .дк.дк308 .реплика{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:9px;background:none;border:0;border-bottom:1px solid #9b865866;border-image:none;padding:8px 2px 16px;min-height:0;filter:none}
 #lvis .дк.дк308 .реплика .аватар{grid-column:1;grid-row:1;display:flex;align-items:center;flex-direction:row;gap:8px;width:auto;justify-content:start}
-#lvis .дк.дк308 .реплика .аватар img{height:44px;width:35px;object-fit:contain}#lvis .дк.дк308 .реплика .аватар span{font:18px PicHand308;color:#557159}
-#lvis .дк.дк308 .реплика p{grid-column:1/-1;grid-row:2;font:18px/1.45 PicHand308,sans-serif;color:#394c40}
+#lvis .дк.дк308 .реплика .аватар img{height:44px;width:35px;object-fit:contain}#lvis .дк.дк308 .реплика .аватар span{font:400 18px/1.4 PicHand308,sans-serif;color:#d3c490}
+#lvis .дк.дк308 .реплика p{grid-column:1/-1;grid-row:2;font:400 19px/1.5 PicHand308,sans-serif;color:#e8e0cc}
 #lvis .дк.дк308 .слушать{grid-column:2;grid-row:1;width:44px;height:44px;min-height:44px;padding:0;border:2px solid #b9a363;border-radius:50%;background:linear-gradient(#79977b,#466b56);color:#fff7d7;font-size:20px;box-shadow:0 2px 0 #294c3b}
-#lvis .дк.дк308 .pic-chapter{display:flex;justify-content:space-between;gap:12px;color:#d6dfb4;font:12px/1.4 'NunitoДК',sans-serif;letter-spacing:.03em}
+#lvis .дк.дк308 .pic-chapter{display:flex;justify-content:space-between;gap:12px;color:#d6dfb4;font:400 15px/1.4 PicHand308,sans-serif;letter-spacing:0}
 #lvis .дк.дк308 .pic-heading{font:400 27px/1.25 PicTitle308,cursive;color:#fae9ba;text-align:center;margin:0}
 #lvis .дк.дк308 .pic-game,#lvis .дк.дк308 .pic-practice{display:grid;gap:12px;min-width:0}
-#lvis .дк.дк308 .pic-world{border:2px solid #bca26d;border-radius:22px;padding:12px;background:#c3ae83;overflow:hidden;box-shadow:0 5px 0 #253c32,0 9px 20px #061b1544}
+#lvis .дк.дк308 .pic-world{border:0;border-radius:0;padding:0;background:none;overflow:visible;box-shadow:none}
 #lvis .дк.дк308 .pic-cast{height:clamp(180px,35vw,260px);display:flex;justify-content:center;gap:16px;align-items:end;margin-bottom:9px;padding:25px 12px 9px;background-image:var(--world);background-size:cover;background-position:center bottom;border-radius:12px;box-shadow:inset 0 -12px 15px #95764c33}
 #lvis .дк.дк308 .pic-cast>div{position:relative;height:100%;display:flex;align-items:center;justify-content:end;flex-direction:column;min-width:50px}
 #lvis .дк.дк308 .pic-cast>div:before{content:'';position:absolute;bottom:18px;width:65px;height:10px;background:#352c2366;border-radius:50%;filter:blur(3px)}
 #lvis .дк.дк308 .pic-cast img{height:calc(100% - 20px);max-width:100%;object-fit:contain;z-index:1}#lvis .дк.дк308 .pic-cast span{font-size:14px;line-height:19px;background:#fff3d2;color:#435a42;border-radius:10px;padding:0 9px;z-index:2}
-#lvis .дк.дк308 .pic-work{padding:15px 12px;background:#fff9e8f2;border:1px solid #b4a276;border-radius:16px;display:grid;gap:12px;color:#354c3d;min-width:0}
+#lvis .дк.дк308 .pic-work{padding:14px 0 0;background:none;border:0;border-radius:0;display:grid;gap:14px;color:#e8e0cc;min-width:0}
 #lvis .дк.дк308 svg{width:45px;height:45px;flex-shrink:0}
 #lvis .дк.дк308 button.pic-button,#lvis .дк.дк308 .число,#lvis .дк.дк308 .дальше-кн,#lvis .дк.дк308 .дт-подск,#screen:has(.дк308)>.btnrow>button,#screen:has(.дк308)>button{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-align:center;white-space:normal;min-height:54px;min-width:0;max-width:100%;padding:5px 7px;border:12px solid transparent;border-image:url('img/l308/button.webp') 25% 12% fill / 12px stretch;background:none;box-shadow:none;color:#3e5d48;font:400 18px/1.3 PicHand308,sans-serif;cursor:pointer;touch-action:manipulation;filter:drop-shadow(0 2px 2px #213b302b);transition:transform .12s}
 #lvis .дк.дк308 button.chosen:disabled{outline:3px solid #609472;outline-offset:2px;opacity:1}#lvis .дк.дк308 button:focus-visible,#screen:has(.дк308) button:focus-visible{outline:3px solid #2e867b;outline-offset:3px}
@@ -163,7 +167,7 @@ body:has(.дк308) #asst,#screen:has(.дк308)>.card>.arch{display:none}
 #lvis .дк.дк308 .pic-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}#lvis .дк.дк308 .pic-controls>button{flex:1;min-width:90px}#lvis .дк.дк308 .pic-options{display:grid;gap:8px}
 #lvis .дк.дк308 button.primary{font-size:19px;min-width:130px}#lvis .дк.дк308 button.secondary{font-size:16px}
 #lvis .дк.дк308 .pic-group-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#lvis .дк.дк308 button.group-card{display:flex;flex-direction:column;gap:6px;min-height:105px}
-#lvis .дк.дк308 .pic-icon-pair{display:flex;justify-content:center;gap:0}#lvis .дк.дк308 .pic-icon-pair svg{width:42px;height:48px}#lvis .дк.дк308 .pic-equation{font-size:24px;text-align:center;color:#8c6434}
+#lvis .дк.дк308 .pic-icon-pair{display:flex;justify-content:center;gap:0}#lvis .дк.дк308 .pic-icon-pair svg{width:42px;height:48px}#lvis .дк.дк308 .pic-equation{font:400 26px/1.4 PicHand308,sans-serif;text-align:center;color:#e5c580}
 #lvis .дк.дк308 .pic-counter{display:flex;justify-content:center;align-items:center;gap:12px}#lvis .дк.дк308 button.stepper{width:54px;height:54px;padding:0;font-size:28px}
 #lvis .дк.дк308 output{display:flex;flex-direction:column;min-width:70px;text-align:center}#lvis .дк.дк308 output b{font:32px/1.1 PicHand308}#lvis .дк.дк308 output small{font-size:14px}
 #lvis .дк.дк308 .pic-shared{background:repeating-linear-gradient(0deg,#cbb37d,#ead3a0 14px,#cbb37d 16px);border:4px solid #a78352;border-radius:50%;padding:14px;text-align:center;max-width:240px;width:100%;margin:auto;color:#4d5036;box-shadow:0 7px 0 #816345}
@@ -176,7 +180,7 @@ body:has(.дк308) #asst,#screen:has(.дк308)>.card>.arch{display:none}
 #lvis .дк.дк308 .pic-map-label{display:flex;justify-content:space-between;font-size:17px;gap:8px}#lvis .дк.дк308 .pic-map{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:4px;padding:6px;background:#b7c79c;border:2px solid #82977a;border-radius:16px}
 #lvis .дк.дк308 button.map-cell{min-height:52px;height:60px;border:2px solid #bda779;border-image:none;padding:2px;background:linear-gradient(#f6e9c4,#d9c692);border-radius:12px;box-shadow:0 2px 0 #857455;color:#6f704e;font-size:27px;filter:none}
 #lvis .дк.дк308 button.map-cell>span:first-child{display:flex;align-items:center;justify-content:center;width:100%;height:100%}#lvis .дк.дк308 .map-cell img{height:50px;max-width:100%;object-fit:contain}#lvis .дк.дк308 button.map-cell.water{background:#91c4c5;color:#3d7e8b;border-color:#66999c}#lvis .дк.дк308 button.map-cell.trail{border-color:#5d8b4f;background:#e4efc7}
-#lvis .дк.дк308 .pic-note{font-size:15px;line-height:1.35;color:#68735b;text-align:center}
+#lvis .дк.дк308 .pic-note{font:400 17px/1.45 PicHand308,sans-serif;color:#c9d4b7;text-align:center}
 #lvis .дк.дк308 .pic-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}#lvis .дк.дк308 .pic-dish{border:3px solid #9bb8a3;border-radius:24px;background:radial-gradient(ellipse,#fff8de 55%,#d9e7d4 60%,#fff6d6 76%);min-height:126px;display:flex;flex-direction:column;justify-content:center;padding:9px 4px;gap:8px;text-align:center;font-size:16px}
 #lvis .дк.дк308 .pic-dish>div{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:0;min-height:76px}#lvis .дк.дк308 .pic-dish svg{width:36px;height:36px}
 #lvis .дк.дк308 .pic-total{text-align:center;font-size:19px}#lvis .дк.дк308 .pic-bags{align-items:end}#lvis .дк.дк308 button.bag-button{border:0;filter:none;flex-direction:column;padding:0;gap:7px;background:transparent;min-height:220px;justify-content:end}#lvis .дк.дк308 .bag-button small{font-size:14px}
@@ -191,9 +195,9 @@ body:has(.дк308) #asst,#screen:has(.дк308)>.card>.arch{display:none}
 #lvis .дк.дк308 .pic-guests{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}#lvis .дк.дк308 button.guest-place{border:1px solid #c0b185;filter:none;border-radius:12px;background:#fff8e5e8;padding:7px 2px;flex-direction:column;gap:5px;font-size:13px;min-height:150px}
 #lvis .дк.дк308 .guest-place strong{font:17px PicHand308}#lvis .дк.дк308 .pic-place-setting{border:2px dashed #98ad88;width:50px;height:58px;border-radius:14px;font-size:30px;display:flex;align-items:center;justify-content:center}#lvis .дк.дк308 .pic-place-setting svg{width:44px;height:44px}
 #lvis .дк.дк308 button.plate-button{border:0;padding:0;flex-direction:column;background:transparent;filter:none;font-size:16px}#lvis .дк.дк308 .plate-button>.pic-dish{width:100%;min-height:120px}#lvis .дк.дк308 .plate-button strong{font-weight:400}
-#lvis .дк.дк308 .pic-feedback,#lvis .дк.дк308 .готово,#lvis .дк.дк308 .разбор,#lvis .дк.дк308 .дт-совет{padding:14px;border:1px solid #bca67c;border-left:5px solid #c0a064;border-radius:15px;background:#fbf3dc;color:#3d5743;font:18px/1.45 PicHand308,sans-serif;min-height:54px}
-#lvis .дк.дк308 .pic-feedback.success{border-left-color:#6c9775;background:#e6efda}#lvis .дк.дк308 button.pic-help{justify-self:center;min-height:48px;font-size:16px}
-#lvis .дк.дк308 .число .окно{height:auto;min-height:0;padding:0!important;min-width:0;background:none;box-shadow:none;border:0;font:inherit;color:inherit;white-space:normal}#lvis .дк.дк308 .число.длин.длин .окно{font-size:18px}
+#lvis .дк.дк308 .pic-feedback,#lvis .дк.дк308 .готово,#lvis .дк.дк308 .разбор,#lvis .дк.дк308 .дт-совет{padding:14px 4px 14px 15px;border:0;border-left:3px solid #b89c5d;border-radius:0;background:none;color:#e8e0cc;font:400 19px/1.5 PicHand308,sans-serif;min-height:54px}
+#lvis .дк.дк308 .pic-feedback.success{border-left-color:#a6c694;background:none;color:#dcebc9}#lvis .дк.дк308 button.pic-help{justify-self:start;min-height:48px;font-size:19px;border:0;border-bottom:1px solid #b89c5d;border-image:none;border-radius:0;background:none;color:#e5cd96;filter:none;padding:8px 3px}
+#lvis .дк.дк308 .число .окно{height:auto;min-height:0;padding:0!important;min-width:0;background:none;box-shadow:none;border:0;font:inherit;color:inherit;white-space:normal;text-shadow:none;overflow-wrap:anywhere}#lvis .дк.дк308 .число.длин.длин .окно{font-size:18px}
 #lvis .дк.дк308 .число.верно:after,#lvis .дк.дк308 .число.мимо:after{right:1px;top:1px;width:18px;height:18px;font-size:12px;line-height:18px}
 #lvis .дк.дк308 .дт-лента{background:#425e4b;border:1px solid #b2a16c;border-radius:16px;padding:12px;color:#ffedbd;flex-wrap:wrap;gap:8px;font-size:15px}#lvis .дк.дк308 .дт-лента .зв{display:grid;grid-template-columns:repeat(6,15px);gap:3px}
 #lvis .дк.дк308:has(.pic-practice)>.числа,#lvis .дк.дк308:has(.pic-practice)>.готово,#lvis .дк.дк308:has(.pic-practice)>.дт-подсказки,#lvis .дк.дк308:has(.pic-practice)>.дт-совет,#lvis .дк.дк308:has(.pic-finale)>.готово{display:none}
@@ -201,9 +205,50 @@ body:has(.дк308) #asst,#screen:has(.дк308)>.card>.arch{display:none}
 #lvis .дк.дк308 .pic-feast{display:flex;flex-wrap:wrap;justify-content:center;padding:10px;background:#fff3d5df;border-radius:30px}#lvis .дк.дк308 .pic-quiz-art{height:160px;text-align:center}#lvis .дк.дк308 .pic-quiz-art img{height:100%;max-width:100%;object-fit:contain}
 #lvis .дк.дк308 .pic-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 #lvis .дк.дк308 .plate-panel{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:16px;min-width:0}#lvis .дк.дк308 .plate-panel strong{font-weight:400}#lvis .дк.дк308 .plate-panel .pic-dish{width:100%}#lvis .дк.дк308 .plate-controls{display:flex;gap:5px;justify-content:center}#lvis .дк.дк308 button.plate-step{width:44px;min-width:44px;min-height:44px;height:44px;padding:0;border-width:7px;font-size:25px}
+
+/* The picnic is arranged with objects: serving boards, a shelf and a trail.
+   Keep the shared app frame intact; type is explicit even in trainer states. */
+#lvis .дк.дк308 :is(button,output,small,strong,b){font-family:PicHand308,sans-serif;font-weight:400}
+#lvis .дк.дк308 :is(.pic-chapter,.pic-controls,.pic-list,.pic-feedback,.готово,.разбор,.дт-совет){min-width:0;overflow-wrap:break-word}
+#lvis .дк.дк308 .pic-chapter>span:last-child{flex-shrink:0}
+#lvis .дк.дк308 .pic-heading{hyphens:none;text-wrap:balance}
+#lvis .дк.дк308 .pic-group-grid{gap:12px}
+#lvis .дк.дк308 button.group-card{position:relative;border:2px solid #a7824f;border-image:none;border-radius:25% 12% 24% 14%;background:#e7cda1;color:#394d38;padding:12px 8px 14px;box-shadow:inset 0 0 0 4px #f4e4c4;filter:none}
+#lvis .дк.дк308 .pic-shelf{gap:0 12px;padding:0 6px;background:repeating-linear-gradient(0deg,transparent 0,transparent 114px,#ab8750 114px,#e1c898 120px,transparent 120px,transparent 124px)}
+#lvis .дк.дк308 button.shelf-item{min-height:124px;border:0;border-image:none;border-radius:0;background:none;color:#e8e0cc;filter:none;gap:2px;font:400 18px/1.3 PicHand308,sans-serif;padding:8px 2px 12px}
+#lvis .дк.дк308 button.shelf-item>span{display:block;max-width:100%;overflow-wrap:anywhere}
+#lvis .дк.дк308 button.shelf-item small{display:block;font-size:14px;line-height:1.3;color:#c6cfae}
+#lvis .дк.дк308 button.shelf-item[aria-pressed=true]{background:#234d36;color:#f7efcf;outline-color:#bbcf9c}
+#lvis .дк.дк308 button.shelf-item[aria-pressed=true]:after{color:#e4d59c}
+#lvis .дк.дк308 .pic-dish{color:#3c513b}
+#lvis .дк.дк308 .pic-runner span{font-size:17px;color:#3b513c}
+#lvis .дк.дк308 .pic-family>div{font-size:16px;line-height:1.4}
+#lvis .дк.дк308 .pic-map{background:#294e39;border:0;border-radius:0;padding:8px 0;gap:6px}
+#lvis .дк.дк308 button.map-cell{min-width:44px;min-height:52px;border-radius:30% 18% 26% 14%}
+#lvis .дк.дк308 .pic-bag{font-weight:400}
+#lvis .дк.дк308 .bag-button>span,#lvis .дк.дк308 .bag-button small,#lvis .дк.дк308 .box-name{color:#e8e0cc;font:400 18px/1.4 PicHand308,sans-serif}
+#lvis .дк.дк308 .box-name{display:block;width:100%;overflow-wrap:anywhere}
+#lvis .дк.дк308 .pic-box{color:#304633}
+#lvis .дк.дк308 .pic-boxes{gap:12px}
+#lvis .дк.дк308 button.box-button{font:400 18px/1.4 PicHand308,sans-serif}
+#lvis .дк.дк308 .pic-tablecloth{padding:12px;background:repeating-conic-gradient(#e0c9a9 0% 25%,#f4e7c8 0% 50%) 0/34px 34px;border:0;border-radius:6px 14px 9px 4px;color:#354d38}
+#lvis .дк.дк308 .pic-guests{grid-template-columns:1fr;gap:0}
+#lvis .дк.дк308 button.guest-place{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr);align-items:center;min-height:76px;border:0;border-image:none;border-bottom:1px solid #9e865966;border-radius:0;background:none;filter:none;padding:8px 6px;font:400 16px/1.35 PicHand308,sans-serif;color:#354d38}
+#lvis .дк.дк308 button.guest-place strong{font:400 18px/1.3 PicHand308,sans-serif;text-align:left}
+#lvis .дк.дк308 button.guest-place:disabled{opacity:1}
+#lvis .дк.дк308 .pic-place-setting{background:#f7ecd0}
+#lvis .дк.дк308 .pic-feedback.hint{border-left-color:#e2c173;color:#f0dba6}
+#lvis .дк.дк308 .числа{display:grid;grid-template-columns:1fr;gap:10px;width:100%;min-width:0}
+#lvis .дк.дк308 .число.длин.длин{width:100%;max-width:none;min-height:54px}
+#lvis .дк.дк308 .число .окно,#lvis .дк.дк308 .число.длин.длин .окно{font:400 19px/1.4 PicHand308,sans-serif;text-shadow:none}
+#lvis .дк.дк308 .дт-лента{font:400 17px/1.4 PicHand308,sans-serif;border:0;border-bottom:1px solid #9b865877;border-radius:0;background:none;box-shadow:none;padding:8px 0}
+#lvis .дк.дк308 .дт-итог{font:400 20px/1.5 PicHand308,sans-serif}
+#lvis .дк.дк308 .pic-summary{background:none;border-radius:0;padding:8px 0;gap:12px}
+@media(max-width:360px){#lvis .дк.дк308 .pic-shelf{grid-template-columns:repeat(2,minmax(0,1fr))}#lvis .дк.дк308 .pic-boxes{grid-template-columns:1fr;gap:10px}#lvis .дк.дк308 button.box-button{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:18px;text-align:left;min-height:86px}#lvis .дк.дк308 .pic-box{width:76px;height:76px}#lvis .дк.дк308 .pic-guests{gap:0}}
+
 @keyframes pic-place{from{transform:translateY(-8px);opacity:.6}to{transform:translateY(0);opacity:1}}
 @media(min-width:520px){#lvis .дк.дк308 .pic-group-grid:has(>button:nth-child(3):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}#screen:has(.дк308)>.btnrow{max-width:650px;width:100%;margin-left:auto;margin-right:auto}}
-@media(max-width:360px){#lvis .дк.дк308 .реплика{border-width:16px;border-image-width:16px;padding:2px}#lvis .дк.дк308 .реплика p{font-size:17px}#lvis .дк.дк308 .pic-world{padding:7px}#lvis .дк.дк308 .pic-work{padding:12px 8px}#lvis .дк.дк308 .pic-heading{font-size:25px}#lvis .дк.дк308 button.pic-button{padding-left:3px;padding-right:3px;border-left-width:9px;border-right-width:9px}#lvis .дк.дк308 button.shelf-item{font-size:14px;padding-left:0;padding-right:0}#lvis .дк.дк308 .pic-group-grid{gap:8px}#lvis .дк.дк308 .pic-boxes{gap:7px}#lvis .дк.дк308 button.box-button{font-size:14px;border:0;padding:0}#lvis .дк.дк308 .pic-dish svg{width:30px;height:32px}#lvis .дк.дк308 .pic-tablecloth{padding:7px}#lvis .дк.дк308 button.guest-place{font-size:12px;border:1px solid #c0b185;padding:7px 2px}#lvis .дк.дк308 button.plate-button{border:0}#lvis .дк.дк308 .pic-family{gap:3px}#lvis .дк.дк308 .pic-family>div{font-size:12px}#lvis .дк.дк308 .pic-family img{height:80px}}
+@media(max-width:360px){#lvis .дк.дк308 .реплика{padding:6px 2px 14px}#lvis .дк.дк308 .реплика p{font-size:18px}#lvis .дк.дк308 .pic-world{padding:0}#lvis .дк.дк308 .pic-work{padding:12px 0 0}#lvis .дк.дк308 .pic-heading{font-size:25px}#lvis .дк.дк308 button.shelf-item{font-size:17px;padding-left:0;padding-right:0}#lvis .дк.дк308 .pic-group-grid{gap:8px}#lvis .дк.дк308 .pic-boxes{gap:7px}#lvis .дк.дк308 button.box-button{font-size:17px;border:0;padding:0}#lvis .дк.дк308 .pic-dish svg{width:30px;height:32px}#lvis .дк.дк308 .pic-tablecloth{padding:7px}#lvis .дк.дк308 button.guest-place{font-size:16px;border:0;padding:8px 6px}#lvis .дк.дк308 button.plate-button{border:0}#lvis .дк.дк308 .pic-family{gap:3px}#lvis .дк.дк308 .pic-family>div{font-size:15px}#lvis .дк.дк308 .pic-family img{height:80px}}
 @media(prefers-reduced-motion:reduce){#lvis .дк.дк308 *{animation:none!important;transition:none!important}}
 `;document.head.appendChild(css);
 })();

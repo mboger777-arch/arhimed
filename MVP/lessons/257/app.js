@@ -47,7 +47,7 @@
     const name=search?'Рыжик':'Тоша';
     const art=s.solved?(delivery?'tosha-parcel':'ryzhik-happy'):(search?'ryzhik-search':'tosha-point');
     const task=s.solved?'Получилось! Идём дальше.':search?'Помогу найти число.':delivery?'Жду письмо у флажка!':f.mode==='groups'?'Один прыжок — три деления.':f.start===f.goal?'Ноль: лапки остаются на месте.':f.goal<f.start?'Покажу, как идти влево.':'Покажу, как считать шаги.';
-    return `<button class="friend-help" id="friend-help" ${s.solved?'disabled':''} aria-label="${s.solved?'Задание выполнено':`Подсказка героя: ${name}`}"><img src="../300/assets/${art}.webp" alt=""><span><b>${s.solved?(delivery?'ТОША':'РЫЖИК'):name.toUpperCase()}</b>${task}${s.solved?'':'<small>Нажми на героя — получишь подсказку</small>'}</span></button>`;
+    return `<button class="friend-help" id="friend-help" ${s.solved?'disabled':''} aria-label="${s.solved?'Задание выполнено':`Подсказка героя: ${name}`}"><img src="../300/assets/${art}.webp" alt=""><span><b>${s.solved?(delivery?'Тоша':'Рыжик'):name}</b>${task}${s.solved?'':'<small>Нажми на героя — получишь подсказку</small>'}</span></button>`;
   }
   function line(f, s) {
     let min = f.min ?? Math.max(0, Math.min(f.start, f.goal)-1);
@@ -87,7 +87,7 @@
         <path d="M2 175 H358 l-7 -6 m7 6 l-7 6" class="trail-arrow"/>
         ${Array.from({length:6},(_,i)=>{const n=min+i;return `<ellipse cx="${x(n)}" cy="188" rx="25" ry="7" fill="#4c402a30"/><rect class="stone ${n===s.pos?'current':''} ${showGoal&&n===f.goal?'goal':''}" x="${x(n)-24}" y="155" width="48" height="37" rx="13"/><text class="number" x="${x(n)}" y="182">${n===hidden?'?':n}</text>`;}).join('')}
         ${arcs.join('')}
-        ${goalFlag?`<path d="M${x(f.goal)+19} 153 V92 l22 7 -22 9" fill="#719d58" stroke="#3f6340" stroke-width="2"/>`:''}
+        ${goalFlag?`<g aria-label="Флажок на числе ${f.goal}"><path d="M${x(f.goal)-14} 154 V88" fill="none" stroke="#263d26" stroke-width="5"/><path d="M${x(f.goal)-14} 154 V88" fill="none" stroke="#ffefb9" stroke-width="2"/><path d="M${x(f.goal)-13} 90 h25 l-5 9 5 9 h-25 Z" fill="#f3cd5a" stroke="#354c29" stroke-width="2"/></g>`:''}
         <g transform="translate(${x(s.pos)} 0)">
           ${animated?`<animateTransform attributeName="transform" type="translate" from="${x(lastPosition)} 0" to="${x(s.pos)} 0" dur="${duration}" fill="freeze"/>`:''}
           <ellipse cx="0" cy="155" rx="21" ry="4" fill="#44381f42"/>
@@ -99,7 +99,17 @@
         </g>
       </svg>${!s.solved?`<button class="hero-touch" style="left:${x(s.pos)/360*100}%" ${canMove?`data-move="${heroDelta}"`:'data-ask-hero'} aria-label="${canMove?`Пых: ${heroDelta===3?'прыгнуть на три':heroDelta<0?'шаг влево':'шаг вправо'}`:`${actor}: помоги решить`}"></button>`:''}${arcs.length?'':`<span class="trail-tail">дальше →</span>`}</div>`;
   }
-  function say(text, success=false) { silence();const c=context();if(c&&!c.st.solved&&c.frame.start!==c.frame.goal){const hero=$('pykh-pose');if(hero?.dataset.character==='Пых'){hero.setAttribute('href','assets/pykh-think.webp');hero.setAttribute('y','67.1');}} feedback=text;good=success;const e=$('feedback');if(e){e.textContent=text;e.classList.toggle('success',success);} }
+  function say(text, success=false) { silence();const c=context();if(c&&!c.st.solved&&c.frame.start!==c.frame.goal){const hero=$('pykh-pose');if(hero?.dataset.character==='Пых'){hero.setAttribute('href','assets/pykh-think.webp');hero.setAttribute('y','67.1');}} feedback=text;good=success;const e=$('feedback');if(e){e.textContent=text;e.classList.toggle('success',success);revealFeedback(e);} }
+  function revealFeedback(element) {
+    if (!element?.textContent.trim()) return;
+    requestAnimationFrame(() => {
+      if (!element.isConnected) return;
+      const navigation = document.querySelector('.navigation');
+      const safeBottom = innerHeight - (navigation?.getBoundingClientRect().height || 0) - 20;
+      const box = element.getBoundingClientRect();
+      if (box.top < 16 || box.bottom > safeBottom) element.scrollIntoView({block:'center',behavior:'instant'});
+    });
+  }
   function win(c) {
     if (c.st.solved) return;
     c.st.solved=true;
@@ -109,26 +119,28 @@
   function controls(f, s) {
     if (s.solved && f.mode !== 'explore') return '';
     const choosing = ['missing','choice'].includes(f.mode) || (f.mode==='predict'&&!s.predicted) || (f.mode==='distance'&&s.pos===f.goal);
-    if (choosing) return `<div class="controls">${f.options.map(n=>`<button class="choice" data-answer="${n}">${n}</button>`).join('')}</div>`;
-    if (f.mode === 'groups') return '<div class="controls"><button class="step-button primary" data-move="3">Прыгнуть на 3 →</button></div>';
-    return `<div class="controls"><button class="step-button" data-move="-1" ${s.pos===0?'disabled':''}>← −1</button><button class="step-button primary" data-move="1" ${s.pos===20?'disabled':''}>+1 →</button>${f.mode==='free'?`<button class="step-button primary" data-move="3" ${s.pos>17?'disabled':''}>+3 →</button>`:''}</div>`;
+    if (choosing) return `<div class="controls answer-stones" role="group" aria-label="Выбери ответ">${f.options.map(n=>`<button class="choice" data-answer="${n}" aria-label="Ответ ${n}">${n}</button>`).join('')}</div>`;
+    if (f.mode === 'groups') return '<div class="controls directions"><button class="step-button primary jump-command" data-move="3"><span class="move-value">+3 →</span><span class="move-caption">Прыжок на три</span></button></div>';
+    return `<div class="controls directions"><button class="step-button" data-move="-1" ${s.pos===0?'disabled':''}><span class="move-value">← −1</span><span class="move-caption">На один влево</span></button><button class="step-button primary" data-move="1" ${s.pos===20?'disabled':''}><span class="move-value">+1 →</span><span class="move-caption">На один вправо</span></button>${f.mode==='free'?`<button class="step-button primary jump-command" data-move="3" ${s.pos>17?'disabled':''}><span class="move-value">+3 →</span><span class="move-caption">Прыжок на три</span></button>`:''}</div>`;
   }
   function render() {
     silence();
     const training=isTraining(), c=context(), done=earned();
     $('stage-label').textContent=training?'ЛЕСНЫЕ ТРЕНАЖЁРЫ':'ПРИКЛЮЧЕНИЕ ПЫХА';
     $('progress-label').textContent=training?`${done} из 12 ★`:`${state.step+1} из ${frames.length}`;
-    $('progress-fill').style.width=`${training?100:(state.step+1)/frames.length*100}%`;
+    $('progress-fill').style.width=`${training?done/12*100:(state.step+1)/frames.length*100}%`;
     $('back').hidden=false;$('back').disabled=state.step===0;$('back').textContent=training?'← К уроку':'← Назад';
     $('next').hidden=false;
     if (training && state.training.stations.every(p=>p.index===4)) {
       state.completed=true;save();
+      $('lesson-body').dataset.mode='finish';
       $('lesson-body').innerHTML=`<div class="finish"><img src="assets/pykh-happy.webp" alt="Радостный Пых"><img src="../300/assets/parcel-ready.webp" alt="Доставленная посылка"><div class="paper"><p class="eyebrow">ВСЕ МАРШРУТЫ ПРОЙДЕНЫ</p><h2>Знаток тропинок!</h2><p class="stars" aria-label="12 звёзд">★ ★ ★ ★ ★ ★<br>★ ★ ★ ★ ★ ★</p><p><strong>12 из 12 заданий решены.</strong></p><p>Вправо — прибавляем.<br>Влево — вычитаем.<br>Считаем шаги между числами.</p></div></div>`;
       $('next').disabled=false;$('next').textContent='Готово! Дальше →';return;
     }
     if (training && !c) {
       state.training.active=null;
-      $('lesson-body').innerHTML=`<div class="trainer-title"><p class="eyebrow">ПЫХ УЖЕ ДОМА. А ТЫ УМЕЕШЬ САМ?</p><h2>Три лесных испытания</h2><p>Решено ${done} из 12 заданий</p></div><div class="stations">${stations.map((station,i)=>`<button class="station" data-station="${i}" ${state.training.stations[i].index===4?'disabled':''}><span class="station-icon">${state.training.stations[i].index===4?'✓':station.icon}</span><span><strong>${station.title}</strong><small>${station.subtitle}</small></span><span class="score">${state.training.stations[i].index}/4</span></button>`).join('')}</div><p class="desktop-note">Выбери станцию. Ошибки можно исправлять.</p>`;
+      $('lesson-body').dataset.mode='stations';
+      $('lesson-body').innerHTML=`<div class="trainer-title"><p class="eyebrow">ПЫХ УЖЕ ДОМА. А ТЫ УМЕЕШЬ САМ?</p><h2>Три лесных испытания</h2><p>Решено ${done} из 12 заданий</p></div><div class="stations" aria-label="Выбери лесной маршрут">${stations.map((station,i)=>`<button class="station" data-station="${i}" ${state.training.stations[i].index===4?'disabled':''}><img class="station-guide" src="${['../300/assets/ryzhik-search.webp','assets/pykh-right.webp','../300/assets/tosha-point.webp'][i]}" alt=""><span class="station-icon">${state.training.stations[i].index===4?'✓':station.icon}</span><span><strong>${station.title}</strong><small>${station.subtitle}</small></span><span class="score">${state.training.stations[i].index}/4</span></button>`).join('')}</div><p class="desktop-note">Выбери станцию. Ошибки можно исправлять.</p>`;
       $('next').hidden=true;bind();return;
     }
     const {frame:f,st:s}=c;
@@ -138,7 +150,8 @@
     if (f.mode==='groups') counter=`Больших прыжков: ${s.moves} из 3`;
     if (f.mode==='explore') counter=`Шагов от нуля: ${s.pos}`;
     if (f.mode==='free') counter=s.pos===f.goal?'Пых дома!':`До флажка: ${Math.abs(f.goal-s.pos)} ${f.goal>s.pos?'вправо':'влево'}`;
-    $('lesson-body').innerHTML=`${training?`<div class="trainer-top"><button id="stations-back">← Станции</button><span>${stations[c.station].title} · ${c.index+1}/4</span></div>`:''}<div class="instruction paper"><div><h2>${esc(f.title||stations[c.station].title)}</h2><p id="instruction-text">${esc(f.say||f.q)}</p></div><button class="speak" id="speak" aria-label="Послушать задание">♫</button></div>${line(f,s)}<div class="readout"><span class="equation">${esc(equation(f,s))}</span>${counter?`<span class="counter">${counter}</span>`:''}</div>${controls(f,s)}<p id="feedback" class="feedback ${good||s.solved?'success':''}" role="status" aria-live="polite">${esc(text)}</p>${companion(f,s)}`;
+    $('lesson-body').dataset.mode=f.mode;
+    $('lesson-body').innerHTML=`${training?`<div class="trainer-top"><button id="stations-back">← Станции</button><span>Задание ${c.index+1} из 4</span></div>`:''}<div class="instruction paper"><div><h2>${esc(f.title||stations[c.station].title)}</h2><p id="instruction-text">${esc(f.say||f.q)}</p></div><button class="speak" id="speak" aria-label="Послушать задание">♫</button></div>${line(f,s)}<div class="readout"><span class="equation">${esc(equation(f,s))}</span>${counter?`<span class="counter">${counter}</span>`:''}</div>${controls(f,s)}<p id="feedback" class="feedback ${good||s.solved?'success':''}" role="status" aria-live="polite">${esc(text)}</p>${companion(f,s)}`;
     $('next').disabled=!s.solved;
     $('next').textContent=training?(c.index===3?'Станция пройдена →':'Следующее задание →'):(state.step===frames.length-1?'К тренажёрам →':'Дальше →');
     lastPosition=null;bind();save();

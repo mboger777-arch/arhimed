@@ -6,7 +6,7 @@ window.LessonTraining={mount(root,state,api){
   {title:'Считай сам',subtitle:'Примеры без перекладывания',icon:'+',items:[[6,5],[7,8],[9,6]]}
  ];
  const total=()=>state.stations.reduce((sum,s)=>sum+s.index,0);
- function feedback(text,ok=false){const hero=root.querySelector('.trainer-actor img');if(hero){hero.src=`assets/${ok?'ryzhik-happy':'tosha-point'}.webp`;hero.alt=ok?'Рыжик радуется верному ответу':'Тоша помогает разобраться';}const e=root.querySelector('.trainer-feedback');e.textContent=text;e.className='trainer-feedback'+(ok?' correct':'');}
+ function feedback(text,ok=false){const hero=root.querySelector('.trainer-actor img');if(hero){const ryzhik=state.active===1;const pose=ryzhik?(ok?'ryzhik-happy':'ryzhik-search'):(ok?'tosha-parcel':'tosha-point');hero.src=`assets/${pose}.webp`;hero.alt=`${ryzhik?'Рыжик':'Тоша'} ${ok?'радуется верному ответу':'помогает разобраться'}`;}const e=root.querySelector('.trainer-feedback');e.textContent=text;e.className='trainer-feedback'+(ok?' correct':'');}
  function render(){
   api.stopAudio();
   const done=total();

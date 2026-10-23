@@ -48,7 +48,7 @@ function apply(c,s,a,v){
  if(a==='exchange'&&!s.exchanged&&(c.kind==='split'||(c.kind==='calc'&&['borrow','exchange'].includes(s.stage)))){s.exchanged=true;s.stage=c.op==='+'?'write':'units';s.entry='';s.fb=c.op==='+'?'Десять единиц ушли в десятки. Запиши, сколько единиц осталось.':`Один десяток стал десятью единицами. Теперь ${tens(c.n??c.a)-1} дес. и ${ones(c.n??c.a)+10} ед.`;return true;}
  const canType=['repair'].includes(c.kind)||(c.kind==='split'&&s.exchanged)||(c.kind==='calc'&&['units','write','tens'].includes(s.stage));
  if(!canType)return false;
- if(a==='digit'&&Number.isInteger(v)&&v>=0&&v<=9){if(s.entry.length<2)s.entry=s.entry==='0'?String(v):s.entry+v;s.fb='Нажми «Проверить». Цифру можно стереть.';return true;}
+ if(a==='digit'&&Number.isInteger(v)&&v>=0&&v<=9){if(s.entry.length<2)s.entry=s.entry==='0'?String(v):s.entry+v;s.fb='Нажми «Проверить». Последнюю цифру можно стереть.';return true;}
  if(a==='erase'){s.entry=s.entry.slice(0,-1);s.fb='Исправь число и проверь ещё раз.';return true;}
  if(a==='check'){
   if(s.entry===''){s.fb='Сначала набери ответ на кнопках с цифрами.';return true;}
@@ -59,6 +59,14 @@ function apply(c,s,a,v){
   else{s.ten=want;finish(c,s);}return true;
  }
  return false;
+}
+function nextAction(c,s){
+ if(c.kind==='align')return `Поставь ${c.b} под единицами — в правую ячейку.`;
+ if(c.kind==='bundle')return 'Нажимай на шестерёнки, пока не выберешь десять. Затем собери десяток.';
+ if(c.kind==='split')return s.exchanged?'Посчитай отдельные шестерёнки и набери ответ.':'Открой один десяток и посмотри, что изменится.';
+ if(c.kind==='repair')return 'Набери только исправленную цифру десятков.';
+ if(c.kind==='choose')return 'Найди запись, которая вернёт снятые детали на место.';
+ return s.stage==='borrow'?'Единиц не хватает. Разменяй один десяток.':s.stage==='exchange'?'Перенеси десять единиц в столбец десятков.':s.stage==='tens'?'Теперь посчитай десятки и набери ответ.':'Сначала посчитай единицы справа и набери ответ.';
 }
 const gear=()=>'<svg viewBox="0 0 40 40" aria-hidden="true"><path d="m16 2 8 0 1 6 5-3 5 5-3 5 6 1v8l-6 1 3 5-5 5-5-3-1 6h-8l-1-6-5 3-5-5 3-5-6-1v-8l6-1-3-5 5-5 5 3Z" fill="#d7ad54" stroke="#86622c" stroke-width="1.4"/><circle cx="20" cy="20" r="7" fill="#fff1bd" stroke="#86622c" stroke-width="2"/></svg>';
 function toy(kind){return `<img class="work-toy" src="${A}${kind}.webp" alt="${kind==='bird'?'Заводная птица':kind==='butterfly'?'Механическая бабочка':'Игрушечный паровоз'}" draggable="false">`;}
@@ -86,13 +94,13 @@ function renderGame(c,s,scope,i){
  if(c.kind==='split'){work=number(c.n,s.exchanged);if(!s.exchanged)work+=b('Открыть 1 десяток','exchange',null,'primary');else if(!s.ok){work+='<p class="work-note">Сколько теперь отдельных единиц?</p>';typing=true;}}
  if(c.kind==='repair'){work=`<p class="work-equation">${c.a} ${c.op||'+'} ${c.b} = <span class="${s.ok?'':'work-error'}">${s.ok?c.result:c.wrong}</span></p><p class="work-note">${s.ok?'Чертёж исправлен':'Какую цифру запишем в десятки ответа?'}</p>`;typing=!s.ok;}
  if(c.kind==='choose')work=`<div class="work-options">${c.opts.map((o,j)=>b(o,'choose',j,s.picked===j?'chosen':'',s.ok)).join('')}</div>`;
- if(typing)work+=`<output class="work-entry" aria-label="Твой ответ">${s.entry||'?'}</output><div class="work-keypad">${[1,2,3,4,5,6,7,8,9].map(n=>b(n,'digit',n)).join('')}${b('Стереть','erase',null,'erase')}${b(0,'digit',0)}${b('Проверить','check',null,'check')}</div>`;
- return `<div class="work-game" data-game="${c.kind}">${cast(c,s)}<div class="work-work">${work}</div><p class="work-feedback ${s.ok?'success':''}" role="status" aria-live="polite">${esc(s.fb||'Действуй по одному шагу. Ошибку всегда можно исправить.')}</p>${s.ok?'':b('Нужна подсказка','hint',null,'work-help')}</div>`;
+ if(typing)work+=`<output class="work-entry" aria-label="Твой ответ">${s.entry||'…'}</output><div class="work-keypad">${[1,2,3,4,5,6,7,8,9].map(n=>b(n,'digit',n)).join('')}${b(0,'digit',0,'zero')}${b('Стереть','erase',null,'erase')}${b('Проверить','check',null,'check')}</div>`;
+ return `<div class="work-game" data-game="${c.kind}">${cast(c,s)}<div class="work-work work-surface-${c.kind}">${work}</div><p class="work-feedback ${s.ok?'success':''}" role="status" aria-live="polite">${esc(s.fb||nextAction(c,s))}</p>${s.ok?'':b('Нужна подсказка','hint',null,'work-help')}</div>`;
 }
 function restoreSolved(c,s){Object.assign(s,initial(c));if(c.kind==='calc'){s.exchanged=c.op==='+'?ones(c.a)+ones(c.b)>=10:ones(c.a)<ones(c.b);const result=c.op==='+'?c.a+c.b:c.a-c.b;s.ten=tens(result);s.unit=ones(result);s.stage='tens';}if(c.kind==='split'||c.kind==='bundle')s.exchanged=true;if(c.kind==='choose')s.picked=c.answer;if(c.kind==='align')s.picked='units';finish(c,s);}
 const answer=t=>t.kind==='choose'?t.answer:1;
 tasks.forEach(t=>{t.opts||=['Ещё думаю','Готово','Нужна помощь'];t.answer=answer(t);});
-const frames=scenes.map((c,i)=>({кто:keys[c.who],t:c.t,say:c.q,hint:c.hint,success:c.sol,начало:s=>Object.assign(s,initial(c)),готов:s=>s.ok===true,рисуй:s=>`<div class="work-chapter"><span>МАСТЕРСКАЯ ЗАВОДНЫХ ЧУДЕС</span><span>${i+1} / ${scenes.length}</span></div><h3 class="work-heading">${c.t}</h3>`+renderGame(c,s,'story',i),делать:'',подсказка:()=>c.hint,клики:{action(s,a,v){apply(c,s,a,v);}}}));
+const frames=scenes.map((c,i)=>({кто:keys[c.who],t:c.t,say:c.q,hint:c.hint,success:c.sol,начало:s=>Object.assign(s,initial(c)),готов:s=>s.ok===true,рисуй:s=>`<div class="work-chapter"><span>Заказ ${i+1} из ${scenes.length}</span><span>${c.toy==='bird'?'Певчая птица':c.toy==='butterfly'?'Заводная бабочка':'Паровозик'}</span></div><h3 class="work-heading">${c.t}</h3>`+renderGame(c,s,'story',i),делать:'',подсказка:()=>c.hint,клики:{action(s,a,v){apply(c,s,a,v);}}}));
 function practiceState(i){const rec=lrec();rec.workshop||={version:1,frames:{}};rec.workshop.practice||={};return rec.workshop.practice[i]||=initial(tasks[i]);}
 function act(scope,i,a,v){
  if(typeof LV==='undefined'||LV.id!==ID||!Number.isInteger(i))return;
@@ -124,7 +132,7 @@ body:has(.дк313) #asst,#screen:has(.дк313)>.card>.arch{display:none}
 #lvis .дк.дк313 .реплика .аватар img{height:44px;width:35px;object-fit:contain}#lvis .дк.дк313 .реплика .аватар span{font:18px WorkHand313;color:#557159}
 #lvis .дк.дк313 .реплика p{grid-column:1/-1;grid-row:2;font:18px/1.45 WorkHand313,sans-serif;color:#284753}
 #lvis .дк.дк313 .слушать{grid-column:2;grid-row:1;width:44px;height:44px;min-height:44px;padding:0;border:2px solid #b9a363;border-radius:50%;background:linear-gradient(#5f9aab,#285c6a);color:#fff7d7;font-size:20px;box-shadow:0 2px 0 #294c3b}
-#lvis .дк.дк313 .work-chapter{display:flex;justify-content:space-between;gap:12px;color:#c1e6e4;font:12px/1.4 'NunitoДК',sans-serif;letter-spacing:.03em}
+#lvis .дк.дк313 .work-chapter{display:flex;justify-content:space-between;gap:12px;color:#c1e6e4;font:16px/1.4 WorkHand313,sans-serif;letter-spacing:0}
 #lvis .дк.дк313 .work-heading{font:400 27px/1.25 WorkTitle313,cursive;color:#fae9ba;text-align:center;margin:0}
 #lvis .дк.дк313 .work-game,#lvis .дк.дк313 .work-practice{display:grid;gap:12px;min-width:0}
 #lvis .дк.дк313 .work-cast{height:clamp(180px,35vw,260px);display:flex;justify-content:center;gap:16px;align-items:end;margin-bottom:9px;padding:25px 12px 9px;background-image:var(--world);background-size:cover;background-position:center bottom;border-radius:12px;box-shadow:inset 0 -12px 15px #95764c33}
@@ -155,7 +163,7 @@ body:has(.дк313) #asst,#screen:has(.дк313)>.card>.arch{display:none}
 #lvis .дк.дк313 .work-cast>.work-project{height:74%;max-width:145px;justify-content:end;padding-bottom:0}
 #lvis .дк.дк313 .work-project .work-toy{width:100%;height:calc(100% - 20px);filter:drop-shadow(0 5px 2px #4e452756)}
 #lvis .дк.дк313 .work-project span{font-size:12px;white-space:normal;text-align:center}
-#lvis .дк.дк313 .is-ready .work-toy{animation:work313-bounce 1.6s ease-in-out infinite alternate}
+#lvis .дк.дк313 .is-ready .work-toy{animation:work313-bounce .65s ease-in-out 2 alternate}
 #lvis .дк.дк313 button.work-button,#lvis .дк.дк313 .число,#screen:has(.дк313)>.btnrow>button,#screen:has(.дк313)>button{background-color:#edf0db;background-clip:padding-box;border-radius:16px;color:#35503b}
 #lvis .дк.дк313 button.work-button{border-image-slice:30% 12%;min-height:56px;font-size:18px;line-height:1.3;padding:7px 4px}
 #lvis .дк.дк313 button.chosen{outline:3px solid #4d8261;outline-offset:1px;background-color:#c8dfb9}
@@ -197,5 +205,28 @@ body:has(.дк313) #asst,#screen:has(.дк313)>.card>.arch{display:none}
 @keyframes work313-bounce{to{transform:translateY(-5px) rotate(3deg)}}
 @media(max-width:360px){#lvis .дк.дк313 .реплика{border-width:16px;border-image-width:16px;padding:2px}#lvis .дк.дк313 .реплика p{font-size:17px}#lvis .дк.дк313 .work-work{padding:14px 10px}#lvis .дк.дк313 .work-heading{font-size:25px}#lvis .дк.дк313 button.work-button{border-left-width:8px;border-right-width:8px}#lvis .дк.дк313 .work-keypad{gap:6px}#lvis .дк.дк313 .work-keypad .check{font-size:12px}#lvis .дк.дк313 .work-cast{padding-left:12px;padding-right:12px}}
 @media(prefers-reduced-motion:reduce){#lvis .дк.дк313 *{animation:none!important;transition:none!important}}
+
+/* A workshop has a drawing sheet, a sorting tray and a test rail, each for a real action. */
+#lvis .дк.дк313 .work-work{border-radius:3px 10px 4px 7px;border:1px solid #c5b382;background:#f2edda;box-shadow:2px 4px 0 #475138;position:relative}
+#lvis .дк.дк313 .work-surface-calc,#lvis .дк.дк313 .work-surface-align,#lvis .дк.дк313 .work-surface-repair{background-color:#f3f0df;background-image:linear-gradient(#87987815 1px,transparent 1px),linear-gradient(90deg,#87987815 1px,transparent 1px);background-size:24px 24px}
+#lvis .дк.дк313 .work-surface-bundle{background:#425b44;border:7px double #b29962;color:#fff0bc;box-shadow:0 5px 0 #16291f}
+#lvis .дк.дк313 .work-surface-bundle .work-note{color:#fff0bc}
+#lvis .дк.дк313 .work-surface-choose{background:none;border:0;box-shadow:none;padding:4px 0}
+#lvis .дк.дк313 .work-feedback,#lvis .дк.дк313 .готово,#lvis .дк.дк313 .разбор,#lvis .дк.дк313 .дт-совет{border:0;border-left:3px solid #b99c62;border-radius:0;background:none;color:#e9dfbc;padding:9px 12px;font:400 18px/1.5 WorkHand313,sans-serif;box-shadow:none}
+#lvis .дк.дк313 .work-feedback.success{background:none;border-left-color:#9bbd7f;color:#dbe9bb}
+#lvis .дк.дк313 .work-keypad{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+#lvis .дк.дк313 .work-keypad button.work-button{grid-column:span 2;min-height:52px;font:400 26px/1.2 WorkHand313,sans-serif;border:2px solid #9a8855;border-image:none;border-radius:6px;background:#f6e8bc;box-shadow:0 3px 0 #9a8855;padding:6px}
+#lvis .дк.дк313 .work-keypad button.zero{grid-column:3/5}
+#lvis .дк.дк313 .work-keypad button.erase,#lvis .дк.дк313 .work-keypad button.check{grid-column:span 3;font:400 19px/1.3 WorkHand313,sans-serif;white-space:normal;overflow-wrap:normal;min-height:54px}
+#lvis .дк.дк313 .work-keypad button.check{background:#d7e4be;border-color:#708357;box-shadow:0 3px 0 #708357}
+#lvis .дк.дк313 .work-gear-grid button.work-button{background:transparent;border:0;border-image:none;border-radius:50%;box-shadow:none;min-height:52px;position:relative}
+#lvis .дк.дк313 .work-gear-grid button.chosen{outline:2px solid #fff0ba;background:#ffffff20;outline-offset:-3px}
+#lvis .дк.дк313 .work-gear-grid button.chosen::after{content:'✓';position:absolute;right:1px;top:0;color:#fff9d3;font:400 18px/1 WorkHand313}
+#lvis .дк.дк313 .work-rod small{font:400 15px/1.3 WorkHand313}
+#lvis .дк.дк313 .work-summary{background:none;border:0;border-radius:0;padding:8px 0}
+#lvis .дк.дк313 .work-heading{overflow-wrap:normal;hyphens:none;text-wrap:balance}
+#lvis .дк.дк313 .work-chapter{font-weight:400;text-transform:none}
+#lvis .дк.дк313 button.work-help{font:400 19px/1.4 WorkHand313,sans-serif;border:0;border-image:none;border-bottom:1px solid #bba26d;border-radius:0;background:none;color:#e9d29d;padding:9px;box-shadow:none;filter:none}
+@media(max-width:360px){#lvis .дк.дк313 .work-chapter{font-size:15px;gap:8px}#lvis .дк.дк313 .work-keypad button.erase,#lvis .дк.дк313 .work-keypad button.check{font-size:18px}#lvis .дк.дк313 .work-work{padding:14px 10px}}
 `;document.head.appendChild(css);
 })();

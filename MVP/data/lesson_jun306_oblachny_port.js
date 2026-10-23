@@ -7,7 +7,7 @@
  const ID=306, A='img/l306/';
  const names={sun:'Солнце',cloud:'Облако',moon:'Луна'};
  const escape=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
- const text=(x,y,t,size=20,color='#253d43')=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" font-weight="900" fill="${color}">${t}</text>`;
+ const text=(x,y,t,size=20,color='#253d43')=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" font-weight="400" font-family="PortHand306, sans-serif" fill="${color}">${t}</text>`;
  const defs=`<defs><linearGradient id="port-brass" x2="0" y2="1"><stop stop-color="#ffe8a0"/><stop offset=".5" stop-color="#d8a453"/><stop offset="1" stop-color="#96602c"/></linearGradient><linearGradient id="port-teal" x2="1" y2="1"><stop stop-color="#5abeb9"/><stop offset="1" stop-color="#205963"/></linearGradient><linearGradient id="port-paper" x2="0" y2="1"><stop stop-color="#fffcec"/><stop offset="1" stop-color="#ecd4a5"/></linearGradient></defs>`;
  const panel=(x,y,w,h)=>`<g><rect x="${x}" y="${y+3}" width="${w}" height="${h}" rx="13" fill="#563e29" opacity=".3"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="13" fill="url(#port-brass)" stroke="#795330" stroke-width="1.5"/><rect x="${x+4}" y="${y+4}" width="${w-8}" height="${h-8}" rx="10" fill="url(#port-paper)" stroke="#ffedb8" stroke-width="1.4"/><path d="M${x+13},${y+8} H${x+w-13}" stroke="#fffdf0" opacity=".8"/>${[[x+8,y+9],[x+w-8,y+h-9]].map(([cx,cy])=>`<circle cx="${cx}" cy="${cy}" r="2" fill="#997042"/><circle cx="${cx-.5}" cy="${cy-.6}" r=".8" fill="#ffe3a3"/>`).join('')}</g>`;
  const prop=(name,x,y,w,h)=>`<image href="${A}${name}.webp" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet" pointer-events="none"/>`;
@@ -19,9 +19,12 @@
   return `<g transform="translate(${x},${y})" pointer-events="none">${s}</g>`;
  }
  const target=(н,key,label,body,...args)=>`<g role="button" tabindex="0" aria-label="${escape(label)}" data-port-action="${key}" class="port-target" onclick="${н.клик(key,...args)}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.onclick(event)}">${body}</g>`;
- const btn=(н,label,key,args=[],disabled=false)=>`<button type="button" class="port-button" ${disabled?'disabled':''} onclick="${н.клик(key,...args)}">${label}</button>`;
+ const btn=(н,label,key,args=[],disabled=false,pressed)=>`<button type="button" class="port-button" data-port-action="${key}" ${disabled?'disabled':''} ${pressed===undefined?'':`aria-pressed="${pressed}"`} onclick="${н.клик(key,...args)}">${label}</button>`;
  const row=html=>`<div class="port-controls">${html}</div>`;
- const reply=st=>`<p class="port-feedback ${st.ok?'is-good':''}" role="status" aria-live="polite">${st.fb||'Попробуй. Герой поможет, если нажать на него.'}</p>`;
+ const reply=st=>{
+  const selectionOnly=Number.isInteger(st.selected)&&st.fb===`Выбран ${cargoName(st.selected).toLowerCase()}. Сначала найди его строку, затем столбец.`;
+  return st.fb&&!selectionOnly?`<p class="port-feedback ${st.ok?'is-good':''}" role="status" aria-live="polite">${escape(st.fb)}</p>`:'';
+ };
  const floor=`<path d="M0,265 H360 V300 H0Z" fill="#905d36" opacity=".35"/>`;
  const actor=(н,key,st,x=307,y=291,h=103)=>н.герой(key,x,y,h,st.ok?'happy':st.fb?'action':null,'port-grounded').replace("'_подсказка'","'portHint'").replace('role="button"',`role="button" aria-label="Подсказка: ${key==='nori'?'Нори':'Клёпа'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.onclick(event)}"`);
  const boat=(x,y,scale=1)=>`<g transform="translate(${x},${y}) scale(${scale})" pointer-events="none">${prop('airship-v2',-120,-55,240,153)}</g>`;
@@ -79,7 +82,7 @@
  {
   кто:'klepa',t:'Груз по своим местам',say:'На складе всё разложено по таблице. Строка подсказывает форму, столбец — цвет. Выбери груз, затем его ячейку. Можно перетащить груз прямо в таблицу.',hint:'Найди слева форму груза, сверху — его цвет. Нужная ячейка там, где встретятся строка и столбец.',success:'Порядок! Каждый груз нашёл и свою строку, и свой столбец.',
   начало(st){st.placed=[];st.selected=null;},готов:st=>st.placed.length===4,
-  рисуй(st,н){return н.сцена(`${sortGrid(н,st)}${[0,1,2,3].filter(i=>!st.placed.includes(i)).map(i=>н.тащ(String(i),49+i*65,278,cargo(i,0,0,23),26)).join('')}${actor(н,'klepa',st,325,293,79)}`, 'Таблица: строки — форма, столбцы — цвет',true,'workshop')+(!st.ok?'<div class="port-controls port-cargo-controls">'+[0,1,2,3].filter(i=>!st.placed.includes(i)).map(i=>btn(н,cargoName(i),'select',[i])).join('')+'</div>':'')+reply(st);},
+  рисуй(st,н){return н.сцена(`${sortGrid(н,st)}${[0,1,2,3].filter(i=>!st.placed.includes(i)).map(i=>н.тащ(String(i),49+i*65,278,cargo(i,0,0,23),26)).join('')}${actor(н,'klepa',st,325,293,79)}`, 'Таблица: строки — форма, столбцы — цвет',true,'workshop')+(!st.ok?'<div class="port-controls port-cargo-controls">'+[0,1,2,3].filter(i=>!st.placed.includes(i)).map(i=>btn(н,`<img src="${A}cargo-${i}-v2.webp" alt="" draggable="false"><span>${cargoName(i)}</span>`,'select',[i],false,st.selected===i)).join('')+'</div>':'')+reply(st);},
   делать:st=>st.selected===null?'Выбери груз или перетащи его в таблицу.':`Выбран ${cargoName(st.selected).toLowerCase()}. Нажми нужную ячейку.`,подсказка(){return this.hint;},
   тап(st,v){if(st.ok)return null;st.selected=Number(v);return null;},бросить(st,v,z,x,y,н){return putCargo(st,Number(v),Number(z),н);},
   клики:{select(st,i,н){if(st.ok||st.placed.includes(i))return;st.selected=i;tell(st,н,`Выбран ${cargoName(i).toLowerCase()}. Сначала найди его строку, затем столбец.`);},cell(st,i,н){if(st.ok)return;if(st.selected===null){tell(st,н,'Сначала выбери груз под таблицей.');return;}putCargo(st,st.selected,i,н);}}
@@ -111,7 +114,7 @@
  function sortGrid(н,st){
   const selected=st.selected;
   return prop('cargo-cabinet-v2',52,34,261,209)+`<rect x="66" y="9" width="237" height="23" rx="10" fill="#285c60" stroke="#d4b46b"/>`+text(183,25,'СКЛАД ВОЗДУШНОГО ПОРТА',12,'#fff4d3')+
-   [0,1].map(col=>`<rect x="${91+col*104}" y="53" width="90" height="28" rx="9" fill="${selected!==null&&selected%2===col?'#b9e9de':'#fff4db'}" stroke="#b99051" stroke-width="2"/><text x="${136+col*104}" y="68" dominant-baseline="middle" text-anchor="middle" font-size="16" font-weight="800" fill="#294b50">${col?'Синий':'Красный'}</text>`).join('')+
+   [0,1].map(col=>`<rect x="${91+col*104}" y="53" width="90" height="28" rx="9" fill="${selected!==null&&selected%2===col?'#b9e9de':'#fff4db'}" stroke="#b99051" stroke-width="2"/><text x="${136+col*104}" y="68" dominant-baseline="middle" text-anchor="middle" font-size="16" font-weight="400" font-family="PortHand306, sans-serif" fill="#294b50">${col?'Синий':'Красный'}</text>`).join('')+
    [0,1].map(row=>`${panel(8,98+row*72,41,41)}${selected!==null&&Math.floor(selected/2)===row?`<rect x="9" y="${99+row*72}" width="39" height="39" rx="10" fill="#a6daca"/>`:''}${row?`<rect x="20" y="${110+row*72}" width="17" height="17" rx="2" fill="none" stroke="#456669" stroke-width="3"/>`:`<circle cx="28.5" cy="118" r="10" fill="none" stroke="#456669" stroke-width="3"/>`}`).join('')+
    [0,1,2,3].map(i=>{const x=78+i%2*116,y=85+Math.floor(i/2)*72;return (!st.placed.includes(i)?н.зона(String(i),x,y,103,63):'')+target(н,'cell',`Ячейка: ${cargoName(i)}`,`<rect x="${x}" y="${y}" width="103" height="63" rx="6" fill="${st.placed.includes(i)?'#a9d7bd':'#fff3d9'}" opacity="${st.placed.includes(i)?'.2':'.04'}"/>${st.placed.includes(i)?cargo(i,x+51,y+34,25):''}`,i);}).join('')+text(148,248,`На месте: ${st.placed.length} из 4`,12,'#fff8df');
  }
@@ -215,7 +218,7 @@
   return `<div class="port-practice"><div class="port-chapter">${series[t.series]} <span>${i%4+1} / 4</span></div>`+н.сцена(defs+body,'Практика: '+t.q,false,t.table?'observatory':t.series===1?'workshop':'harbor').replace('role="img"','role="group"')+(!done?`<p class="что-делать">${instruction}</p>`:'')+controls+(st.msg&&!done?`<p class="port-feedback" role="status">${escape(st.msg)}</p>`:'')+'</div>';
  }
 
- frames.forEach((f,i)=>{f.клики.portHint=(st)=>{st.fb=f.hint;st.рк=null;window.PORT306_AUDIO?.playKey('frame-'+i+'-hint');};const draw=f.рисуй;f.рисуй=(st,н)=>{н.сказ=(who,t,pose)=>{st.fb=t;st.рк={кто:who,т:t,поза:pose,t:Date.now()};window.PORT306_AUDIO?.play(t);};const scene=н.сцена;н.сцена=(body,...args)=>scene(defs+body,...args).replace('role="img"','role="group"');return `<div class="port-chapter">ОБЛАЧНЫЙ ПОРТ <span>${i+1} / ${frames.length}</span></div>`+draw(st,н);};});
+ frames.forEach((f,i)=>{f.клики.portHint=(st)=>{st.fb=f.hint;st.рк=null;window.PORT306_AUDIO?.playKey('frame-'+i+'-hint');};const draw=f.рисуй;f.рисуй=(st,н)=>{н.сказ=(who,t,pose)=>{st.fb=t;st.рк={кто:who,т:t,поза:pose,t:Date.now()};window.PORT306_AUDIO?.play(t);};const scene=н.сцена;н.сцена=(body,...args)=>scene(defs+body,...args).replace('role="img"','role="group"');return `<div class="port-chapter">Облачный порт <span>${i+1} / ${frames.length}</span></div>`+draw(st,н);};});
  window.PORT306={frames,tasks,claims,practice:practiceAction,restart(){if(typeof LV==='undefined'||LV.id!==ID)return;window.PORT306_AUDIO?.stop();CHS[lidKey(ID)]={п:{}};LV.phase='explain';LV.step=0;renderLessonView();}};
  ДК.подключить({ID,ИМГ:A,размеры:{'nori-idle':[321,500],'nori-action':[334,500],'nori-happy':[334,500],'klepa-idle':[290,500],'klepa-action':[346,500],'klepa-happy':[293,500]},
   герои:{nori:{имя:'Нори',ф:'nori-idle',позы:{action:'nori-action',happy:'nori-happy'},позаПодсказки:'action'},klepa:{имя:'Клёпа',ф:'klepa-idle',позы:{action:'klepa-action',happy:'klepa-happy'},позаПодсказки:'action'}},
@@ -248,14 +251,15 @@
   for(const name of ['lvStep','lvToCheck']){const original=window[name];window[name]=function(...args){if(LV.id===ID&&LV.phase==='explain'&&(name==='lvToCheck'||args[0]>0)){const s=CHS[lidKey(ID)]?.п?.[LV.step];if(!s||!frames[LV.step].готов(s))return;}return original.apply(this,args);};}
  });
  const style=document.createElement('style');style.textContent=`
- #lvis .дк.дк306{width:100%;max-width:640px;margin:0 auto;--контур:#79613e;--чернила:#284249;gap:10px}
+ @font-face{font-family:PortHand306;src:url('fonts/Pangolin-ru.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+ #lvis .дк.дк306{width:100%;max-width:640px;margin:0 auto;--контур:#79613e;--чернила:#284249;gap:10px;font-family:PortHand306,sans-serif;font-weight:400;font-synthesis:none}
  body:has(.дк306) #asst{display:none}
  #screen:has(.дк306)>.card>.arch{display:none}#screen:has(.дк306)>.card{padding:6px;background:transparent;border:0}
  #lvis .дк.дк306 .реплика{padding:18px 20px;min-height:105px}#lvis .дк.дк306 .реплика p{font-size:17px;line-height:1.35}
  #lvis .дк.дк306 .аватар{width:44px}#lvis .дк.дк306 .аватар img{width:43px;height:55px}
  #lvis .дк.дк306 .port-chapter{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.08em;color:#edc980;padding:0 4px}
  #lvis .дк.дк306 .port-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
- #lvis .дк.дк306 .port-button{min-height:48px;min-width:66px;border:2px solid #8b6839;border-radius:14px;padding:9px 14px;font:900 18px 'NunitoДК',sans-serif;color:#244b51;background:linear-gradient(#fff9e5,#edd6a7);box-shadow:0 3px 0 #71542f;cursor:pointer;touch-action:manipulation}
+ #lvis .дк.дк306 .port-button{min-height:48px;min-width:66px;border:2px solid #8b6839;border-radius:14px;padding:9px 14px;font:400 18px PortHand306,sans-serif;color:#244b51;background:linear-gradient(#fff9e5,#edd6a7);box-shadow:0 3px 0 #71542f;cursor:pointer;touch-action:manipulation}
  #lvis .дк.дк306 .port-button:disabled{opacity:.5;cursor:default}#lvis .дк.дк306 .port-button:active{transform:translateY(2px)}
  #lvis .дк.дк306 .port-feedback{font-size:16px;line-height:1.4;min-height:52px;margin:0;padding:10px 14px;border-radius:12px;background:#fcf0d5;color:#455555;border-left:4px solid #c5a263}
  #lvis .дк.дк306 .port-feedback.is-good{background:#dcebdc;border-color:#4c987a;color:#24583e}
@@ -269,16 +273,16 @@
  @media(max-width:360px){#lvis .дк.дк306 .реплика{padding:16px 14px;gap:6px}#lvis .дк.дк306 .реплика p{font-size:16px}#lvis .дк.дк306 .аватар{width:34px}#lvis .дк.дк306 .аватар img{width:34px}#lvis .дк.дк306 .port-button{font-size:16px;padding:8px 10px}}
  /* Illustrated port UI: scalable artwork with readable live text. */
  body:has(.дк306){background:radial-gradient(ellipse at 50% 0,#224b4e 0,#102c2e 45%,#0b1d23 100%)}
- #screen:has(.дк306){font-family:'NunitoДК',sans-serif}
- #screen:has(.дк306)>h2{font-family:'NunitoДК',sans-serif;font-size:19px;line-height:1.25;color:#f2d9a6;max-width:640px;margin:12px auto 6px}
+ #screen:has(.дк306){font-family:PortHand306,sans-serif}
+ #screen:has(.дк306)>h2{font-family:PortHand306,sans-serif;font-weight:400;font-size:19px;line-height:1.25;color:#f2d9a6;max-width:640px;margin:12px auto 6px}
  #lvis .дк.дк306 .реплика{display:grid;grid-template-columns:1fr 44px;gap:4px 10px;background:none;filter:drop-shadow(0 5px 5px #071c2360);border:24px solid transparent;border-image:url('img/l306/window-v2.webp') 22% 23% fill / 24px stretch;padding:0 6px 6px;min-height:0}
  #lvis .дк.дк306 .реплика .аватар{display:flex;flex-direction:row;gap:8px;width:auto;grid-column:1;grid-row:1;justify-self:start;align-self:center}
  #lvis .дк.дк306 .реплика .аватар img{display:block;width:28px;height:40px;object-fit:contain}
- #lvis .дк.дк306 .реплика .аватар span{font-size:15px;letter-spacing:.06em;color:#24676b;text-transform:uppercase;font-weight:900}
- #lvis .дк.дк306 .реплика p{grid-column:1/-1;grid-row:2;font-size:17px;line-height:1.38;font-weight:800;color:#29484b}
+ #lvis .дк.дк306 .реплика .аватар span{font-size:15px;letter-spacing:.06em;color:#24676b;text-transform:uppercase;font-weight:400}
+ #lvis .дк.дк306 .реплика p{grid-column:1/-1;grid-row:2;font-size:17px;line-height:1.38;font-weight:400;color:#29484b}
  #lvis .дк.дк306 .слушать{grid-column:2;grid-row:1;width:44px;height:44px;min-height:44px;background:radial-gradient(circle at 35% 25%,#6bc6c3,#1e646b);border:3px solid #d9b465;color:#fff4d3;box-shadow:inset 0 1px 1px #b8e2d6,0 2px 0 #836038;font-size:20px}
  #lvis .дк.дк306 .port-button,#lvis .дк.дк306 .число,#lvis .дк.дк306 .дт-подск,#lvis .дк.дк306 .дальше-кн,#screen:has(.дк306)>.btnrow>button,#screen:has(.дк306)>button{
-  appearance:none;background:none;border:14px solid transparent;border-image:url('img/l306/button-v2.webp') 24% 13% fill / 14px 18px 18px stretch;border-radius:18px;padding:0 8px 3px;min-height:58px;min-width:74px;font:900 17px/1.25 'NunitoДК',sans-serif;color:#24565b;box-shadow:none;filter:drop-shadow(0 3px 2px #061c2166);transition:transform .15s,filter .15s;cursor:pointer;text-shadow:0 1px #fff8e4}
+  appearance:none;background:none;border:14px solid transparent;border-image:url('img/l306/button-v2.webp') 24% 13% fill / 14px 18px 18px stretch;border-radius:18px;padding:0 8px 3px;min-height:58px;min-width:74px;font:400 17px/1.25 PortHand306,sans-serif;color:#24565b;box-shadow:none;filter:drop-shadow(0 3px 2px #061c2166);transition:transform .15s,filter .15s;cursor:pointer;text-shadow:0 1px #fff8e4}
  #lvis .дк.дк306 .число .окно{background:none;border:0;box-shadow:none;min-height:0;height:auto;min-width:0;padding:0!important;color:inherit;font-size:22px;line-height:1.3}
  #lvis .дк.дк306 .число.длин.длин .окно{font-size:17px;min-height:0}
  #lvis .дк.дк306 .число.верно{color:#27653e;filter:drop-shadow(0 0 4px #a6e2b5)}
@@ -288,21 +292,22 @@
  #lvis .дк.дк306 button:not(:disabled):active,#screen:has(.дк306)>.btnrow>button:not(:disabled):active{transform:translateY(3px);filter:brightness(.96)}
  #lvis .дк.дк306 button:focus-visible,#screen:has(.дк306) button:focus-visible{outline:3px solid #9be7e1;outline-offset:3px}
  #lvis .дк.дк306 .port-controls{gap:7px}
- #lvis .дк.дк306 .port-feedback,#lvis .дк.дк306 .готово,#lvis .дк.дк306 .разбор,#lvis .дк.дк306 .дт-совет{position:relative;min-height:54px;margin:0;border:1px solid #d7bc80;border-left:5px solid #4a9595;border-radius:16px;padding:13px 16px;background:linear-gradient(135deg,#fffbed,#efe3c7);box-shadow:inset 0 0 0 3px #fffae8,0 3px 8px #051b2440;color:#345357;font-size:16px;line-height:1.4;font-weight:800}
+ #lvis .дк.дк306 .port-feedback,#lvis .дк.дк306 .готово,#lvis .дк.дк306 .разбор,#lvis .дк.дк306 .дт-совет{position:relative;min-height:54px;margin:0;border:1px solid #d7bc80;border-left:5px solid #4a9595;border-radius:16px;padding:13px 16px;background:linear-gradient(135deg,#fffbed,#efe3c7);box-shadow:inset 0 0 0 3px #fffae8,0 3px 8px #051b2440;color:#345357;font-size:16px;line-height:1.4;font-weight:400}
  #lvis .дк.дк306 .port-feedback.is-good,#lvis .дк.дк306 .готово{background:linear-gradient(135deg,#eff9e6,#d6ead8);border-left-color:#57956a;color:#305f45}
  #lvis .дк.дк306 .port-note{border:22px solid transparent;border-image:url('img/l306/window-v2.webp') 22% 23% fill / 22px stretch;padding:4px 5px 8px;background:none;font-size:18px}
  #lvis .дк.дк306 .что-делать{background:#183e42;border:1px solid #477474;border-radius:12px;color:#f7e7be;font-size:15px;padding:10px 12px;margin:0}
  #lvis .дк.дк306 .сцена{border:3px solid #bb995c;box-shadow:0 0 0 2px #345e60,0 8px 18px #07171d66;border-radius:22px}
  #lvis .дк.дк306 .дт-лента{border:1px solid #bf9d62;border-radius:14px;background:linear-gradient(#326b6c,#234e54);color:#fff0c9;box-shadow:inset 0 0 0 3px #3f7170;font-size:15px;padding:10px 13px}
- #lvis .дк.дк306 .port-chapter{padding:2px 5px;color:#f0d7a1;font-size:11px;letter-spacing:.1em;font-weight:900}
+ #lvis .дк.дк306 .port-chapter{padding:2px 5px;color:#f0d7a1;font-size:11px;letter-spacing:.1em;font-weight:400}
  #lvis .дк.дк306 .дт-итог{color:#fff0c9}
  @media(max-width:360px){#lvis .дк.дк306 .реплика{border-width:21px;border-image-width:21px;padding:0 1px 4px}#lvis .дк.дк306 .реплика p{font-size:16px}#lvis .дк.дк306 .port-button{font-size:16px;padding-left:5px;padding-right:5px}#screen:has(.дк306)>h2{font-size:17px}}
 
 
- #lvis .дк.дк306{font-weight:700}
- #lvis .дк.дк306 .реплика p{font-weight:700;font-size:17px;line-height:1.4}
- #lvis .дк.дк306 .port-button,#lvis .дк.дк306 .число,#lvis .дк.дк306 .дальше-кн,#screen:has(.дк306)>.btnrow>button{font-weight:800}
- #lvis .дк.дк306 .port-feedback,#lvis .дк.дк306 .готово,#lvis .дк.дк306 .разбор{font-weight:700}
+ #lvis .дк.дк306 strong,#lvis .дк.дк306 b{font-weight:400}
+ #lvis .дк.дк306 svg text{font-family:PortHand306,sans-serif;font-weight:400}
+ #lvis .дк.дк306 .реплика p{font-weight:400;font-size:17px;line-height:1.4}
+ #lvis .дк.дк306 .port-button,#lvis .дк.дк306 .число,#lvis .дк.дк306 .дальше-кн,#screen:has(.дк306)>.btnrow>button{font-weight:400}
+ #lvis .дк.дк306 .port-feedback,#lvis .дк.дк306 .готово,#lvis .дк.дк306 .разбор{font-weight:400}
  #lvis .дк.дк306 .port-chapter{font-size:12px;letter-spacing:.04em}
  @media(max-width:360px){#lvis .дк.дк306 .реплика p{font-size:16px}}
  #lvis .дк.дк306 .port-cargo-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
@@ -322,6 +327,28 @@
  #lvis .дк.дк306 .port-finale{display:grid;gap:12px}
  #lvis .дк.дк306 .port-practice{display:grid;gap:10px;min-width:0}
  #lvis .дк.дк306 .port-practice .port-controls{display:flex;flex-wrap:wrap}
+
+ /* Port instruments keep their own shapes; readable labels stay outside the artwork. */
+ #lvis .дк.дк306 .port-chapter{align-items:baseline;gap:12px;letter-spacing:0;font-size:13px;line-height:1.4}
+ #lvis .дк.дк306 .port-chapter>span{white-space:nowrap;font-variant-numeric:tabular-nums}
+ #lvis .дк.дк306 .реплика p{line-height:1.5;overflow-wrap:break-word}
+ #lvis .дк.дк306 .реплика .аватар span{text-transform:none;letter-spacing:0;font-size:17px}
+ #lvis .дк.дк306 .port-controls{align-items:stretch}
+ #lvis .дк.дк306 .port-controls>button{max-width:100%;min-width:0;line-height:1.3}
+ #lvis .дк.дк306 .port-cargo-controls{gap:10px}
+ #lvis .дк.дк306 .port-cargo-controls button.port-button{position:relative;display:grid;justify-items:center;align-content:center;gap:3px;min-height:96px;padding:5px 4px 8px;border:2px solid transparent;border-image:none;border-radius:12px;background:transparent;color:#f3e5bf;font-size:18px;line-height:1.3;filter:none;box-shadow:none;text-shadow:none}
+ #lvis .дк.дк306 .port-cargo-controls button.port-button img{width:45px;height:45px;object-fit:contain;pointer-events:none}
+ #lvis .дк.дк306 .port-cargo-controls button.port-button span{max-width:100%;text-wrap:balance}
+ #lvis .дк.дк306 .port-cargo-controls button[aria-pressed=true]{background:transparent;border-color:#d3b36e;box-shadow:none}
+ #lvis .дк.дк306 .port-cargo-controls button[aria-pressed=true]:before{content:'✓';position:absolute;top:5px;right:7px;color:#e3c883;font-size:18px}
+ #lvis .дк.дк306 .port-feedback,#lvis .дк.дк306 .разбор,#lvis .дк.дк306 .дт-совет{padding:14px 15px 14px 20px;border:0;border-left:3px solid #b79558;border-radius:0 12px 12px 0;background:#f3e8ce;box-shadow:none;font-size:17px;line-height:1.5;min-height:0;overflow-wrap:break-word}
+ #lvis .дк.дк306 .port-note{position:relative;gap:7px;text-align:left;border:0;border-image:none;border-left:3px solid #b79a65;border-radius:0;padding:15px 16px 16px 24px;background:repeating-linear-gradient(transparent,transparent 29px,#ac956425 29px,#ac956425 30px),#f3e7ca;line-height:1.5}
+ #lvis .дк.дк306 .port-note small{font-size:14px;letter-spacing:0;color:#65583d}
+ #lvis .дк.дк306 .port-note strong{font-size:18px;font-weight:400}
+ #lvis .дк.дк306 .что-делать{font-size:16px;line-height:1.5;padding:10px 2px;border:0;border-radius:0;background:none;color:#f4e5be;text-align:left}
+ #lvis .дк.дк306 .дт-подсказки{display:flex;flex-wrap:wrap;gap:8px}
+ #lvis .дк.дк306 .дт-подсказки>button{min-height:48px;max-width:100%;white-space:normal}
+ @media(max-width:360px){#lvis .дк.дк306 .port-cargo-controls button.port-button{font-size:18px;min-height:96px}#lvis .дк.дк306 .реплика p{font-size:17px}#lvis .дк.дк306 .port-feedback,#lvis .дк.дк306 .разбор,#lvis .дк.дк306 .дт-совет{padding:12px 12px 12px 16px}}
  @media(prefers-reduced-motion:reduce){#lvis .дк.дк306 *{animation:none!important;transition:none!important}}`;
  document.head.appendChild(style);
 })();

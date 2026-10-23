@@ -59,3 +59,118 @@ body{font-weight:600;line-height:1.45}button,input{font-weight:700}h1{font-size:
 
 .show-empty .slot.empty:after{outline:3px solid #70a04f;background:#f8ffd7;color:#31512c}
 @media(max-width:650px) and (max-height:720px){.lesson-heading p{display:none}.giving-hero{width:105px}}
+
+/* A parcel workshop, rather than identical framed panels. The host chrome
+   stays unchanged; mathematical state and the characters lead the screen. */
+@font-face{font-family:ExpressHand;src:url('../../fonts/Pangolin-ru.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+.adventure{min-width:0;overflow-wrap:break-word}
+.adventure .dialogue{border:0;border-image:none;background:none;box-shadow:none;color:#ece3cc;margin:0 0 14px;padding:10px 2px;grid-template-columns:46px minmax(0,1fr) 48px;gap:12px;min-height:0}
+.adventure .dialogue>img{height:72px;width:46px;object-fit:contain}
+.adventure .dialogue p{font:600 18px/1.5 Nunito,sans-serif}
+.adventure .dialogue .speaker{font:400 19px/1.3 ExpressHand,cursive;letter-spacing:0;color:#d6b97a}
+.adventure #sound{width:48px;min-width:48px;height:48px;min-height:48px;align-self:start}
+.adventure .scene{border:0;border-image:none;box-shadow:none;border-radius:0;padding:10px 6px 14px;background-position:center bottom}
+.adventure .tableau-header{padding:10px 8px;min-height:44px;background:none;gap:10px;color:#49331c}
+.adventure .tableau-header h3{font:400 21px/1.25 ExpressHand,cursive;background:#f0e0bccc;padding:4px 7px;border-radius:1px 5px 1px 3px}
+.adventure .tiny-pill{font:700 16px/1.3 Nunito,sans-serif;background:#f0e0bccc;padding:4px 6px}
+.adventure .pack-label{position:static;transform:none;display:block;width:fit-content;max-width:100%;margin:4px auto 7px;font-size:15px;line-height:1.4;white-space:normal;text-align:center}
+.adventure .math-card{border:0;border-image:none;background:#f1e2bfe8;color:#48361d;padding:10px 8px;border-radius:1px 7px 2px 5px;margin:10px auto!important;max-width:400px}
+.adventure .equation{font-size:30px;line-height:1.35;gap:9px;flex-wrap:wrap}
+.adventure .math-caption{font-size:16px;line-height:1.5}
+.adventure .basket-caption{background:none;max-width:none;width:fit-content;padding:5px 12px;margin:5px auto;font:700 17px/1.4 Nunito,sans-serif;color:#3c321e;background-color:#f1e2bfd9}
+.adventure .reserve>b,.adventure .giving-hero>span:last-child,.adventure .reserve-total{font:700 16px/1.4 Nunito,sans-serif;white-space:normal}
+.adventure .reserve{min-width:0}
+.adventure .handoff-scene{max-width:390px;gap:6px}
+.adventure .reserve-basket{min-width:0}
+.adventure .arrival-scene>div{min-width:0;padding:8px}
+.adventure .arrival-scene b,.adventure .arrival-scene span{font-size:17px;line-height:1.4}
+.adventure .remaining-nuts{flex-wrap:wrap}
+.adventure .actor-card{max-width:390px;gap:7px;padding:6px 0}
+.adventure .actor-card span{font:400 18px/1.4 ExpressHand,cursive;border:0;background:#f1e2bfeb;border-radius:3px 12px 3px 8px;padding:10px;min-width:0}
+.adventure .guide{border:0;border-image:none;background:none;padding:12px 0 0;color:#e8e0cc}
+.adventure .guide h2{font:400 29px/1.25 ExpressHand,cursive;color:#efcf8d}
+.adventure #guide-copy{font-size:18px;line-height:1.6}
+.adventure #guide-copy strong{color:#f1d49b}
+.adventure .choices{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+.adventure .choice{border:2px solid #aa8c51;border-image:none;background:#ebd9ae;border-radius:3px;box-shadow:inset 0 0 0 3px #f8ecca;min-width:64px;min-height:64px;padding:8px 12px;font:800 28px/1.25 Nunito,sans-serif;color:#47321b;text-align:center}
+.adventure .choice.wrong{background:#f3c3a2;border-color:#ac5d38;box-shadow:inset 0 0 0 3px #f4d8b8}
+.adventure .choices.split{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.adventure .choices.split .choice{font-size:21px;min-width:0;padding:10px 3px;white-space:nowrap}
+.adventure .feedback{font:600 17px/1.5 Nunito,sans-serif;text-align:left;border:0;border-left:2px solid #d2b574;border-radius:0;background:none;color:#f0d6a3;padding:7px 12px;margin:14px 0 8px}
+.adventure .feedback.success{color:#d1e8bf;border-left-color:#9cb77d;background:none}
+.adventure .hint-button{font:400 18px/1.4 ExpressHand,cursive;min-height:48px;padding:9px 3px;color:#c1d8b0;margin:6px auto;max-width:100%;white-space:normal}
+.adventure .mentor{background:none;border-radius:0;padding:7px 0;gap:10px}
+.adventure .mentor p{font-size:17px;line-height:1.5;color:#d6e0c2}
+.adventure .mentor span{font-size:14px;letter-spacing:0;color:#b6cea3}
+.adventure .finished-equations{font-size:24px;line-height:1.55;color:#e8c97d;overflow-wrap:anywhere}
+.adventure .input-label{font-size:17px;line-height:1.5;color:#c6d5b7}
+.adventure .answer-entry{max-width:400px;margin-left:auto;margin-right:auto;gap:10px;align-items:center}
+.adventure .answer-entry input{min-width:0;width:84px;flex:0 0 84px;min-height:58px;font:800 28px/1.3 Nunito,sans-serif}
+.adventure .answer-entry button{min-width:0;min-height:64px;font:700 17px/1.3 Nunito,sans-serif;padding:14px 23px}
+.adventure .training-scene{background:transparent!important;padding:12px 0!important}
+.adventure .trainer-heading{text-align:left;margin:8px 2px 22px}
+.adventure .trainer-eyebrow{font-size:13px;line-height:1.5;letter-spacing:0}
+.adventure .trainer-heading h3{font:400 29px/1.25 ExpressHand,cursive;margin:7px 0 12px}
+.adventure .trainer-heading p{font-size:17px;line-height:1.5}
+.adventure .station-list{display:grid;gap:16px}
+.adventure .station-button{position:relative;display:block;text-align:left;border:0;border-bottom:1px dashed #a5ae7c77;background:none;filter:none;width:100%;min-height:148px;padding:16px 36px 17px 90px;color:#e8e0cc;transform:none}
+.adventure .station-button::before{content:'';position:absolute;left:0;bottom:14px;width:84px;height:106px;background:url('assets/tosha-point.webp') center/contain no-repeat}
+.adventure .station-button:nth-child(2)::before{background-image:url('assets/ryzhik-search.webp')}
+.adventure .station-button:nth-child(3)::before{background-image:url('assets/tosha-parcel.webp')}
+.adventure .station-button b{font:400 24px/1.25 ExpressHand,cursive;color:#edcd8d}
+.adventure .station-button small{font:600 16px/1.45 Nunito,sans-serif;margin-top:7px}
+.adventure .station-icon{position:absolute;right:0;top:17px;width:28px;height:32px;border:1px solid #ab9254;border-radius:2px;background:#d9bc76;color:#2d452e;font:800 16px/1 Nunito,sans-serif}
+.adventure .station-score{display:block;font:700 16px/1.4 Nunito,sans-serif;margin:8px 0 0;color:#c0d5a5}
+.adventure .trainer-footnote{font-size:16px;line-height:1.5;max-width:none;margin:18px 3px 4px}
+.adventure .trainer-task{border:0;border-image:none;background:none;padding:0;color:#e8e0cc}
+.adventure .trainer-task-top{display:flex;flex-wrap:wrap;gap:8px;font-size:16px;line-height:1.4;color:#c7d5b7}
+.adventure .trainer-task-top>span{white-space:normal;font-size:15px;flex:1;text-align:right}
+.adventure .trainer-home{font:700 16px/1.3 Nunito,sans-serif;min-height:48px;color:#b6d2a1;padding:8px 0}
+.adventure .trainer-audio{display:block;min-width:48px;min-height:48px;width:48px;height:48px}
+.adventure .trainer-actor{justify-content:flex-start;gap:12px;margin:8px 0 14px}
+.adventure .trainer-actor h3{font:400 27px/1.25 ExpressHand,cursive;color:#ebca86;min-width:0;text-align:left}
+.adventure .trainer-friend{flex:0 0 80px;min-width:80px;min-height:80px}
+.adventure .trainer-friend img{width:80px;height:80px}
+.adventure .trainer-question{font:600 18px/1.5 Nunito,sans-serif;text-align:left;margin:10px 0 16px}
+.adventure .trainer-equation{font:800 34px/1.35 Nunito,sans-serif;color:#f0dcad;margin:15px 0;font-variant-numeric:tabular-nums}
+.adventure .trainer-equation span{color:#cdbb7c}
+.adventure .trainer-options{gap:9px;margin:14px 0}
+.adventure .trainer-options .choice{font-size:26px;min-width:54px;min-height:62px;padding:7px 10px}
+.adventure .trainer-options.split{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.adventure .trainer-options.split .choice{font-size:21px;min-width:0;white-space:nowrap;padding:9px 2px}
+.adventure .split-map{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-size:20px;color:#e3ce94}
+.adventure .split-map i{font-size:16px;line-height:1.45}
+.adventure .trainer-feedback{font:600 17px/1.5 Nunito,sans-serif;text-align:left;color:#efcea1;padding:12px 0}
+.adventure .trainer-feedback.correct{color:#c7e5b6}
+.adventure .trainer-form label{font-size:17px;line-height:1.5}
+.adventure .trainer-continue{font:700 17px/1.4 Nunito,sans-serif;min-height:72px;padding:17px 35px;max-width:100%}
+.adventure .training-complete .drawn-sheet{background:none;border:0;border-image:none;color:#e8e0cc;padding:14px 3px}
+.adventure .training-complete h3{font:400 32px/1.25 ExpressHand,cursive;color:#ebcb87}
+.adventure .training-complete p{font-size:18px;line-height:1.55}
+.adventure .training-complete .earned-stars{font-size:21px!important;line-height:1.8;letter-spacing:.05em;overflow-wrap:anywhere}
+@media(max-width:650px){
+ .adventure .dialogue{grid-template-columns:minmax(0,1fr) 48px;padding:10px 1px;margin-bottom:10px}
+ .adventure .dialogue #mobile-instruction{font:600 17px/1.5 Nunito,sans-serif}
+ .adventure .scene,.adventure .scene[data-step]{padding:8px 3px 10px;border:0;border-image:none}
+ .adventure .tableau-header h3{font-size:20px}.adventure .tiny-pill{font-size:15px}
+ .adventure .tableau-header{padding:7px 4px;gap:6px}
+ .adventure .tray-tableau{max-width:340px}.adventure .ten-frame,.adventure .trainer-task .ten-frame{max-width:330px;width:100%}
+ .adventure .handoff-scene{max-width:330px}.adventure .giving-hero{width:44%;max-width:160px}.adventure .reserve-basket{min-height:100px}
+ .adventure .duet-group{max-width:330px}.adventure .duet-tableau{max-width:330px}
+ .adventure .basket-caption{font-size:16px;padding:6px 9px}
+ .adventure .guide{padding-top:7px}.adventure .feedback,.adventure .trainer-feedback{font-size:17px;line-height:1.5}
+ .adventure .gate-note{font-size:16px;line-height:1.5}.adventure .split-visual{gap:7px;font-size:21px;flex-wrap:wrap}
+ .adventure .split-visual span{font-size:18px}.adventure .actor-card span{font-size:17px}
+ .adventure .finished-equations{font-size:22px}.adventure .trainer-task .ten-frame{max-width:330px}
+}
+@media(max-width:360px){.adventure .dialogue #mobile-instruction{font-size:17px}.adventure .station-button{padding-left:74px;padding-right:32px}.adventure .station-button::before{width:68px;height:92px}.adventure .station-button b{font-size:22px}.adventure .station-button small{font-size:15px}.adventure .trainer-actor h3{font-size:24px}.adventure .trainer-friend{flex-basis:68px;min-width:68px}.adventure .trainer-friend img{width:68px;height:76px}.adventure .trainer-options.split .choice,.adventure .choices.split .choice{font-size:19px}.adventure .trainer-options .choice{min-width:52px}.adventure .answer-entry input{flex-basis:72px;width:72px}.adventure .answer-entry button{padding-left:20px;padding-right:20px}}
+/* A newly revealed explanation must stay clear of the sticky lesson buttons. */
+.adventure .feedback,.adventure .trainer-feedback{scroll-margin-block:24px 110px}
+.adventure .trainer-task{padding-bottom:20px}
+/* Keep the equality on one baseline; the purpose of its first part is a note below. */
+.adventure .split-visual{align-items:flex-start;line-height:1.35}
+.adventure .split-visual .to-ten{display:inline-flex;flex-direction:column;align-items:center;min-width:42px;line-height:1.35}
+.adventure .split-visual .to-ten b{font:inherit;color:inherit}
+.adventure .split-visual .to-ten small{display:block;margin-top:3px;font:600 14px/1.25 Nunito,sans-serif;white-space:nowrap;color:#3c6138}
+.adventure .split-visual{font:700 24px/1.35 Nunito,sans-serif}
+.adventure .split-visual>span{font:inherit}
