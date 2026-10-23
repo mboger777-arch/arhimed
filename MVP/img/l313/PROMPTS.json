@@ -1,0 +1,29 @@
+{
+  "tool": "Built-in image_gen",
+  "entries": [
+    {
+      "asset": "taya",
+      "prompt": "Use case illustration-story. ONE transparent sprite strip with three full-body poses of the same adorable red panda inventor Taya, warm russet fur and cream face, forest-green overalls, little brass goggles on forehead, small golden neckerchief. Premium children's storybook gouache illustration with soft painted fur, cheerful expressive face, warm natural proportions. Three distinct poses in three equal horizontal cells with generous transparent gutters and no overlap: left standing greeting with open paw; middle kneeling firmly on ground and pointing downward toward an unseen workbench puzzle; right standing excited, paws lifted in celebration. Whole ears, feet and striped tail within each cell, same character and outfit. No background, no text, no food, no apples or baskets. Wide 1536x1024. Finely crafted and friendly, green and antique gold educational app style."
+    },
+    {
+      "asset": "bolt",
+      "prompt": "Transparent sprite strip, three separate full-body poses of Bolt, adorable young beaver clockwork mechanic, soft cocoa fur, big flat textured tail, cream muzzle, mustard waistcoat and teal tool belt, brass spectacles. Premium warm gouache children's storybook art, highly crafted gentle expressive character. Left pose standing greeting with wooden toy bird; middle kneeling and showing ten little brass gear beads on a rod, pointing at them; right standing celebrating with open arms. Three equally spaced horizontal cells, generous empty transparent gutters, whole feet and tails contained, no overlap. Transparent background, no scenery, no words, no apples, no baskets. Wide 1536x1024."
+    },
+    {
+      "asset": "workshop",
+      "prompt": "Premium children's gouache storybook game environment, cozy clockwork toy workshop inside a round old tree, moss green painted cabinets, warm brass gears, tiny unfinished mechanical butterflies and wooden birds on shelves, circular sunlit window, beautiful handcrafted details, spacious clear wooden floor foreground for three character cutouts, workbench far back. No characters, no text, no food, no baskets. Soft golden morning, painterly rich textures and warm cream green antique gold palette, inviting magical educational adventure. Landscape 1536x1024."
+    },
+    {
+      "asset": "garden",
+      "prompt": "Warm magical storybook gouache illustration of a clockwork toy garden outside a tree workshop at sunset: small brass butterflies and wooden mechanical songbirds perched among bluebells, elegant little green toy railway curving in distant flowerbed, round treehouse door, rich moss and sunbeams, spacious clear stone terrace across foreground to place two characters. Handcrafted premium educational children's game art, green cream gold palette, finely painted welcoming. No characters, no lettering, no food, no apples or baskets. Landscape 1536x1024."
+    },
+    {
+      "asset": "ui",
+      "prompt": "Transparent UI asset sheet for premium fairy tale children's clockwork workshop game. Upper two thirds: one large rectangular cream parchment dialogue panel, blank clean light ivory center, refined carved moss green wooden frame with rounded corners, tiny antique brass screw heads and a small gear in each corner, subtle handpainted gouache texture, no text. Bottom third: one wide rounded rectangular green ivory button, blank light mint ivory center, brass trim and carved green wood edge. Separate assets with generous transparent gap, front-on flat symmetrical orthographic view, NO perspective. Entire outlines contained. No symbols in centers, no lettering. 1536x1024 landscape."
+    },
+    {
+      "asset": "toys",
+      "prompt": "Transparent game asset strip, three separate exquisitely crafted tiny mechanical toys in three equal horizontal cells, generous clear gutters: LEFT a cheerful brass and sage-green wooden clockwork songbird with delicate engraved feather wings, visible little gear and winding key, full body standing on tiny feet. CENTER a beautiful mechanical butterfly with cream mint translucent enamel wings edged in brass, delicate gears and curled antennae, resting on tiny feet, front three-quarter view. RIGHT a charming little emerald-green toy steam locomotive with golden wheels, cream window frame and tiny brass chimney, whole locomotive side three-quarter view. Premium warm children's storybook gouache painting, rich charming details, green gold cream palette, same soft textured art style as handmade fairy tale. No characters, no background, no words or numbers, objects isolated and not touching, entire silhouettes contained. 1536x1024 landscape."
+    }
+  ]
+}
