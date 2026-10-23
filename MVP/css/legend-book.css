@@ -1,0 +1,249 @@
+/* «Легенда об Архимеде»: an illustrated scroll made for a child's phone.
+   A continuous illustrated journey on the native app background, without scene cards.
+   Chapter-specific compositions belong to the story, not the app chrome. */
+@font-face{font-family:ArhLegendSerif;src:url('../fonts/SourceSerif4-400-normal-cyrillic.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:ArhLegendSerif;src:url('../fonts/SourceSerif4-400-normal-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2190-2193,U+2212}
+@font-face{font-family:ArhLegendSerif;src:url('../fonts/SourceSerif4-600-normal-cyrillic.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap;unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:ArhLegendSerif;src:url('../fonts/SourceSerif4-600-normal-latin.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2190-2193,U+2212}
+@font-face{font-family:ArhLegendHand;src:url('../fonts/Pangolin-ru.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+
+.arh-legend.legend-tale{
+  --tale-forest:#173629;--tale-heading:#f0e4c6;--tale-ink:#e8e0cc;--tale-paper:#e8e0cc;
+  --tale-sheet:#193326;--tale-brass:#d9b46a;--tale-pencil:#bfcaa5;
+  --tale-gutter:22px;
+  width:100%;max-width:780px;min-width:0;margin:0 auto 16px;
+  color:var(--tale-ink);font:400 18px/1.65 ArhLegendSerif,Georgia,serif;
+  overflow-wrap:break-word;-webkit-text-size-adjust:100%;
+}
+.arh-legend.legend-tale *{box-sizing:border-box}
+.arh-legend.legend-tale button,.arh-legend.legend-tale summary{
+  font:400 18px/1.35 ArhLegendHand,Georgia,serif;letter-spacing:0;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.arh-legend.legend-tale button{min-height:48px;min-width:0;white-space:normal;text-transform:none}
+.arh-legend.legend-tale button:focus-visible,.arh-legend.legend-tale summary:focus-visible{
+  outline:3px solid #c18c2d;outline-offset:4px;
+}
+.arh-legend .tale-tools{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 15px;position:relative;z-index:3;color:var(--tale-paper)}
+.arh-legend .tale-return{border:0;border-radius:0;background:transparent;color:var(--tale-paper);padding:7px 4px;text-align:left;flex:0 0 auto}
+.arh-legend .tale-return::after{content:'';display:block;width:70%;height:3px;margin-top:3px;background:var(--tale-brass);clip-path:polygon(0 20%,100% 0,94% 60%,3% 100%)}
+.arh-legend .tale-contents{max-width:65%;min-width:0;margin:0;padding:0;border:0;background:none;color:inherit}
+.arh-legend .tale-contents>summary{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-height:48px;padding:7px 4px;list-style:none;text-align:right}
+.arh-legend .tale-contents>summary::-webkit-details-marker,.arh-legend .tale-wonder>summary::-webkit-details-marker{display:none}
+.arh-legend .tale-contents>summary::after{content:'';width:18px;height:23px;flex:0 0 18px;border:1.5px solid #bea05e;border-radius:1px 5px 4px 1px;box-shadow:inset 3px 0 0 #bea05e55;transform:rotate(5deg)}
+.arh-legend .tale-contents[open]{position:static}
+.arh-legend .tale-chapters{position:absolute;top:calc(100% + 4px);left:0;right:0;padding:16px 18px 22px;background:var(--tale-sheet);color:var(--tale-ink);box-shadow:0 15px 35px #0006;border-bottom:3px solid var(--tale-brass);display:grid;gap:0;max-height:min(70vh,650px);overflow:auto;overscroll-behavior:contain}
+.arh-legend .tale-chapters button{display:flex;align-items:baseline;gap:12px;width:100%;padding:12px 0;border:0;border-bottom:1px solid #d4c99f30;border-radius:0;background:none;color:inherit;text-align:left;font-family:ArhLegendHand,Georgia,serif;font-size:18px;line-height:1.4}
+.arh-legend .tale-chapters button>span:first-child{flex:0 0 23px;color:#d8b874;font-family:ArhLegendHand,Georgia,serif}
+.arh-legend .tale-chapters button[aria-current]{font-weight:400;color:#f5e7c6;background:#3b5435}
+.arh-legend .tale-chapters button:last-child{border-bottom:0}
+
+.arh-legend .tale-page{position:relative;isolation:isolate;padding:0 var(--tale-gutter) 24px;background:transparent;box-shadow:none;border:0;border-radius:0;overflow:visible}
+.arh-legend .tale-page::before{content:none}
+.arh-legend .tale-opening{position:relative;display:block;flex:none;min-height:0;margin:0 0 18px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;text-align:center;align-items:initial;justify-content:initial;gap:0}
+.arh-legend .tale-number{display:block;margin:0 0 12px;color:#cfb57b;font:400 17px/1.35 ArhLegendHand,Georgia,serif}
+.arh-legend .tale-title,.arh-legend #legend-title.tale-title{position:relative;margin:0 auto 14px;max-width:22ch;color:var(--tale-heading);font:600 clamp(26px,6.5vw,39px)/1.17 ArhLegendSerif,Georgia,serif;letter-spacing:-.025em;text-wrap:balance;overflow-wrap:normal;hyphens:none;outline:none}
+.arh-legend #legend-title.tale-title:focus-visible{outline:2px solid #d9b46a;outline-offset:7px}
+.arh-legend .tale-cover{display:block;position:relative;margin:0 calc(-1 * var(--tale-gutter)) 0;min-width:0}
+.arh-legend .tale-cover img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;mask-image:linear-gradient(to bottom,#000 0%,#000 91%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 91%,transparent 100%)}
+.arh-legend .tale-cover figcaption{margin:0 25px;padding:0 0 8px;font:400 20px/1.35 ArhLegendHand,Georgia,serif;color:var(--tale-pencil)}
+.arh-legend .tale-intro{max-width:44ch;margin:0 auto 28px;font:400 17px/1.55 ArhLegendSerif,Georgia,serif;color:#b9c6aa}
+.arh-legend .tale-spread{position:relative;display:flow-root;min-width:0;margin:24px 0 38px}
+.arh-legend .tale-spread:last-of-type{margin-bottom:22px}
+.arh-legend .spread-opening{margin-top:0}
+.arh-legend .tale-prose{position:relative;z-index:1;max-width:49ch;margin:22px auto 26px}
+.arh-legend .tale-prose p{margin:0 0 20px;color:var(--tale-ink);font:400 18px/1.7 ArhLegendSerif,Georgia,serif;letter-spacing:0;text-align:left;hyphens:none}
+.arh-legend .tale-prose p:last-child{margin-bottom:0}
+.arh-legend .tale-prose strong{font-weight:600;color:var(--tale-heading)}
+.arh-legend .tale-prose.drop-cap>p:first-child::first-letter{float:left;font:600 60px/.88 ArhLegendSerif,Georgia,serif;color:#d9b46a;padding:8px 8px 1px 0}
+.arh-legend .tale-inline-quote{color:#efd39b;font-family:ArhLegendHand,Georgia,serif;font-size:1.07em;line-height:1.65;background:linear-gradient(transparent 85%,#d9b46a45 85%,#d9b46a45 96%,transparent 96%);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.arh-legend .tale-pictures{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:22px 0;align-items:start;min-width:0;margin:20px calc(-.55 * var(--tale-gutter)) 28px}
+.arh-legend .tale-picture{position:relative;min-width:0;width:100%;margin:22px 0;grid-column:1/-1}
+.arh-legend .tale-pictures>.tale-picture{margin:0;grid-column:1/12}
+.arh-legend .tale-pictures>.tale-picture:nth-child(even){grid-column:2/-1}
+.arh-legend .tale-pictures>.picture-wide{grid-column:1/-1}
+.arh-legend .tale-pictures>.picture-far{grid-column:2/-1}
+.arh-legend .tale-pictures>.picture-near{grid-column:1/12}
+.arh-legend .tale-picture img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;border:0;border-radius:0;mask-image:linear-gradient(to bottom,transparent 0,#000 2.5%,#000 94%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 2.5%,#000 94%,transparent 100%)}
+.arh-legend .tale-picture figcaption{max-width:29ch;margin:5px 6px 0;color:#c6ceac;font:400 18px/1.35 ArhLegendHand,Georgia,serif;letter-spacing:0}
+.arh-legend .tale-pictures>.tale-picture:nth-child(even) figcaption{text-align:right;margin-left:auto}
+.arh-legend .tale-note{max-width:27ch;margin:18px 0 23px auto;color:#c6ceac;font:400 18px/1.45 ArhLegendHand,Georgia,serif;transform:rotate(-1deg)}
+.arh-legend .tale-note::before{content:'';display:block;width:44px;height:14px;margin:0 0 9px;border-top:1.5px solid #9d824c;border-radius:50%;transform:rotate(-9deg)}
+
+/* Place, action and memory determine each chapter's page rhythm. */
+.arh-legend .spread-sea>.tale-picture{width:calc(100% + 2 * var(--tale-gutter));margin-left:calc(-1 * var(--tale-gutter));margin-right:calc(-1 * var(--tale-gutter))}
+.arh-legend .spread-sea .tale-pictures>.tale-picture:first-child{grid-column:1/-1}
+.arh-legend .spread-sea .tale-pictures>.tale-picture:nth-child(2){grid-column:2/-1}
+.arh-legend .spread-workshop::before{content:'';position:absolute;right:0;top:18px;width:140px;height:140px;border:1px solid #c0a46555;border-radius:50%;pointer-events:none;z-index:0}
+.arh-legend .spread-workshop::after{content:'';position:absolute;right:25px;top:43px;width:90px;height:90px;border:1px solid #c0a46544;border-radius:50%;pointer-events:none;z-index:0}
+.arh-legend .spread-workshop>.tale-picture:nth-of-type(even){width:92%;margin-left:auto}
+.arh-legend .spread-journey .tale-pictures{row-gap:28px}
+.arh-legend .spread-journey .tale-pictures>.tale-picture:nth-child(odd){grid-column:1/12}
+.arh-legend .spread-journey .tale-pictures>.tale-picture:nth-child(even){grid-column:2/-1}
+.arh-legend .spread-journey>.tale-picture{width:94%}
+.arh-legend .spread-journey>.tale-picture:nth-of-type(even){margin-left:auto}
+.arh-legend .spread-notebook .tale-prose{padding-left:13px;border-left:1px solid #cab17d55}
+.arh-legend .spread-notebook .tale-pictures{margin-left:0;margin-right:0}
+.arh-legend .spread-notebook .tale-pictures>.tale-picture{grid-column:1/-1}
+.arh-legend .spread-notebook .tale-picture figcaption{max-width:31ch;margin-left:14px}
+.arh-legend .spread-observatory .tale-pictures>.tale-picture:first-child{grid-column:1/-1}
+.arh-legend .spread-observatory .tale-pictures>.tale-picture:nth-child(2){grid-column:1/12}
+.arh-legend .spread-observatory .tale-note{margin-right:9%;transform:rotate(1deg)}
+.arh-legend .spread-laboratory>.tale-picture{width:94%;margin-left:auto}
+.arh-legend .spread-laboratory .tale-pictures>.tale-picture:last-child{grid-column:1/-1}
+.arh-legend .spread-citadel .tale-prose{border-left:2px solid #a6bc7f66;padding-left:13px}
+.arh-legend .spread-citadel .tale-pictures>.tale-picture{grid-column:1/-1}
+.arh-legend .spread-citadel .tale-picture figcaption{padding-left:14px;border-left:1px solid #9b8149}
+.arh-legend .spread-torch .tale-pictures{row-gap:32px}
+.arh-legend .spread-torch .tale-pictures>.tale-picture:nth-child(3n+1){grid-column:1/12}
+.arh-legend .spread-torch .tale-pictures>.tale-picture:nth-child(3n+2){grid-column:2/-1}
+.arh-legend .spread-torch .tale-pictures>.tale-picture:nth-child(3n){grid-column:1/-1}
+.arh-legend .spread-farewell>.tale-picture{margin-left:calc(-.5 * var(--tale-gutter));width:calc(100% + var(--tale-gutter))}
+.arh-legend .spread-farewell .tale-note{max-width:28ch;margin-left:auto;margin-right:auto;text-align:center;transform:none}
+.arh-legend[data-chapter="1"] .tale-opening{margin-top:0}
+
+.arh-legend[data-chapter="4"] .tale-title,.arh-legend[data-chapter="6"] .tale-title{max-width:20ch}
+.arh-legend[data-chapter="5"] .tale-page,.arh-legend[data-chapter="6"] .tale-page{background:transparent}
+
+.arh-legend[data-chapter="10"] .tale-title{max-width:15ch}
+
+/* Speech is part of the story: always readable, with its actual speaker. */
+.arh-legend .tale-voice{position:relative;clear:both;margin:32px 0 30px;padding:26px 8px 20px;border:0;background:none;color:var(--tale-heading)}
+.arh-legend .tale-voice::before{content:'';position:absolute;left:0;right:0;top:0;height:8px;background:#af9152;clip-path:polygon(0 55%,12% 37%,32% 42%,59% 30%,83% 46%,100% 20%,98% 44%,82% 70%,60% 54%,32% 65%,11% 62%,1% 84%)}
+.arh-legend .tale-voice p{position:relative;z-index:1;margin:0;font:400 clamp(22px,5.7vw,29px)/1.43 ArhLegendHand,Georgia,serif;color:#f1d494;text-wrap:pretty}
+.arh-legend .tale-speaker{display:block;margin:0 0 10px;font:400 17px/1.4 ArhLegendHand,Georgia,serif;color:#cbb987;font-style:normal}
+.arh-legend .tale-voice-portrait{display:block;float:right;width:74px;height:85px;object-fit:cover;object-position:center top;margin:-8px -4px 6px 13px;border:0;mask-image:radial-gradient(ellipse at 50% 45%,#000 42%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 42%,transparent 72%)}
+.arh-legend .tale-speaker .tale-ink{display:inline-block;width:24px;height:24px;margin:0 7px 0 0;vertical-align:-5px;object-fit:contain}
+.arh-legend .voice-mishutka::before{background:#a6b878}
+.arh-legend .voice-mishutka p{color:#d8e1bd}
+.arh-legend .voice-mishutka .tale-speaker{color:#bdc99b}
+
+.arh-legend .tale-chart{margin:25px 0 30px;padding:20px 10px 13px;border:0;border-radius:0;background:none;color:var(--tale-ink)}
+.arh-legend .tale-chart figcaption{font:400 18px/1.4 ArhLegendHand,Georgia,serif;text-align:center}
+.arh-legend .tale-bars{display:flex;align-items:flex-end;justify-content:center;gap:15px;height:160px;border-bottom:2px solid #7e8a63;margin:12px 0}
+.arh-legend .tale-bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;width:18%;max-width:58px}
+.arh-legend .tale-bar-col b{font:600 18px/1.35 ArhLegendSerif,Georgia,serif}
+.arh-legend .tale-bar-col span{display:block;width:100%;background:#607b50;border:1px solid #365b3d;border-radius:1px 4px 0 0;box-shadow:inset 4px 0 #e8e0cc20}
+.arh-legend .tale-chart>p{margin:10px 0 0;text-align:center;color:#becba5;font:400 17px/1.5 ArhLegendSerif,Georgia,serif}
+.arh-legend .tale-wonder{position:relative;margin:30px 0 0;padding:18px 0 0;border:0;border-top:1px solid #a0906266;background:none}
+.arh-legend .tale-wonder .tale-discovery{display:flex;align-items:flex-start;gap:12px;margin:0;color:#e8d49f;font:400 22px/1.5 ArhLegendHand,Georgia,serif}
+.arh-legend .tale-discovery>.tale-ink{flex:0 0 29px;width:29px;height:36px;margin:0;object-fit:contain}
+.arh-legend .tale-discovery>span{min-width:0}
+.arh-legend .tale-hint{margin:16px 0 0;padding:0;background:none;border:0}
+.arh-legend .tale-hint>summary{display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 0;color:#e5c889;list-style:none;font:400 22px/1.4 ArhLegendHand,Georgia,serif}
+.arh-legend .tale-hint>summary::-webkit-details-marker{display:none}
+.arh-legend .tale-hint>summary::after{content:'+';font:400 24px/1 ArhLegendHand,Georgia,serif;margin-left:2px}
+.arh-legend .tale-hint[open]>summary::after{content:'−'}
+.arh-legend .tale-hint p{margin:7px 0 0;padding-left:12px;border-left:1px solid #a38f5266;color:#d8ddbf;font:400 20px/1.55 ArhLegendHand,Georgia,serif}
+.arh-legend .tale-navigation{display:flex;align-items:stretch;gap:18px;margin:27px 0 10px}
+.arh-legend .tale-navigation button{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;flex:1;padding:12px 13px;min-height:56px;border:0;border-radius:0;background:none;font:400 20px/1.3 ArhLegendHand,Georgia,serif;text-align:center}
+.arh-legend .tale-navigation .tale-prev{flex:.8;color:var(--tale-heading)}
+.arh-legend .tale-navigation .tale-next{flex:1.2}
+.arh-legend .ink-back{transform:scaleX(-1)}
+.arh-legend .tale-prev::after{content:'';position:absolute;left:8px;right:8px;bottom:3px;height:3px;background:#849372;clip-path:polygon(0 35%,98% 0,100% 55%,2% 100%)}
+.arh-legend .tale-next{color:#f6e8bc;background:#3f5836!important;clip-path:polygon(3% 4%,96% 0,100% 48%,96% 96%,4% 100%,0 48%);box-shadow:inset 0 0 0 1px #9d8b50}
+.arh-legend .tale-next:focus-visible{clip-path:none;outline-color:#e5bc62}
+.arh-legend .tale-navigation button:disabled{opacity:.4;cursor:default}
+.arh-legend .tale-page-number{margin:10px 0 0;color:#c1cbae;text-align:center;font:400 17px/1.4 ArhLegendHand,Georgia,serif}
+
+/* Custom drawings are decoration, never another frame around the reading. */
+.arh-legend .tale-ornament{display:block;width:min(100%,180px);height:auto;margin:28px auto;pointer-events:none}
+.arh-legend .tale-ornament img{display:block;width:100%;height:auto;filter:brightness(1.75) saturate(.8)}
+.arh-legend .tale-tools button img,.arh-legend .tale-tools summary img,.arh-legend .tale-navigation button img{display:inline-block;width:32px;height:28px;object-fit:contain;vertical-align:middle;margin:0 7px 0 0;flex:0 0 32px}
+.arh-legend .tale-ink{filter:brightness(1.9) saturate(.8)}
+.arh-legend .tale-tools summary:has(img)::after{display:none}
+.arh-legend .tale-navigation button img{width:24px;height:26px;flex:0 0 24px;margin:0}
+.arh-legend .tale-navigation button span{min-width:0}
+.arh-legend .tale-next img{filter:brightness(0) saturate(100%) invert(93%) sepia(18%) saturate(511%) hue-rotate(348deg) brightness(98%) contrast(94%)}
+.arh-legend .tale-doodle{position:relative;display:block;width:86px;height:auto;margin:20px 5px 14px auto;opacity:.8;pointer-events:none}
+
+@media(max-width:360px){
+  .arh-legend.legend-tale{--tale-gutter:15px}
+  .arh-legend .tale-tools{gap:8px}
+  .arh-legend.legend-tale .tale-return,.arh-legend .tale-contents>summary{font-size:17px}
+  .arh-legend .tale-contents{max-width:67%}
+  .arh-legend .tale-title,.arh-legend #legend-title.tale-title{font-size:26px;letter-spacing:-.025em}
+  .arh-legend .tale-prose p{font-size:18px;line-height:1.65}
+  .arh-legend .tale-voice{padding-left:0;padding-right:0}
+  .arh-legend .tale-voice p{font-size:22px}
+  .arh-legend .tale-voice-portrait{width:62px;height:76px;margin-left:9px}
+  .arh-legend .tale-navigation{gap:10px}
+  .arh-legend .tale-navigation button{font-size:18px;padding-left:8px;padding-right:8px}
+}
+@media(min-width:620px){
+  .arh-legend.legend-tale{--tale-gutter:46px}
+  .arh-legend .tale-page{padding-top:8px;padding-bottom:32px}
+  .arh-legend .tale-title,.arh-legend #legend-title.tale-title{font-size:39px;max-width:23ch}
+  .arh-legend .tale-opening{margin-bottom:30px}
+  .arh-legend .tale-prose p{font-size:20px;line-height:1.75}
+  .arh-legend .tale-pictures{gap:24px 18px;margin-top:30px;margin-bottom:30px}
+  .arh-legend .tale-pictures>.tale-picture,.arh-legend .tale-pictures>.picture-near{grid-column:1/8}
+  .arh-legend .tale-pictures>.tale-picture:nth-child(even),.arh-legend .tale-pictures>.picture-far{grid-column:6/-1;margin-top:-20px}
+  .arh-legend .tale-pictures>.picture-wide{grid-column:1/-1}
+  .arh-legend .spread-sea .tale-pictures>.tale-picture:first-child{grid-column:1/11}
+  .arh-legend .spread-sea .tale-pictures>.tale-picture:nth-child(2){grid-column:5/-1}
+  .arh-legend .spread-journey .tale-pictures>.tale-picture:nth-child(odd){grid-column:1/9}
+  .arh-legend .spread-journey .tale-pictures>.tale-picture:nth-child(even){grid-column:5/-1}
+  .arh-legend .spread-notebook .tale-pictures>.tale-picture{grid-column:1/10}
+  .arh-legend .spread-notebook .tale-pictures>.tale-picture:nth-child(even){grid-column:4/-1}
+  .arh-legend .spread-citadel .tale-pictures>.tale-picture{grid-column:1/11}
+  .arh-legend .spread-citadel .tale-pictures>.tale-picture:nth-child(even){grid-column:3/-1}
+  .arh-legend .tale-voice{max-width:48ch;margin:40px auto;padding-left:15px;padding-right:15px}
+  .arh-legend .tale-voice p{font-size:28px}
+  .arh-legend .tale-voice-portrait{width:100px;height:116px}
+  .arh-legend .tale-wonder{max-width:49ch;margin-left:auto;margin-right:auto}
+}
+
+/* Real changes of visual weight: a scene, a remembered moment, a small discovery. */
+.arh-legend .tale-opening.art-first .tale-cover{margin-bottom:14px}
+.arh-legend .tale-opening.art-first .tale-title{margin-top:0;margin-bottom:18px}
+.arh-legend .tale-spread>.picture-wide{width:calc(100% + 2 * var(--tale-gutter));margin-left:calc(-1 * var(--tale-gutter));margin-right:calc(-1 * var(--tale-gutter))}
+.arh-legend .tale-spread>.picture-memory{width:72%;margin:20px auto 24px 0}
+.arh-legend .tale-spread>.picture-inset{width:64%;margin:16px 0 24px auto}
+.arh-legend .tale-spread>.picture-memory figcaption,.arh-legend .tale-spread>.picture-inset figcaption{font-size:17px;line-height:1.35;margin-left:0;margin-right:0}
+.arh-legend .tale-pictures>.picture-memory{grid-column:1/-1;width:72%;justify-self:start;margin:0}
+.arh-legend .tale-pictures>.picture-inset{grid-column:1/-1;width:64%;justify-self:end;margin:0}
+.arh-legend .tale-pictures.travel-collage{display:grid;grid-template-columns:1fr;row-gap:6px;margin:18px calc(-1 * var(--tale-gutter)) 26px}
+.arh-legend .tale-pictures.travel-collage>.picture-wide{grid-column:1;grid-row:1;width:100%;margin:0}
+.arh-legend .tale-pictures.travel-collage>.picture-inset{grid-column:1;grid-row:2;width:64%;justify-self:end;margin:0 8px 0 0}
+.arh-legend .travel-collage>.picture-inset figcaption{font-size:17px;text-align:left;margin-left:4px}
+.arh-legend[data-chapter="4"] .tale-inline-quote,.arh-legend[data-chapter="6"] .tale-inline-quote{display:flow-root;position:relative;clear:both;margin:22px 0;padding:0;background:none;color:#efd39b;font:400 22px/1.45 ArhLegendHand,Georgia,serif;text-wrap:pretty}
+.arh-legend .tale-inline-portrait{float:left;width:48px;height:54px;object-fit:cover;object-position:50% 20%;margin:0 10px 3px 0;mask-image:radial-gradient(ellipse at 50% 40%,#000 42%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 42%,transparent 72%)}
+.arh-legend .tale-said{display:block}
+.arh-legend .tale-said::before{content:'Архимед';display:block;margin:0 0 5px;color:#cbb987;font:400 17px/1.4 ArhLegendHand,Georgia,serif}
+.arh-legend .tale-navigation{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:12px}
+.arh-legend .tale-navigation>.tale-prev{grid-column:1;grid-row:1}
+.arh-legend .tale-navigation>.tale-next{grid-column:2;grid-row:1}
+.arh-legend .tale-page-count{grid-column:1/-1;grid-row:2;margin:0;color:#c1cbae;text-align:center;font:400 17px/1.4 ArhLegendHand,Georgia,serif}
+
+@media(prefers-reduced-motion:reduce){.arh-legend.legend-tale *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(forced-colors:active){
+  .arh-legend .tale-page,.arh-legend .tale-next,.arh-legend .tale-chapters{border:1px solid CanvasText}
+  .arh-legend .tale-next{clip-path:none}
+  .arh-legend .tale-inline-quote{text-decoration:underline}
+}
+
+/* Transparent painted characters belong to the scene, not a picture frame. */
+.arh-legend .tale-picture.picture-cutout{width:100%;margin:18px auto 24px}
+.arh-legend .tale-picture.picture-cutout img{aspect-ratio:auto;mask-image:none;-webkit-mask-image:none;height:auto;max-height:440px;object-fit:contain}
+.arh-legend .picture-cutout.picture-inset{width:75%;max-width:330px;margin-left:auto;margin-right:0}
+.arh-legend [data-scene="06i-discover-cutout"] img{max-height:330px}
+.arh-legend .tale-prose.tale-invitation p{font:400 29px/1.4 ArhLegendHand,Georgia,serif;text-align:center;color:#edd69d}
+
+/* Hand-drawn sand diagram: one stone per pupil, a shared baseline and scale. */
+.arh-legend .tale-chart{margin:24px calc(-.5 * var(--tale-gutter)) 32px;padding:0;border:0;background:none}
+.arh-legend .tale-chart>figcaption{font:400 24px/1.3 ArhLegendHand,Georgia,serif;color:#ead6a5;text-align:left;margin:0 8px 8px}
+.arh-legend .tale-chart .sand-instruction{font:400 19px/1.45 ArhLegendHand,Georgia,serif;text-align:left;color:#cbd3b7;margin:0 8px 12px}
+.arh-legend .sand-drawing{position:relative;width:100%;max-width:460px;margin:0 auto}
+.arh-legend .sand-drawing>svg{display:block;width:100%;height:auto;overflow:visible}
+.arh-legend.legend-tale .sand-column-choice{position:absolute;transform:translateX(-50%);width:17.5%;min-width:44px;min-height:48px;padding:0;border:0;border-radius:0;background:none;color:#f3e5bc;display:block;font:400 28px/1 ArhLegendHand,Georgia,serif}
+.arh-legend .sand-column-choice>span{position:absolute;left:0;right:0;top:0;text-align:center;text-shadow:0 2px 3px #07170f}
+.arh-legend .sand-column-choice[aria-pressed="true"]>span{color:#ffd982;text-decoration:underline;text-underline-offset:5px}
+.arh-legend .tale-chart-column.is-selected .tale-chart-stone{filter:brightness(1.18)}
+.arh-legend .tale-chart.is-building .tale-chart-stone{animation:tale-stone-appear .4s both;animation-delay:var(--stone-delay,0ms)}
+.arh-legend .tale-chart .sand-feedback{min-height:76px;margin:0 8px 12px;text-align:center;color:#f1ddb0;font:400 20px/1.4 ArhLegendHand,Georgia,serif}
+.arh-legend .sand-actions{display:flex;gap:12px;align-items:stretch;margin:0 8px}
+.arh-legend .sand-actions button{flex:1;min-height:52px;border:0;border-radius:0;border-bottom:1px solid #a38f52;background:none;padding:8px 3px;color:#d9d9b8;font:400 18px/1.3 ArhLegendHand,Georgia,serif}
+.arh-legend .sand-actions button:last-child{color:#f2d99e;border-bottom:2px solid #cfaa57}
+@keyframes tale-stone-appear{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.arh-legend .tale-chart.is-building .tale-chart-stone{animation:none}}

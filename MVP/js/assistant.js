@@ -102,6 +102,10 @@
 
   /* ---------- контекст ---------- */
   function ctx(){
+    if(document.querySelector('.arh-legend') && typeof ARH_LEGEND!=='undefined' && typeof LG!=='undefined'){
+      const chapter=ARH_LEGEND[LG.ch];
+      return {kind:'legend', text:()=>[chapter.t,...chapter.p,chapter.q||''].join(' ')};
+    }
     const inLesson=!!document.querySelector('.sdot');
     const inTask=!!document.querySelector('.q') && !inLesson;
     if(inTask && typeof CUR!=='undefined'&&CUR&&CUR.task) return {kind:'task', text:()=>VOICE.taskText(CUR.task)};
@@ -109,6 +113,10 @@
     return null; }
   function act(what){
     const c=ctx();
+    if(c&&c.kind==='legend'){
+      if(what==='next'){ lgStep(1); return; }
+      if(what==='hint'||what==='sol'){ VOICE.say('Рассмотри рисунки и прочитай историю. В конце шага есть вопрос для размышления — можно обсудить его или просто читать дальше.'); return; }
+    }
     if(what==='read'){ if(c){ VOICE.say(c.text()); } else VOICE.say(VOICE.greeting()); }
     else if(what==='hint'){
       if(typeof LV!=='undefined'&&LV&&LV.phase==='tasks'){ lvHint(0); const L=lessonById(LV.id); if(L&&L.tasks[LV.task]) VOICE.say(VOICE.hintText(L.tasks[LV.task],0)); }
@@ -156,11 +164,17 @@
   function ctxMenu(){
     const where=document.getElementById('asstWhere'); const box=document.getElementById('asstChips');
     if(!where||!box) return;
-    const lesson=!!document.querySelector('.sdot');
-    const task=!!document.querySelector('.q')&&!lesson;
+    const legend=!!document.querySelector('.arh-legend');
+    const lesson=!legend&&!!document.querySelector('.sdot');
+    const task=!legend&&!!document.querySelector('.q')&&!lesson;
     const tab=actTab(); const out=[];
     let label='—';
-    if(lesson&&typeof LV!=='undefined'&&LV){
+    if(legend){ label='Легенда об Архимеде';
+      out.push(chip('➡ Дальше',()=>{ try{ lgStep(1); }catch(e){} }));
+      out.push(chip('⬅ Назад',()=>{ try{ lgStep(-1); }catch(e){} }));
+      out.push(vchip('🗣 Расскажи легенду','Расскажи коротко легенду об Архимеде: Внутреннее море, острова Познания и почему ты учишь ребят.'));
+      out.push(chip('📖 К урокам',()=>go('book')));
+    } else if(lesson&&typeof LV!=='undefined'&&LV){
       try{ const L=lessonById(LV.id); label=(L?'Урок: '+(L.title):'Урок'); }catch(e){ label='Урок'; }
       if(LV.phase==='tasks'){
         out.push(chip('💡 Подсказка',()=>{ try{ if(typeof lvHint==='function')lvHint(0); }catch(e){} }));
@@ -198,11 +212,6 @@
       out.push(vchip('💡 Что подтянуть','Посоветуй, какие темы стоит подтянуть ребёнку (по его прогрессу).'));
     } else if(tab==='library'){ label='Банк задач';
       out.push(vchip('🗣 Посоветуй задачу','Посоветуй ученику хорошую задачу для разминки.'));
-    } else if(document.querySelector('.legend-hero')){ label='Легенда об Архимеде';
-      out.push(chip('➡ Дальше',()=>{ try{ lgStep(1); }catch(e){} }));
-      out.push(chip('⬅ Назад',()=>{ try{ lgStep(-1); }catch(e){} }));
-      out.push(vchip('🗣 Расскажи легенду','Расскажи коротко легенду об Архимеде: Внутреннее море, острова Познания и почему ты учишь ребят.'));
-      out.push(chip('📖 К урокам',()=>go('book')));
     } else { label='Путь / карта островов';
       /* У младших следующий шаг маршрута — это карточка наверху «Пути»
          (урок или задача), а не первая нерешённая задача банка. */
@@ -233,7 +242,7 @@
     tour:['Тур как на олимпиаде: 8 задач на время','Не застревай — пропускай сложное и возвращайся'],
     parent:['Смотрите прогресс и слабые темы ребёнка','Можно поставить лимит времени на день'],
     library:['Выбирай задачи по темам — от простых к сложным'],
-    legend:['Листай главы легенды — их семь, как шагов к титулу Стратега','Полная легенда — в файле ЛЕГЕНДА_АРХИМЕДА.md'] };
+    legend:['Листай десять шагов легенды — рисунки помогут познакомиться с островами','Любой шаг можно выбрать в «Оглавлении»'] };
   /* У начальной школы на «Пути» свой маршрут (MVP/js/path_junior.js): там нет
      кнопки «Продолжить», а разговор про ВсОШ и инварианты ребёнку 1–4 класса
      ничего не объясняет. Поэтому для младших — свои подсказки. */
@@ -242,12 +251,14 @@
     task:['Прочитай условие вслух — так понятнее','Не бойся ошибиться: я покажу, как правильно','Считать на пальцах можно, это честно'],
     taskDone:['Получилось! Идём дальше','Хочешь, объясню ещё раз? Нажми «📜 Объясни решение»'],
     lesson:['Жми «➡ Дальше» — кадр за кадром','Понял? Проверь себя кнопкой «❓ Проверь меня»'],
-    book:['Здесь все уроки твоего класса','Открой урок — Архимед всё покажет по шагам'] };
+    book:['Здесь все уроки твоего класса','Открой урок — Архимед всё покажет по шагам'],
+    legend:['Рассматривай рисунки и читай историю — здесь десять шагов','Вопросы в конце шага можно обсудить или просто читать дальше'] };
   function наборПодсказок(){
     try{ if(typeof isJunior==='function' && isJunior()) return TIPS_JUN; }catch(e){}
     return TIPS;
   }
   function tipKind(){
+    if(document.querySelector('.arh-legend')) return 'legend';
     const lesson=!!document.querySelector('.sdot');
     const task=!!document.querySelector('.q')&&!lesson;
     const tab=actTab();

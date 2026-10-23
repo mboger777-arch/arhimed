@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 280" aria-hidden="true" focusable="false">
+<defs>
+  <linearGradient id="tale-sand-bed" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b28a52" stop-opacity=".2"/><stop offset=".5" stop-color="#c7a065" stop-opacity=".38"/><stop offset="1" stop-color="#8e7648" stop-opacity=".05"/></linearGradient>
+  <linearGradient id="tale-pebble-face" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d6cda7"/><stop offset=".53" stop-color="#b7aa7c"/><stop offset="1" stop-color="#89794d"/></linearGradient>
+  <linearGradient id="tale-pebble-warm" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c5bd99"/><stop offset=".5" stop-color="#aa9e72"/><stop offset="1" stop-color="#7f734a"/></linearGradient>
+</defs>
+<!-- Only this small sand patch is filled; the page background remains visible. -->
+<path d="M7 238C15 226 28 229 40 223C54 219 65 227 79 225C94 219 107 221 121 225C137 221 151 225 166 222C183 217 197 222 212 224C228 218 239 225 254 222C271 219 280 226 293 228C303 229 312 235 311 242C316 249 302 252 286 253C272 260 256 254 242 258C222 263 207 257 188 260C173 265 159 259 141 261C121 265 104 260 85 259C70 261 57 255 44 255C26 257 16 249 9 248C4 245 4 241 7 238Z" fill="url(#tale-sand-bed)"/>
+<!-- A scratched common baseline, plus restrained sand ripples. -->
+<g fill="none" stroke-linecap="round">
+<path d="M17 236C50 234 82 237 113 236C150 234 178 237 211 236C246 234 274 237 303 235" stroke="#e7cc93" stroke-opacity=".72" stroke-width="1.4"/>
+<path d="M18 240C43 238 59 241 78 239M90 245C111 242 129 245 145 243M173 241C196 238 210 241 226 239M246 246C263 242 281 245 296 242" stroke="#e6c58b" stroke-opacity=".3" stroke-width=".9"/>
+<path d="M28 250L40 248M63 246L69 245M151 253L160 251M202 251L210 250M270 253L281 250" stroke="#8f7047" stroke-opacity=".6" stroke-width="1"/>
+</g>
+<g fill="#e6c58b" opacity=".52"><circle cx="22" cy="245" r=".8"/><circle cx="55" cy="250" r=".7"/><circle cx="83" cy="248" r=".8"/><circle cx="103" cy="252" r=".6"/><circle cx="138" cy="248" r=".8"/><circle cx="165" cy="245" r=".7"/><circle cx="183" cy="253" r=".8"/><circle cx="219" cy="249" r=".6"/><circle cx="237" cy="252" r=".8"/><circle cx="289" cy="249" r=".7"/></g>
+<!-- Faint height guides make the shared unit visible without competing with the stones. -->
+<g fill="none" stroke="#d0b783" stroke-opacity=".14" stroke-width=".7" stroke-dasharray="1 5">
+<path d="M18 214H302"/>
+<path d="M18 192H302"/>
+<path d="M18 170H302"/>
+<path d="M18 148H302"/>
+<path d="M18 126H302"/>
+<path d="M18 104H302"/>
+<path d="M18 82H302"/>
+<path d="M18 60H302"/>
+</g>
+<g class="tale-chart-column" data-column="0" data-value="3" data-base-y="236" data-center-x="49" style="transform-origin:49px 236px">
+<path d="M22 237C32 233 66 233 77 237C67 241 31 242 22 237Z" fill="#122219" opacity=".5"/>
+<g class="tale-chart-stone" data-unit="1" transform="translate(49 214)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="2" transform="translate(49 192)">
+<path d="M-26 9C-25 3-18 1-10 0L13 1C21 1 26 5 26 10L25 16C23 21 16 22 8 22L-14 21C-21 21-26 18-26 13Z" fill="url(#tale-pebble-warm)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-19 13L-15 12M7 11L11 9M16 16L19 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="-3" cy="9" r=".7" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="3" transform="translate(49 170)">
+<path d="M-25 7C-23 2-15 0-7 0L12 1C21 1 26 5 26 10L25 16C21 21 15 22 7 22L-13 22C-21 21-26 17-26 12Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-17 10L-13 8M-6 16L-2 15M12 13L15 11" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="5" cy="10" r=".65" fill="#ddd4ad"/>
+</g>
+<rect class="tale-chart-hit" x="21" y="144" width="56" height="96" fill="transparent"/>
+</g>
+<g class="tale-chart-column" data-column="1" data-value="6" data-base-y="236" data-center-x="123" style="transform-origin:123px 236px">
+<path d="M96 237C106 233 140 233 151 237C141 241 105 242 96 237Z" fill="#122219" opacity=".5"/>
+<g class="tale-chart-stone" data-unit="1" transform="translate(123 214)">
+<path d="M-26 9C-25 3-18 1-10 0L13 1C21 1 26 5 26 10L25 16C23 21 16 22 8 22L-14 21C-21 21-26 18-26 13Z" fill="url(#tale-pebble-warm)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-19 13L-15 12M7 11L11 9M16 16L19 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="-3" cy="9" r=".7" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="2" transform="translate(123 192)">
+<path d="M-25 7C-23 2-15 0-7 0L12 1C21 1 26 5 26 10L25 16C21 21 15 22 7 22L-13 22C-21 21-26 17-26 12Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-17 10L-13 8M-6 16L-2 15M12 13L15 11" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="5" cy="10" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="3" transform="translate(123 170)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="4" transform="translate(123 148)">
+<path d="M-26 9C-25 3-18 1-10 0L13 1C21 1 26 5 26 10L25 16C23 21 16 22 8 22L-14 21C-21 21-26 18-26 13Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-19 13L-15 12M7 11L11 9M16 16L19 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="-3" cy="9" r=".7" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="5" transform="translate(123 126)">
+<path d="M-25 7C-23 2-15 0-7 0L12 1C21 1 26 5 26 10L25 16C21 21 15 22 7 22L-13 22C-21 21-26 17-26 12Z" fill="url(#tale-pebble-warm)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-17 10L-13 8M-6 16L-2 15M12 13L15 11" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="5" cy="10" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="6" transform="translate(123 104)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<rect class="tale-chart-hit" x="95" y="78" width="56" height="162" fill="transparent"/>
+</g>
+<g class="tale-chart-column" data-column="2" data-value="8" data-base-y="236" data-center-x="197" style="transform-origin:197px 236px">
+<path d="M170 237C180 233 214 233 225 237C215 241 179 242 170 237Z" fill="#122219" opacity=".5"/>
+<g class="tale-chart-stone" data-unit="1" transform="translate(197 214)">
+<path d="M-25 7C-23 2-15 0-7 0L12 1C21 1 26 5 26 10L25 16C21 21 15 22 7 22L-13 22C-21 21-26 17-26 12Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-17 10L-13 8M-6 16L-2 15M12 13L15 11" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="5" cy="10" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="2" transform="translate(197 192)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="3" transform="translate(197 170)">
+<path d="M-26 9C-25 3-18 1-10 0L13 1C21 1 26 5 26 10L25 16C23 21 16 22 8 22L-14 21C-21 21-26 18-26 13Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-19 13L-15 12M7 11L11 9M16 16L19 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="-3" cy="9" r=".7" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="4" transform="translate(197 148)">
+<path d="M-25 7C-23 2-15 0-7 0L12 1C21 1 26 5 26 10L25 16C21 21 15 22 7 22L-13 22C-21 21-26 17-26 12Z" fill="url(#tale-pebble-warm)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-17 10L-13 8M-6 16L-2 15M12 13L15 11" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="5" cy="10" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="5" transform="translate(197 126)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="6" transform="translate(197 104)">
+<path d="M-26 9C-25 3-18 1-10 0L13 1C21 1 26 5 26 10L25 16C23 21 16 22 8 22L-14 21C-21 21-26 18-26 13Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-19 13L-15 12M7 11L11 9M16 16L19 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="-3" cy="9" r=".7" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="7" transform="translate(197 82)">
+<path d="M-25 7C-23 2-15 0-7 0L12 1C21 1 26 5 26 10L25 16C21 21 15 22 7 22L-13 22C-21 21-26 17-26 12Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-17 10L-13 8M-6 16L-2 15M12 13L15 11" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="5" cy="10" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="8" transform="translate(197 60)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-warm)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<rect class="tale-chart-hit" x="169" y="34" width="56" height="206" fill="transparent"/>
+</g>
+<g class="tale-chart-column" data-column="3" data-value="5" data-base-y="236" data-center-x="271" style="transform-origin:271px 236px">
+<path d="M244 237C254 233 288 233 299 237C289 241 253 242 244 237Z" fill="#122219" opacity=".5"/>
+<g class="tale-chart-stone" data-unit="1" transform="translate(271 214)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="2" transform="translate(271 192)">
+<path d="M-26 9C-25 3-18 1-10 0L13 1C21 1 26 5 26 10L25 16C23 21 16 22 8 22L-14 21C-21 21-26 18-26 13Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-19 13L-15 12M7 11L11 9M16 16L19 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="-3" cy="9" r=".7" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="3" transform="translate(271 170)">
+<path d="M-25 7C-23 2-15 0-7 0L12 1C21 1 26 5 26 10L25 16C21 21 15 22 7 22L-13 22C-21 21-26 17-26 12Z" fill="url(#tale-pebble-warm)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-17 10L-13 8M-6 16L-2 15M12 13L15 11" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="5" cy="10" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="4" transform="translate(271 148)">
+<path d="M-25 8C-25 4-19 1-12 1L9 0C17 0 25 3 26 8L25 15C23 20 16 22 6 22L-12 22C-20 22-26 19-26 14Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-15 12L-11 10M13 13L18 11M-3 15L1 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="7" cy="9" r=".65" fill="#ddd4ad"/>
+</g>
+<g class="tale-chart-stone" data-unit="5" transform="translate(271 126)">
+<path d="M-26 9C-25 3-18 1-10 0L13 1C21 1 26 5 26 10L25 16C23 21 16 22 8 22L-14 21C-21 21-26 18-26 13Z" fill="url(#tale-pebble-face)" stroke="#5d5638" stroke-width="1.05"/>
+<path d="M-22 8C-15 3-4 5 5 4C13 4 18 5 22 8" fill="none" stroke="#eee4be" stroke-opacity=".7" stroke-width="1.1" stroke-linecap="round"/>
+<path d="M-24 14L-20 17L-14 17L-8 20L8 20L19 17L24 14L21 19L13 22L-12 21L-22 19Z" fill="#716744" opacity=".12"/>
+<path d="M-23 16C-11 20 8 20 23 15" fill="none" stroke="#71633e" stroke-opacity=".44" stroke-width="1" stroke-linecap="round"/>
+<path d="M-19 13L-15 12M7 11L11 9M16 16L19 14" fill="none" stroke="#716744" stroke-opacity=".5" stroke-width=".65" stroke-linecap="round"/><circle cx="-3" cy="9" r=".7" fill="#ddd4ad"/>
+</g>
+<rect class="tale-chart-hit" x="243" y="100" width="56" height="140" fill="transparent"/>
+</g>
+</svg>
