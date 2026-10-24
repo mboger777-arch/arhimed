@@ -201,9 +201,20 @@ def main():
     if want:
         print(f'Ожидаемая версия в index.html: v{want}')
 
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(host, username=user, password=pwd, timeout=30)
+    # сервер порой долго отдаёт SSH-приветствие (25.10.2026 — «Error reading SSH protocol banner» дважды подряд):
+    # ждём его до минуты и пробуем трижды, прежде чем сдаться
+    import time
+    for попытка in range(3):
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        try:
+            client.connect(host, username=user, password=pwd, timeout=30, banner_timeout=60, auth_timeout=60)
+            break
+        except (paramiko.SSHException, OSError) as e:
+            client.close()
+            if попытка == 2: raise
+            print(f'Нет ответа SSH ({e}), повтор через 10 с…')
+            time.sleep(10)
 
     _, server_head, _ = run(client, f'git -C {SRC} rev-parse HEAD 2>/dev/null || true', 60)
     server_head = server_head.strip()
