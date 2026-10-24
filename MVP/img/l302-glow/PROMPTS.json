@@ -1,0 +1,48 @@
+{
+  "heroes": [
+    [
+      "iskra-idle",
+      "Original children's storybook character asset for Russian educational app Archimedes, forest green, warm cream and muted brass palette. A friendly young anthropomorphic fire salamander named Iskra: deep forest-green velvet skin with distinct warm ochre patches, amber eyes, rounded gentle snout, small olive explorer waistcoat with brass clasp, a tiny cream scarf, long curved tail. She stands firmly on both feet, grounded, looking attentively down and right toward a counting meadow, one open hand near her chest. Full body entirely visible, 3/4 view, beautifully hand-painted watercolor and gouache with tactile controlled brushwork, rich subtle shading, charming expressive childlike proportions. No words, no numbers, no icons, no frame, no floating particles, no extra objects, no fireflies. A clean single-character cutout, transparent background, small soft contact shadow immediately under feet. Square composition, character fills 85% height, generous edge clearance. This identity will be reused across action poses."
+    ],
+    [
+      "tish-idle",
+      "Original children's storybook character asset for Russian educational app Archimedes, forest green, warm cream and muted brass palette. A friendly small anthropomorphic moth named Tish: soft warm cream fuzzy face, dark curious eyes, two curved feathery antennae, broad sage-green wings with simple muted golden oval markings, short dark olive waistcoat, tiny ochre scarf. Perched firmly with little feet on a short mossy twig, wings half folded, holding an unmarked rolled parchment map under one arm, looking curiously toward left. Entire body and twig visible, 3/4 view, beautifully hand-painted watercolor and gouache with tactile controlled brushwork, rich subtle shading, charming expressive childlike proportions. No text, numbers, icons, frame, floating particles, fireflies or other characters. Single character cutout on transparent background with clean alpha. Square composition, character fills 80% height. Not butterfly princess, not generic glowing mascot. This identity will recur in other purposeful poses."
+    ]
+  ],
+  "backgrounds": [
+    [
+      "valley",
+      "Wide cinematic landscape 3:2, original hand-painted children's adventure book illustration for the Archimedes educational app. The Valley of Sleeping Lights at dusk: deep forest-green slopes, a winding empty woodland footpath leading to a small quiet clearing, distant soft mist and gentle moonlight through tall ferns, broad mossy stones and tree roots in foreground, a natural curved fallen log framing the bottom edge. Rich watercolor and gouache, tactile individual brushwork, sophisticated warm cream and muted brass highlights against dark olive greens. Warm inviting and safe for a 7 year old child, readable big shapes on a phone. NO characters, NO insects or fireflies, no points of light, no stars, no floating particles, no fruit, no baskets, no letters or numbers, no UI, no text, no borders. Leave central lower half uncluttered to overlay live game objects. Ground is a wide continuous horizontal mossy ledge, no black vignette."
+    ],
+    [
+      "glade",
+      "Wide landscape 3:2, hand-painted watercolor and gouache illustration for the children's Archimedes app, The Valley of Sleeping Lights. A quiet open moss clearing seen slightly from above, surrounded by elegant fern fronds and two gentle curving tree roots; a small flat pale stone is off to the far side, no objects on it. Near foreground leaves and distant forest create beautiful depth, broad soft moonlight illuminates a central oval patch of natural moss. Color palette deep forest-green, olive sage, warm cream and muted gold. Detailed but composed, visible handmade brush texture, luminous shadows without bright specks. No characters, no insects, no fireflies, no stars or floating particles, no apples, no baskets, no text, no numbers, no UI, no frame. The center must be plain enough for a separate exactly counted group of animated insects."
+    ],
+    [
+      "bridge",
+      "Wide landscape 3:2, original lovingly hand-painted watercolor and gouache children's book illustration. Deep in the Valley of Sleeping Lights, a fork in a forest path leads onto two distinct small natural bridges over a narrow mossy stream. One bridge is a broad flat root, the other is weathered wood; warm ochre edge highlights, green foliage, deep forest-green background with soft moonlit mist. Both near ends of the paths are unobstructed for game objects. Fine botanical detail at edges, readable calm shapes in center, inviting exploration, no danger. No characters, no insects or fireflies, no stars, no sparkle particles, no apples, no baskets, no letters, numbers, text, UI or decorative frame. Storybook painterly depth, consistent Archimedes olive-green, cream and muted brass colors."
+    ],
+    [
+      "festival",
+      "Wide landscape 3:2, exquisite hand-painted watercolor and gouache storybook final scene, Valley of Sleeping Lights. The previously quiet valley now warmly illuminated for a peaceful woodland celebration: broad golden shafts of light between trees, flowing warm luminous ribbons along the footpaths, fern arches and mossy stone terraces around an open central clearing, gentle moon above, distant forest silhouettes. NO discrete light dots or visible insects; illumination is broad washes and ribbons, so no decorative marks can be mistaken for countable fireflies. No characters, no text, no numbers, no apples, no baskets, no UI and no frame. Deep forest-green palette, cream moonlight, muted brass and golden ochre highlights. Highly crafted tranquil fairy tale mood, layered scene depth, central foreground open and horizontal for overlayed consistent heroes."
+    ]
+  ],
+  "poses": [
+    {
+      "name": "iskra-action",
+      "prompt": "Use the attached Iskra character as exact identity reference. Preserve her youthful face, forest-green salamander skin and ochre patches, olive vest with brass clasp, cream scarf, tail, watercolor/gouache texture. New full body purposeful action pose: crouching on both feet with knees bent, gently reaching one hand up and outward to invite unseen fireflies, other hand points down at the counting place. Warm attentive expression, eyes follow raised hand, body rotated three-quarter toward right. All limbs, tail and scarf visible; stable feet and soft contact shadow, no floating body. Transparent clean background. No fireflies, no numbers, words, props or other characters. Leave 8% margins, single image."
+    },
+    {
+      "name": "iskra-happy",
+      "prompt": "Use attached Iskra as strict identity reference, same face, proportions, markings, vest brass clasp and cream scarf. New full body action: standing firmly on both feet, smiling with delighted pride, one hand opens toward the viewer as if presenting a successfully completed path, other hand rests on the hip. Torso turned slightly left, tail gracefully curls opposite side. Expressive but not exaggerated, no jumping, no random floating confetti. Transparent background, soft small contact shadow beneath feet. Hand-painted watercolor/gouache consistent with reference. No words, numbers, objects, fireflies, other characters or border. Full body within 8% margins."
+    },
+    {
+      "name": "tish-action",
+      "prompt": "Preserve exact Tish moth identity from reference: cream fuzzy face, eyes and feathery ochre antennae, sage-green wings with golden oval markings, dark olive waistcoat and ochre scarf, painted watercolor/gouache. New purposeful pose: seated securely on a small mossy stone, feet visibly supported, unfolding a small cream parchment map with both hands, head tilted down in thoughtful inspection. Map blank, no invented symbols or words. Wings spread enough to balance his seated pose, entire character, antennae, wings and stone visible, 8% margins. Single transparent-background cutout. No other creatures, fireflies, dots, baskets or fruit."
+    },
+    {
+      "name": "tish-happy",
+      "prompt": "Preserve exact Tish moth identity from reference, same cream face, feathery antennae, sage wings with golden oval markings, olive waistcoat, ochre scarf, watercolor/gouache texture. New full body pose on the same short mossy twig, both feet clearly planted, joyful smile, pointing left with one small hand to show a finished discovery; the other hand holds his rolled parchment map upright. Head turned to viewer, wings lifted in an expressive proud but natural pose, no floating body, no jumping. Transparent clean background. No words, numbers, fireflies, sparkles, extra creatures, borders or fruit. Full body and twig inside 8% margins."
+    }
+  ]
+}
