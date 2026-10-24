@@ -78,19 +78,24 @@
     }
   };
 
-  /* Шапка — от приложения (владелец 25.10.2026: «шапка не от приложения»). Документ урока встаёт под шапкой
-     приложения, его собственная шапка «АРХИМЕД · ← Выйти» прячется, а кнопка выхода переезжает в строку
-     с названием урока и подписывается, как в остальных уроках: «← Путь» или «← Книга знаний».
-     Сам урок (сцены, кнопки, озвучка, награды) не меняется. */
-  const ШАПКА_CSS = '.app-header{display:none!important}.lesson-heading .exit-button{flex-shrink:0;min-width:0;white-space:nowrap}' +
+  /* Шапка и футер — от приложения (владелец 25.10.2026: «шапка не от приложения», «и футер тоже»). Документ урока
+     встаёт между шапкой приложения и его нижним меню (Путь, Тур, Учебники…); собственные шапка «АРХИМЕД · ← Выйти»
+     и подпись внизу урока прячутся, а кнопка выхода переезжает в строку с названием урока и подписывается, как
+     в остальных уроках: «← Путь» или «← Книга знаний». Сам урок (сцены, кнопки, озвучка, награды) не меняется. */
+  const ШАПКА_CSS = '.app-header,#footer-note{display:none!important}.lesson-heading .exit-button{flex-shrink:0;min-width:0;white-space:nowrap}' +
     '.lesson-heading>div:first-of-type{flex:1;min-width:0}';
   function верхРамки() {
     const h = document.querySelector('.wrap > header');
     return h ? Math.max(0, Math.round(h.getBoundingClientRect().bottom)) : 0;
   }
+  function низРамки() {
+    const n = document.getElementById('navBar');
+    if (!n || getComputedStyle(n).display === 'none') return 0;
+    return Math.max(0, Math.round(innerHeight - n.getBoundingClientRect().top));
+  }
   function поставить(f) {
-    const top = верхРамки();
-    f.style.top = top + 'px'; f.style.height = 'calc(100dvh - ' + top + 'px)';
+    const top = верхРамки(), низ = низРамки();
+    f.style.top = top + 'px'; f.style.height = 'calc(100dvh - ' + (top + низ) + 'px)';
   }
   function подготовить(f) {
     try {
@@ -111,10 +116,10 @@
     if (!document.getElementById('lesson300-frame')) {
       window.scrollTo(0, 0);
       document.getElementById('screen').innerHTML =
-        '<iframe id="lesson300-frame" title="Урок 300 — Ореховый экспресс" src="lessons/300/index.html?v=964" style="position:fixed;left:0;right:0;top:0;width:100%;height:100dvh;border:0;z-index:9000;background:#0b1712"></iframe>';
+        '<iframe id="lesson300-frame" title="Урок 300 — Ореховый экспресс" src="lessons/300/index.html?v=965" style="position:fixed;left:0;right:0;top:0;width:100%;height:100dvh;border:0;z-index:9000;background:#0b1712"></iframe>';
       const f = document.getElementById('lesson300-frame');
       поставить(f);
-      f.addEventListener('load', () => подготовить(f));
+      f.addEventListener('load', () => { подготовить(f); поставить(f); });
     }
     hud();
   };
