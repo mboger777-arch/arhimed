@@ -83,7 +83,7 @@
     if (LV.id !== ID) return previous.apply(this, arguments);
     if (!document.getElementById('lesson300-frame')) {
       document.getElementById('screen').innerHTML =
-        '<iframe id="lesson300-frame" title="Урок 300 — Ореховый экспресс" src="lessons/300/index.html?v=960" style="position:fixed;inset:0;width:100%;height:100%;height:100dvh;border:0;z-index:9000;background:#0b1712"></iframe>';
+        '<iframe id="lesson300-frame" title="Урок 300 — Ореховый экспресс" src="lessons/300/index.html?v=963" style="position:fixed;inset:0;width:100%;height:100%;height:100dvh;border:0;z-index:9000;background:#0b1712"></iframe>';
     }
     hud();
   };
