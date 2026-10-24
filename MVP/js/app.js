@@ -1216,7 +1216,11 @@ function renderLibrary(){
   const islands=ISLANDS.filter(islandVisible);
   const status=LB.status||'all';
   const statFilter=t=> status==='all'? true : status==='todo'? !(DB.tasks[t.id]&&DB.tasks[t.id].done) : !!(DB.tasks[t.id]&&DB.tasks[t.id].done);
-  const clsFilter=t=> LB.cls==='all' || clsKey(t)===LB.cls;
+  /* фильтр «класс» — по тому же диапазону, что и taskFits (taskClassRange): пометка класса в теме
+     или диапазон острова. Раньше брался только текст темы — 71 задача без пометки (Сиракузы, Ньютон,
+     Лавуазье, Информатика) не попадала ни в один фильтр, а 7–9 класса в фильтре не было вовсе. */
+  const вКлассе=(t,k)=>{ const r=taskClassRange(t); return r[0]<=k&&k<=r[1]; };
+  const clsFilter=t=> LB.cls==='all' || вКлассе(t,+LB.cls);
   const selIsl=libIsland();
   const allFit = tasksFit(window.ARH_TASKS).filter(t=>islandVisible({name:t.island})).filter(statFilter).filter(clsFilter);
   const doneFit=allFit.filter(t=>DB.tasks[t.id]&&DB.tasks[t.id].done).length;
@@ -1226,11 +1230,12 @@ function renderLibrary(){
   const clsSource = selIsl==='all'
     ? tasksFit(window.ARH_TASKS).filter(t=>islandVisible({name:t.island})).filter(statFilter)
     : tasksFit(window.ARH_TASKS.filter(t=>t.island===selIsl)).filter(statFilter);
-  const clsOpts=[...new Set(clsSource.map(clsKey).filter(Boolean))].sort((a,b)=>+a.split('-')[0]-+b.split('-')[0]);
+  const clsOpts=[1,2,3,4,5,6,7,8,9].filter(k=>clsSource.some(t=>вКлассе(t,k))).map(String);
+  if(LB.cls!=='all'&&!clsOpts.includes(String(LB.cls))) LB.cls='all';
   const clsChips = clsOpts.length
     ? `<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
         <button class="chip fb ${LB.cls==='all'?'on':''}" onclick="libPick('cls','all')">Все классы</button>
-        ${clsOpts.map(c=>`<button class="chip fb ${LB.cls===c?'on':''}" onclick="libPick('cls','${c}')">${clsFromKey(c)}</button>`).join('')}
+        ${clsOpts.map(c=>`<button class="chip fb ${String(LB.cls)===c?'on':''}" onclick="libPick('cls','${c}')">${c} класс</button>`).join('')}
       </div>` : '';
   const tabAll = junior? [] : [{
     key:'all', ico:'🗺', name:'Все',
@@ -1262,7 +1267,9 @@ function renderLibrary(){
             <span class="small" style="color:var(--muted)">${esc(g.I.dsc)} · ${gd}/${g.items.length} решено</span></span>
           </div>${secRows(g.items)}`; })()
     : groups.map((g,i)=>{
-        const open = LB.open[g.I.name]===true || (LB.open[g.I.name]===undefined && i===0);
+        /* сам раскрывается раздел, где есть задачи класса ученика (семиклассник не начинает с «Начальной школы») */
+        const мой = Math.max(0, groups.findIndex(G=>G.items.some(t=>вКлассе(t,profileClassNum()))));
+        const open = LB.open[g.I.name]===true || (LB.open[g.I.name]===undefined && i===мой);
         const gd=g.items.filter(t=>DB.tasks[t.id]&&DB.tasks[t.id].done).length;
         return `<div class="book-sec">
           <div class="bs-head" onclick="libToggle('${esc(g.I.name)}')">
