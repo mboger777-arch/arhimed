@@ -73,5 +73,5 @@ function frame(now){if(disposed)return;const dt=Math.min(.04,lastFrame?(now-last
  world.update(dt,{...pose,moving,time:elapsed,collected:state.collected,activated:state.activated,brushes:Object.fromEntries(brushes),sparks:Object.fromEntries(sparks)});world.render();requestAnimationFrame(frame);
 }
 window.addEventListener('resize',()=>world?.resize());canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();failed=true;resetInput();persist();render();});
-render();try{const {createWorld}=await import('./world.js?v=314-5');world=createWorld(canvas);resetStage();loadPose();world.resize();world.update(0,{...pose,moving:false,time:0,collected:state.collected,activated:state.activated});world.render();requestAnimationFrame(frame);}catch(error){console.error('The 3D expedition could not start:',error);failed=true;render();}
+render();try{const {createWorld}=await import('./world.js?v=314-6');world=createWorld(canvas);resetStage();loadPose();world.resize();world.update(0,{...pose,moving:false,time:0,collected:state.collected,activated:state.activated});world.render();requestAnimationFrame(frame);}catch(error){console.error('The 3D expedition could not start:',error);failed=true;render();}
 window.addEventListener('unload',()=>{disposed=true;clearInterval(unlockInterval);world?.dispose();});
