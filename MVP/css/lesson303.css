@@ -1,0 +1,177 @@
+/* Речная мастерская. The existing application header and footer are untouched. */
+@font-face{font-family:RiverHand303;src:url('../fonts/Pangolin-ru.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:RiverTitle303;src:url('../img/l307/Lobster-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+
+#screen:has(.дк303)>.card:has(#lvis){padding:8px 2px 0;background:none;border:0;border-radius:0;box-shadow:none;min-width:0}
+#screen:has(.дк303)>.card:has(#lvis)>.arch{display:none}
+#screen:has(.дк303)>h2{font:400 25px/1.25 RiverTitle303,cursive;color:#e9cb88}
+#screen:has(.дк303)>#lvis,#screen:has(.дк303)>.card>#lvis{width:100%;min-width:0}
+
+#lvis .дк.дк303{
+  --river-paper:#f4e8cc;--river-honey:#eac580;--river-ink:#294333;
+  --river-muted:#c4d5c2;--river-water:#8fbbb0;--river-error:#ffceb7;
+  --чернила:var(--river-paper);--контур:#bca673;
+  display:flex;flex-direction:column;gap:18px;width:100%;max-width:640px;
+  min-width:0;margin:0 auto;padding:0;background:none;border:0;box-shadow:none;
+  color:var(--river-paper);font:400 19px/1.45 RiverHand303,cursive;
+}
+#lvis .дк.дк303 *{box-sizing:border-box}
+#lvis .дк.дк303 :is(p,h2,h3,h4,figure){margin:0}
+#lvis .дк.дк303 :is(button,input,select,textarea){font-family:RiverHand303,cursive;font-weight:400}
+#lvis .дк.дк303 :is(b,strong){font-weight:400;color:var(--river-honey)}
+#lvis .дк.дк303 :is(img,svg){max-width:100%}
+#lvis .дк.дк303 button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#lvis .дк.дк303 button:focus-visible,#lvis .дк.дк303 [tabindex]:focus-visible{outline:3px solid #ffe2a2;outline-offset:4px}
+#lvis .дк.дк303 button:disabled{cursor:default;opacity:.55}
+#lvis .дк.дк303 button:disabled:is(.chosen,.is-selected,.верно,.is-success){opacity:1}
+#lvis .дк.дк303 button:not(:disabled):active{transform:translateY(2px)}
+
+/* The speaker and narration stay readable above the workshop scene. */
+#lvis .дк.дк303 .реплика{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:8px 12px;padding:0 2px 14px;min-height:0;background:none;border:0;border-bottom:1px solid #cbb17755;border-radius:0;box-shadow:none;filter:none;color:var(--river-paper)}
+#lvis .дк.дк303 .реплика .аватар{grid-column:1;grid-row:1;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;min-width:0;width:auto}
+#lvis .дк.дк303 .реплика .аватар img{width:44px;height:48px;object-fit:contain;object-position:center bottom}
+#lvis .дк.дк303 .реплика .аватар span{font:400 20px/1.25 RiverHand303,cursive;color:var(--river-honey)}
+#lvis .дк.дк303 .реплика p{grid-column:1/-1;grid-row:2;min-width:0;font:400 19px/1.45 RiverHand303,cursive;color:var(--river-paper);text-align:left}
+#lvis .дк.дк303 .слушать{grid-column:2;grid-row:1;appearance:none;display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;min-height:48px;padding:0;border:1px solid #b3bc92;border-radius:8px 12px 7px 10px;background:#345748;color:#ffedb7;box-shadow:0 3px 0 #102c22;font:400 21px/1 RiverHand303,cursive;cursor:pointer}
+
+#lvis .дк.дк303 :is(.river303,.river-game){display:grid;gap:17px;min-width:0}
+#lvis .дк.дк303 .river-heading{font:400 clamp(28px,7.7vw,33px)/1.22 RiverTitle303,cursive;color:var(--river-paper);text-align:center;text-wrap:balance;overflow-wrap:break-word}
+#lvis .дк.дк303 .river-chapter{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 12px;color:var(--river-muted);font:400 18px/1.35 RiverHand303,cursive}
+#lvis .дк.дк303 :is(.river-instruction,.что-делать){padding:0 2px;background:none;border:0;border-radius:0;box-shadow:none;color:var(--river-paper);font:400 19px/1.45 RiverHand303,cursive;text-align:left;overflow-wrap:break-word}
+#lvis .дк.дк303 :is(.river-label,.river-given,.river-group-title){min-width:0;color:var(--river-muted);font:400 18px/1.4 RiverHand303,cursive;overflow-wrap:break-word}
+#lvis .дк.дк303 .river-given{text-align:center;color:var(--river-honey)}
+#lvis .дк.дк303 .river-given :is(b,strong){font-size:26px;white-space:nowrap}
+#lvis .дк.дк303 .river-art{display:block;position:relative;width:100%;min-width:0;margin:1px 0 3px;padding:0;border:0;background:none;box-shadow:none}
+#lvis .дк.дк303 img.river-art,#lvis .дк.дк303 .river-art img{display:block;width:100%;height:auto;max-height:260px;object-fit:contain;object-position:center bottom;border-radius:3px}
+
+/* Written mathematics is HTML, separate from painted scenery. */
+#lvis .дк.дк303 .river-equation{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(8px,2.7vw,15px);min-width:0;padding:8px 0;font:400 34px/1.25 RiverHand303,cursive;font-variant-numeric:tabular-nums;color:var(--river-paper);text-align:center}
+#lvis .дк.дк303 .river-equation>span{display:inline-flex;align-items:center;justify-content:center;min-width:22px;min-height:43px}
+#lvis .дк.дк303 .river-equation .unknown{position:relative;color:var(--river-honey)}
+#lvis .дк.дк303 .river-equation .unknown::after{content:'';position:absolute;bottom:1px;left:-3px;right:-3px;height:2px;background:#d6b66d;border-radius:50%;transform:rotate(-4deg)}
+#lvis .дк.дк303 .river-equation .answer{color:#daecbb}
+#lvis .дк.дк303 .river-equation .wrong{color:#ffc9ae;text-decoration:line-through;text-decoration-thickness:2px}
+#lvis .дк.дк303 .river-equation small{font:400 18px/1.4 RiverHand303,cursive;color:var(--river-muted)}
+
+/* A carved wooden key: broad flat face, end grain and two quiet peg marks. */
+#lvis .дк.дк303 :is(.river-controls,.числа,.дт-ряд){display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;gap:12px;min-width:0;padding:4px 2px 7px}
+#lvis .дк.дк303 :is(button.river-button,.число,.дальше-кн,button.river-key){
+  appearance:none;position:relative;display:inline-flex;align-items:center;justify-content:center;
+  min-width:64px;min-height:64px;max-width:100%;padding:13px 20px;border:0;border-radius:8px 5px 9px 6px;
+  background-color:#e3bc75;background-repeat:no-repeat;background-size:100% 100%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 92' preserveAspectRatio='none'%3E%3Cpath d='M9 5Q37 1 77 5L139 3Q147 4 147 13L145 78Q144 87 133 87L15 89Q5 87 4 78L3 16Q3 7 9 5Z' fill='%23e7c383' stroke='%23977742' stroke-width='1.6'/%3E%3Cpath d='M13 13Q64 8 136 11M13 78Q77 83 134 78' fill='none' stroke='%23f8dda3' stroke-width='2'/%3E%3Cpath d='M12 25L11 64M139 26L138 63' stroke='%23bc975d' fill='none'/%3E%3Ccircle cx='18' cy='46' r='2' fill='%23b79156'/%3E%3Ccircle cx='132' cy='46' r='2' fill='%23b79156'/%3E%3C/svg%3E");
+  color:#304531;box-shadow:0 4px 0 #826338,0 7px 0 #102b2180;filter:none;
+  font:400 20px/1.35 RiverHand303,cursive;text-align:center;white-space:normal;overflow-wrap:break-word;
+  cursor:pointer;transition:transform .12s ease;
+}
+#lvis .дк.дк303 :is(button.river-button.number,.число){min-width:64px;min-height:68px;padding:13px 18px;font-size:32px;line-height:1.25}
+#lvis .дк.дк303 .число.мал.мал{min-width:64px;min-height:64px;padding:10px 17px;font-size:30px}
+#lvis .дк.дк303 .число .окно{display:block;width:auto;min-width:0;height:auto;min-height:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;color:inherit;font:inherit;line-height:inherit;text-shadow:none;white-space:normal;overflow-wrap:break-word}
+#lvis .дк.дк303 .число .окно::after{display:none}
+#lvis .дк.дк303 .число.длин.длин{width:100%;min-height:68px;padding:15px 25px}
+#lvis .дк.дк303 .число.длин.длин .окно{min-height:0;padding:0;font:400 20px/1.4 RiverHand303,cursive}
+#lvis .дк.дк303 :is(button.river-button.primary,.дальше-кн){
+  width:100%;min-height:68px;padding:16px 27px;border-radius:3px 9px 4px 7px;
+  background-color:#d8bd81;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 90' preserveAspectRatio='none'%3E%3Cpath d='M8 8L89 5L173 7L308 3L314 14L311 43L317 73L306 85L223 81L128 85L10 82L4 72L8 44L3 18Z' fill='%23dec38b' stroke='%239c7e47' stroke-width='2'/%3E%3Cpath d='M22 15Q97 10 167 15T298 13M21 75Q104 79 175 75T300 77' stroke='%23f5dda7' stroke-width='2' fill='none'/%3E%3Cpath d='M19 24L17 67M301 24L303 64' stroke='%23b29154' stroke-width='2'/%3E%3Ccircle cx='20' cy='45' r='2.5' fill='%238a7047'/%3E%3Ccircle cx='300' cy='45' r='2.5' fill='%238a7047'/%3E%3C/svg%3E");
+  font-size:20px;line-height:1.4;color:#2a432f;
+}
+#lvis .дк.дк303 :is(button.river-button.feather,button.river-help,.дт-подск){appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:52px;max-width:100%;padding:10px 8px;background:none;border:0;border-bottom:1px solid #a7b294;border-radius:0;box-shadow:none;color:#deceb0;font:400 18px/1.4 RiverHand303,cursive;text-align:center;white-space:normal;cursor:pointer}
+#lvis .дк.дк303 :is(button.river-button.feather,button.river-help)::before{content:'';flex:none;width:25px;height:31px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 36'%3E%3Cpath d='M7 28Q0 17 10 8Q18 2 25 2Q27 12 20 20L13 24L16 19L10 23Z' fill='%238db0a1' stroke='%235b897c' stroke-width='1'/%3E%3Cpath d='M4 34Q11 19 23 5M11 21L9 14M15 16L20 15' fill='none' stroke='%23e5d9ae' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat}
+#lvis .дк.дк303 .river-help{display:flex;justify-content:center;min-width:0}
+#lvis .дк.дк303 :is(.river-button.chosen,.river-button.is-selected,.river-button.is-success,.число.верно){outline:3px solid #d2e9ac;outline-offset:3px;color:#203d26;opacity:1}
+#lvis .дк.дк303 :is(.river-button.wrong,.river-button.is-error,.число.мимо){outline:3px solid #f3b296;outline-offset:3px;color:#78372d;animation:none}
+#lvis .дк.дк303 :is(.число.верно,.число.мимо)::after{right:0;top:-7px;width:24px;height:24px;border:0;border-radius:50%;background:#ecdfb9;color:#294333;box-shadow:none;text-shadow:none;font:400 19px/24px RiverHand303,cursive}
+#lvis .дк.дк303 .ряд-кн{display:flex;justify-content:center;min-width:0}
+
+/* The three counting tools use their actual structures, not repeated cards. */
+#lvis .дк.дк303 .river-instrument{position:relative;display:grid;gap:19px;min-width:0;padding:7px 0}
+#lvis .дк.дк303 .river-group{position:relative;display:grid;gap:10px;min-width:0}
+#lvis .дк.дк303 .river-group-title{text-align:left;color:#e5d3a9}
+#lvis .дк.дк303 .river-items{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;justify-items:center;gap:8px 5px;min-width:0;min-height:56px;padding:4px 2px}
+#lvis .дк.дк303 .river-piece{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:54px;max-width:62px;color:var(--river-honey)}
+#lvis .дк.дк303 .river-piece svg{display:block;width:100%;height:auto;max-height:64px;overflow:visible}
+#lvis .дк.дк303 .river-empty{grid-column:1/-1;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:54px;padding:7px 4px;border-bottom:1px dashed #c4c29a;color:#d3c391;font:400 18px/1.4 RiverHand303,cursive;text-align:center}
+#lvis .дк.дк303 .river-instrument.chimes .river-items{position:relative;grid-auto-rows:64px;row-gap:22px;padding-top:21px;padding-bottom:0;border:0;border-radius:3px 7px 0 0;background:repeating-linear-gradient(to bottom,#e5c383 0,#e5c383 2px,#b1915c 2px,#b1915c 6px,transparent 6px,transparent 86px)}
+#lvis .дк.дк303 .river-instrument.chimes .river-piece{height:64px}
+#lvis .дк.дк303 .river-instrument.chimes .river-piece::before{content:'';position:absolute;top:-15px;left:50%;height:16px;border-left:1px solid #cbb98e;pointer-events:none}
+#lvis .дк.дк303 .river-instrument.chimes .river-group-title{padding-left:3px}
+#lvis .дк.дк303 .river-boat{position:relative;display:grid;gap:10px;min-width:0;padding:10px 13px 35px;background:linear-gradient(to bottom,transparent calc(100% - 28px),#b79861 calc(100% - 28px),#b79861 calc(100% - 24px),#65583b calc(100% - 24px),#65583b calc(100% - 21px),#bd9c62 calc(100% - 21px),#bd9c62 calc(100% - 14px),#6e5e3e calc(100% - 14px),#6e5e3e calc(100% - 11px),#a88955 calc(100% - 11px),#a88955 calc(100% - 5px),transparent calc(100% - 5px));border-bottom:2px solid #739f94;border-radius:0 0 18% 30% / 0 0 5% 6%}
+#lvis .дк.дк303 .river-boat::before,#lvis .дк.дк303 .river-boat::after{content:'';position:absolute;bottom:4px;width:3px;height:25px;background:#e0d3a4;transform:rotate(-7deg);pointer-events:none}
+#lvis .дк.дк303 .river-boat::before{left:18%}
+#lvis .дк.дк303 .river-boat::after{right:18%;transform:rotate(5deg)}
+#lvis .дк.дк303 .river-instrument.raft{gap:24px}
+#lvis .дк.дк303 .river-instrument.raft>.river-group:not(.river-boat){padding:0 7px 13px;border-bottom:2px solid #849e7d;border-radius:0 0 28% 8% / 0 0 4% 3%}
+#lvis .дк.дк303 .river-instrument.merge>.river-group{padding-left:13px;border-left:2px solid #83b0a3;border-radius:0 0 0 12px}
+#lvis .дк.дк303 .river-whole{position:relative;display:grid;gap:10px;min-width:0;padding:20px 8px 7px;border-top:2px solid #97bcaa;border-radius:30% 20% 0 0 / 12px 10px 0 0}
+#lvis .дк.дк303 .river-whole::before{content:'';position:absolute;top:-14px;left:calc(50% - 6px);width:11px;height:11px;border-right:2px solid #a3cbb7;border-bottom:2px solid #a3cbb7;transform:rotate(45deg);pointer-events:none}
+#lvis .дк.дк303 .river-whole .river-group-title{text-align:center;color:#d9e8ba}
+
+/* One continuous curtain conceals the whole unknown group, whatever its count. */
+#lvis .дк.дк303 .river-curtain{position:relative;display:grid;align-content:center;justify-items:center;gap:9px;width:100%;min-width:0;min-height:156px;padding:24px 22px 23px;border:0;border-top:6px solid #b49660;border-bottom:2px solid #a48d5a;border-radius:3px 6px 16px 11px;background-color:#d4c599;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180' preserveAspectRatio='none'%3E%3Cpath d='M12 0Q6 44 13 90T12 180M32 0Q24 50 31 94T29 180M59 0Q51 42 58 93T55 180M267 0Q259 41 266 93T264 180M291 0Q282 46 290 90T287 180M311 0Q302 45 309 92T307 180' stroke='%23b0a476' stroke-width='2' fill='none'/%3E%3Cpath d='M18 0Q12 45 20 90T19 180M38 0Q31 42 38 93T36 180M273 0Q267 43 273 92T271 180M297 0Q288 43 296 93T294 180' stroke='%23e9dbb0' stroke-width='2' fill='none'/%3E%3Cpath d='M5 167Q52 174 88 168M238 169Q277 175 315 168' stroke='%23eee0b4' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-size:100% 100%;background-repeat:no-repeat;box-shadow:0 -2px 0 #e0c48a,0 4px 0 #122d2255;color:#314b37;text-align:center}
+#lvis .дк.дк303 .river-curtain::before,#lvis .дк.дк303 .river-curtain::after{content:'';position:absolute;top:-12px;width:5px;height:18px;border:1px solid #8d754a;background:#d0b987;border-radius:2px;pointer-events:none}
+#lvis .дк.дк303 .river-curtain::before{left:13%}
+#lvis .дк.дк303 .river-curtain::after{right:13%}
+#lvis .дк.дк303 .river-curtain>span{display:block;min-width:35px;font:400 36px/1.2 RiverHand303,cursive;color:#364e34}
+#lvis .дк.дк303 .river-curtain>p{max-width:100%;font:400 18px/1.4 RiverHand303,cursive;color:#40533a;overflow-wrap:break-word}
+
+/* Explanations sit next to the action and grow with their real text. */
+#lvis .дк.дк303 :is(.river-feedback,.готово,.разбор,.дт-совет){display:block;min-width:0;margin:0;padding:12px 6px 12px 15px;border:0;border-left:2px solid #cdb477;border-radius:0;background:none;box-shadow:none;color:var(--river-paper);font:400 19px/1.45 RiverHand303,cursive;text-align:left;overflow-wrap:break-word;scroll-margin-block:100px 130px}
+#lvis .дк.дк303 :is(.river-feedback.is-success,.готово){border-left-color:#c2db9f;color:#e0edc6}
+#lvis .дк.дк303 :is(.river-feedback.is-error,.разбор){border-left-color:#f1ae90;color:var(--river-error)}
+#lvis .дк.дк303 .river-feedback.is-hint{border-left-color:#8bb5a6;color:#e0e5cb}
+#lvis .дк.дк303 .готово>span{display:inline-block;margin-right:7px;font-size:20px;color:#eac480}
+#lvis .дк.дк303 .дт-совет{display:flex;gap:9px}
+#lvis .дк.дк303 .дт-подсказки{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+#lvis .дк.дк303 .дт-лента{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;align-self:stretch;gap:8px 14px;padding:0 2px 9px;border:0;border-bottom:1px solid #c8b27c55;border-radius:0;background:none;box-shadow:none;color:var(--river-honey);font:400 18px/1.4 RiverHand303,cursive}
+#lvis .дк.дк303 .дт-лента .зв{display:flex;flex-wrap:wrap;gap:5px;max-width:100%}
+#lvis .дк.дк303 .дт-лента .зв i{font-style:normal;color:#e5c280;text-shadow:none}
+#lvis .дк.дк303 .дт-лента .зв i.нет{color:#82927a}
+#lvis .дк.дк303 .дт-итог{color:var(--river-paper);font:400 25px/1.35 RiverHand303,cursive}
+#lvis .дк.дк303:has(.river-practice)>:is(.числа,.дт-ряд,.готово,.дт-подсказки,.дт-совет){display:none}
+
+/* Only the verification uses a short music sheet. It never holds story text. */
+#lvis .дк.дк303 .river-score{position:relative;display:grid;gap:12px;min-width:0;padding:16px 12px 18px;background:#e5dec1;color:#294333;border:0;border-radius:2px 6px 3px 1px;box-shadow:3px 4px 0 #122e2366}
+#lvis .дк.дк303 .river-score :is(p,small,.river-label,.river-group-title){color:#365442;font:400 18px/1.4 RiverHand303,cursive}
+#lvis .дк.дк303 .river-score :is(b,strong){color:#59683c}
+#lvis .дк.дк303 .river-score .river-equation{padding:5px 0;color:#2d4c39}
+#lvis .дк.дк303 .river-score .river-equation .unknown{color:#805e2c}
+#lvis .дк.дк303 .river-score .river-equation .answer{color:#426737}
+#lvis .дк.дк303 .river-slots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;gap:6px;min-width:0;padding:12px 0}
+#lvis .дк.дк303 .river-slot{display:flex;align-items:center;justify-content:center;min-width:0;min-height:52px;padding:5px 0;border:0;border-bottom:2px dashed #c5b47d;background:none;color:var(--river-honey);font:400 30px/1.25 RiverHand303,cursive;text-align:center}
+#lvis .дк.дк303 .river-slot.filled{border-bottom-style:solid;color:#e4eccb}
+#lvis .дк.дк303 .river-progress{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 12px;min-width:0;color:var(--river-muted);font:400 18px/1.4 RiverHand303,cursive}
+#lvis .дк.дк303 .river-rule{min-width:0;padding:15px 2px 15px 14px;border-left:2px solid #a8bea0;color:var(--river-paper);font:400 19px/1.45 RiverHand303,cursive}
+#lvis .дк.дк303 .river-rule+.river-rule{border-left-color:#d2b77a}
+#lvis .дк.дк303 .river-final-instrument{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:13px;min-width:0;padding:17px 3px 18px;border-top:5px solid #b69a64;box-shadow:0 -2px 0 #e1c38b;border-radius:4px 7px 0 0}
+#lvis .дк.дк303 .river-final-instrument>p,#lvis .дк.дк303 .river-final-instrument>.river-controls{width:100%}
+#lvis .дк.дк303 .river-controls:has(>.river-key){display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;align-items:start;padding-inline:0}
+#lvis .дк.дк303 button.river-key{width:100%;min-width:0;min-height:95px;padding:17px 3px;font-size:20px;align-items:flex-end;white-space:nowrap;overflow-wrap:normal}
+#lvis .дк.дк303 button.river-key:nth-child(2n){min-height:108px}
+#lvis .дк.дк303 button.river-key:nth-child(3n){min-height:120px}
+#lvis .дк.дк303 .river-finale{gap:20px;text-align:center}
+#lvis .дк.дк303 .river-finale>.слушать{grid-column:auto;grid-row:auto;justify-self:center}
+#lvis .дк.дк303 .river-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+
+/* These are lesson navigation controls inside #screen, not application chrome. */
+#screen:has(.дк303) .btnrow{display:flex;flex-wrap:wrap;gap:12px}
+#screen:has(.дк303) .btnrow .btn{display:flex;align-items:center;justify-content:center;flex:1 1 125px;min-width:0;min-height:60px;padding:14px 18px;border:1px solid #b69e6b;border-radius:4px 8px 5px 7px;background:#d5bc83;color:#2c4432;box-shadow:0 3px 0 #785f38;font:400 19px/1.4 RiverHand303,cursive;text-align:center;white-space:normal;overflow-wrap:break-word;touch-action:manipulation}
+#screen:has(.дк303) .btnrow .btn.ghost{background:none;color:#e1d8b6;border-color:#879f86;box-shadow:none}
+#screen:has(.дк303) .btnrow .btn:disabled{opacity:.45}
+#screen:has(.дк303) .btnrow .btn:focus-visible{outline:3px solid #ffe2a2;outline-offset:3px}
+@media(min-width:480px){
+  #lvis .дк.дк303 img.river-art,#lvis .дк.дк303 .river-art img{max-height:360px}
+  #lvis .дк.дк303 .river-items{gap:10px;max-width:380px;width:100%;margin-inline:auto}
+  #lvis .дк.дк303 .river-score{padding:20px 22px}
+}
+@media(max-width:350px){
+  #lvis .дк.дк303{gap:16px}
+  #lvis .дк.дк303 :is(.river303,.river-game){gap:15px}
+  #lvis .дк.дк303 :is(.river-controls,.числа,.дт-ряд){gap:10px}
+  #lvis .дк.дк303 .river-equation{gap:8px;font-size:32px}
+  #lvis .дк.дк303 :is(button.river-button.primary,.дальше-кн){padding-inline:24px}
+  #lvis .дк.дк303 .river-score{padding-inline:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  #lvis .дк.дк303 *,#lvis .дк.дк303 *::before,#lvis .дк.дк303 *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

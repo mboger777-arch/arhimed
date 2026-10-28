@@ -30,7 +30,7 @@
     255: { папка:'vesy-znaki',      имя:'Весы и знаки',   ключ:'vz', уровней:5, про:'больше, меньше, столько же' },
     60:  { папка:'chasy',           имя:'Часы',           ключ:'ch', уровней:6, про:'учимся понимать время' },
     30:  { папка:'sto-monetok',     имя:'Сто монеток',    ключ:'sl', уровней:5, про:'сложение и вычитание до 100' },
-    314: { папка:'sad-umnozheniya', имя:'Сад умножения',  ключ:'um', уровней:5, про:'умножение и таблица' },
+    314: { папка:'tropy-velikanov', имя:'Тропы каменных великанов', уровней:7, про:'3D-экспедиция: раскопки, мосты, валуны, динозавры, маяки и полёт', прогресс(){ return звёзды('paleo314_action'); } },
     71:  { папка:'tsyplyata-parami',   имя:'Цыплята парами',     ключ:'ts', уровней:5, про:'умножение на 2' },
     73:  { папка:'igrushki-na-polkah', имя:'Игрушки на полках',  ключ:'ig', уровней:5, про:'умножение на 3' },
     74:  { папка:'polovina-yabloka',   имя:'Половина яблока',    уровней:5, про:'половина и четверть',
@@ -61,7 +61,9 @@
       const n = пройдено(g);
       DB.lessons = DB.lessons || {};
       const rec = DB.lessons[id] || (DB.lessons[id] = {done:false, stars:0, tasks:[]});
-      if(rec.game && rec.game.done === n) return;
+      /* The new 314 expedition has seven stages. Keep the previous garden result intact. */
+      if(id===314 && rec.game && rec.game.of===5 && !rec.gameLegacyUm) rec.gameLegacyUm=Object.assign({},rec.game);
+      if(rec.game && rec.game.done === n && (id!==314 || rec.game.of===g.уровней)) return;
       rec.game = { done:n, of:g.уровней };
       if(typeof save==='function') save();
     }catch(e){}

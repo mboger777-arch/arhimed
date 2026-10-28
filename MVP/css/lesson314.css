@@ -1,0 +1,239 @@
+/* Атлас каменных великанов: clay labels, survey cloths and a field notebook. */
+@font-face{font-family:PaleoHand314;src:url('../fonts/Pangolin-ru.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:PaleoTitle314;src:url('../img/l307/Lobster-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+#screen:has(.дк314)>.card:has(#lvis){min-width:0;padding:8px 2px 0;border:0;border-radius:0;background:none;box-shadow:none}
+#screen:has(.дк314)>.card:has(#lvis)>.arch{display:none}
+#screen:has(.дк314)>h2{font:400 25px/1.25 PaleoTitle314,cursive;color:#e6c78d}
+#screen:has(.дк314)>#lvis,#screen:has(.дк314)>.card>#lvis{width:100%;min-width:0}
+#lvis .дк.дк314{
+  --paleo-paper:#f2e6cc;--paleo-gold:#e3bf7c;--paleo-muted:#c7d4bd;
+  --paleo-ink:#344b39;--paleo-clay:#d4be94;--paleo-rust:#c78e69;
+  --чернила:var(--paleo-paper);--контур:#b7a27b;
+  display:flex;flex-direction:column;gap:14px;width:100%;max-width:640px;min-width:0;
+  margin:0 auto;padding:0;border:0;background:none;box-shadow:none;
+  color:var(--paleo-paper);font:400 19px/1.45 PaleoHand314,cursive;
+}
+#lvis .дк.дк314 *{box-sizing:border-box}
+#lvis .дк.дк314 :is(p,h2,h3,h4,figure){margin:0}
+#lvis .дк.дк314 :is(button,input,select,textarea){font-family:PaleoHand314,cursive;font-weight:400}
+#lvis .дк.дк314 :is(b,strong){font-weight:400;color:var(--paleo-gold)}
+#lvis .дк.дк314 :is(img,svg){max-width:100%}
+#lvis .дк.дк314 button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#lvis .дк.дк314 button:focus-visible,#lvis .дк.дк314 [tabindex]:focus-visible{outline:3px solid #ffe0a0;outline-offset:4px}
+#lvis .дк.дк314 button:disabled{cursor:default;opacity:.52}
+#lvis .дк.дк314 button:disabled:is(.chosen,.is-selected,.верно,.is-success,.is-marked){opacity:1}
+#lvis .дк.дк314 button:not(:disabled):active{transform:translateY(2px)}
+
+/* The guide speaks in ordinary HTML; the shared application chrome is untouched. */
+#lvis .дк.дк314 .реплика{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:8px 12px;min-height:0;padding:0 2px 15px;border:0;border-bottom:1px solid #beae8355;border-radius:0;background:none;box-shadow:none;filter:none;color:var(--paleo-paper)}
+#lvis .дк.дк314 .реплика .аватар{grid-column:1;grid-row:1;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;width:auto;min-width:0}
+#lvis .дк.дк314 .реплика .аватар img{width:44px;height:48px;object-fit:contain;object-position:center bottom}
+#lvis .дк.дк314 .реплика .аватар span{color:var(--paleo-gold);font:400 20px/1.25 PaleoHand314,cursive}
+#lvis .дк.дк314 .реплика p{grid-column:1/-1;grid-row:2;min-width:0;color:var(--paleo-paper);font:400 19px/1.45 PaleoHand314,cursive;text-align:left}
+#lvis .дк.дк314 .слушать{grid-column:2;grid-row:1;appearance:none;display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;min-height:48px;padding:0;border:1px solid #b5b591;border-radius:3px 11px 3px 11px;background:#365447;box-shadow:inset 0 0 0 3px #1b392c;color:#f5e5b8;font:400 21px/1 PaleoHand314,cursive;cursor:pointer}
+
+#lvis .дк.дк314 :is(.paleo314,.paleo-game){display:grid;gap:12px;min-width:0}
+#lvis .дк.дк314 .paleo-kicker{display:block;color:var(--paleo-muted);font:400 18px/1.35 PaleoHand314,cursive;text-align:right}
+#lvis .дк.дк314 .paleo-heading{color:var(--paleo-paper);font:400 clamp(28px,7.7vw,33px)/1.24 PaleoTitle314,cursive;text-align:center;text-wrap:balance;overflow-wrap:break-word}
+#lvis .дк.дк314 .paleo-art{display:block;width:100%;min-width:0;margin:1px 0 3px;padding:0;border:0;background:none;box-shadow:none}
+#lvis .дк.дк314 .paleo-art img{display:block;width:100%;height:auto;max-height:270px;object-fit:contain;object-position:center bottom;border-radius:2px}
+#lvis .дк.дк314 :is(.paleo-instruction,.что-делать){min-width:0;padding:0 2px;border:0;border-radius:0;background:none;box-shadow:none;color:var(--paleo-paper);font:400 19px/1.45 PaleoHand314,cursive;text-align:left;overflow-wrap:break-word}
+#lvis .дк.дк314 :is(.paleo-caption,.paleo-progress){color:var(--paleo-muted);font:400 18px/1.4 PaleoHand314,cursive;text-align:center}
+
+/* A hand-pressed clay label, with bevelled corners and a single impressed edge. */
+#lvis .дк.дк314 :is(.paleo-controls,.числа,.дт-ряд){display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:12px;min-width:0;padding:4px 2px 7px}
+#lvis .дк.дк314 :is(button.paleo-button,.число,.дальше-кн){
+  appearance:none;position:relative;display:inline-flex;align-items:center;justify-content:center;
+  min-width:64px;min-height:64px;max-width:100%;padding:13px 19px;border:0;border-radius:2px 9px 3px 9px;
+  background-color:#cdb38b;background-repeat:no-repeat;background-size:100% 100%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 95' preserveAspectRatio='none'%3E%3Cpath d='M13 3L96 4L106 15L105 81L95 91L12 92L4 80L4 15Z' fill='%23d8c29c' stroke='%23918465' stroke-width='2'/%3E%3Cpath d='M16 10L93 11L99 18L98 76' fill='none' stroke='%23f0e0ba' stroke-width='2'/%3E%3Cpath d='M12 23L12 77L20 84L86 84' fill='none' stroke='%23b29b74' stroke-width='1.7'/%3E%3Cpath d='M20 17L26 16M83 76L89 75' stroke='%23c4ac84' stroke-linecap='round'/%3E%3C/svg%3E");
+  box-shadow:0 3px 0 #736246,0 6px 0 #102b2166;filter:none;
+  color:#334b3a;font:400 20px/1.4 PaleoHand314,cursive;text-align:center;
+  white-space:normal;overflow-wrap:break-word;cursor:pointer;transition:transform .12s ease;
+}
+#lvis .дк.дк314 :is(button.paleo-button.number,.число){min-width:64px;min-height:68px;padding:13px 17px;font-size:32px;line-height:1.25}
+#lvis .дк.дк314 .число.мал.мал{min-width:64px;min-height:64px;padding:10px 16px;font-size:30px}
+#lvis .дк.дк314 .число .окно{display:block;width:auto;min-width:0;height:auto;min-height:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;color:inherit;font:inherit;line-height:inherit;text-shadow:none;white-space:normal;overflow-wrap:break-word}
+#lvis .дк.дк314 .число .окно::after{display:none}
+#lvis .дк.дк314 .число.длин.длин{width:100%;min-height:68px;padding:15px 23px}
+#lvis .дк.дк314 .число.длин.длин .окно{min-height:0;padding:0;font:400 20px/1.4 PaleoHand314,cursive}
+/* The main action is a stitched field strap, not another clay answer label. */
+#lvis .дк.дк314 :is(button.paleo-button.primary,.дальше-кн){width:100%;min-height:68px;padding:16px 26px;border-radius:2px;background-color:#bfc69e;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 90' preserveAspectRatio='none'%3E%3Cpath d='M4 7L316 4L314 84L5 86Z' fill='%23c6cdaa' stroke='%238e9878' stroke-width='1.5'/%3E%3Cpath d='M11 14L307 11L306 77L12 78Z' fill='none' stroke='%237d8c6b' stroke-width='1.5' stroke-dasharray='4 5'/%3E%3Cpath d='M22 14L21 77M299 12L298 77' stroke='%23e4e6c7' stroke-width='2'/%3E%3Ccircle cx='19' cy='45' r='3' fill='%23a6a877' stroke='%237e8662'/%3E%3Ccircle cx='301' cy='45' r='3' fill='%23a6a877' stroke='%237e8662'/%3E%3C/svg%3E");box-shadow:0 3px 0 #667354,0 6px 0 #102b2166;color:#2c4735;font-size:20px;line-height:1.4}
+#lvis .дк.дк314 :is(button.paleo-button.tool,.дт-подск){display:inline-flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:52px;max-width:100%;padding:10px 9px;border:0;border-bottom:1px solid #b6b692;border-radius:0;background:none;box-shadow:none;color:#e2d8b7;font:400 18px/1.4 PaleoHand314,cursive;white-space:normal;text-align:center;cursor:pointer}
+#lvis .дк.дк314 .paleo-help{display:flex;justify-content:center;min-width:0}
+#lvis .дк.дк314 .paleo-help .paleo-button.tool::before{content:'';flex:none;width:28px;height:32px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 36'%3E%3Cpath d='M22 3Q25 1 27 4L18 23L13 20Z' fill='%23b6c9b4' stroke='%237c947e' stroke-width='1.3'/%3E%3Cpath d='M13 19L19 22L16 27L10 23Z' fill='%23afac8a' stroke='%236e7b67' stroke-width='1'/%3E%3Cpath d='M10 23L16 27Q14 35 3 33Q7 29 10 23Z' fill='%23dccba1' stroke='%23988864' stroke-width='1'/%3E%3Cpath d='M11 26L7 31M14 28L11 32' stroke='%23ad9b72' fill='none'/%3E%3C/svg%3E") center/contain no-repeat}
+#lvis .дк.дк314 :is(.paleo-button.chosen,.paleo-button.is-selected,.paleo-button.is-success,.число.верно){outline:3px solid #cce2a9;outline-offset:3px;color:#263e29;opacity:1}
+#lvis .дк.дк314 :is(.paleo-button.wrong,.paleo-button.is-error,.число.мимо){outline:3px solid #f0b69a;outline-offset:3px;color:#793e30;animation:none}
+#lvis .дк.дк314 :is(.число.верно,.число.мимо)::after{right:0;top:-7px;width:24px;height:24px;border:0;border-radius:50%;background:#eee0bc;color:#294333;box-shadow:none;text-shadow:none;font:400 19px/24px PaleoHand314,cursive}
+#lvis .дк.дк314 .ряд-кн{display:flex;justify-content:center;min-width:0}
+
+/* Each survey cloth encloses one real group. Only those cloths repeat. */
+#lvis .дк.дк314 .paleo-dig{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:15px 12px;min-width:0;padding:4px 1px}
+#lvis .дк.дк314 .paleo-group{appearance:none;position:relative;display:grid;align-content:start;justify-items:center;gap:10px;width:100%;min-width:0;min-height:112px;margin:0;padding:13px 8px 15px;border:1px solid #7d987e;border-radius:2px 7px 2px 5px;background:#284c3b;color:var(--paleo-paper);box-shadow:inset 0 0 0 4px #183c2c;font:400 18px/1.35 PaleoHand314,cursive;text-align:center}
+#lvis .дк.дк314 button.paleo-group{cursor:pointer}
+#lvis .дк.дк314 .paleo-group::before{content:'';position:absolute;inset:6px;border:1px dashed #99a78666;pointer-events:none}
+#lvis .дк.дк314 .paleo-group.is-marked{border-color:#e9ce90;outline:2px solid #d2b677;outline-offset:2px;background:#365b42}
+#lvis .дк.дк314 .paleo-group-label{display:block;position:relative;min-width:0;color:#ead8af;font:400 18px/1.35 PaleoHand314,cursive;overflow-wrap:break-word}
+#lvis .дк.дк314 .paleo-group-count{display:block;color:#e2ebc7;font:400 18px/1.35 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-fossils{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px;min-width:0;width:100%}
+#lvis .дк.дк314 .paleo-fossil{display:inline-flex;align-items:center;justify-content:center;flex:0 0 45px;width:45px;min-width:0;min-height:45px}
+#lvis .дк.дк314 .paleo-fossil svg{display:block;width:100%;height:auto;overflow:visible}
+#lvis .дк.дк314 .paleo-empty{display:block;width:100%;min-width:0;padding:10px 3px;color:#cfd7ba;font:400 18px/1.4 PaleoHand314,cursive;text-align:center}
+#lvis .дк.дк314 .paleo-dig>.paleo-group:has(.paleo-fossil:nth-child(6)),#lvis .дк.дк314 .paleo-dig>.paleo-repair-group:has(.paleo-fossil:nth-child(6)),#lvis .дк.дк314 .paleo-dig>.paleo-group:has(.paleo-dinosaur){grid-column:1/-1}
+#lvis .дк.дк314 .paleo-dig>.paleo-group:last-child:nth-child(odd):not(:has(.paleo-fossil:nth-child(6))):not(:has(.paleo-dinosaur)){grid-column:1/-1;justify-self:center;width:calc(50% - 6px)}
+#lvis .дк.дк314 .paleo-dinosaur{display:block;width:180px;max-width:100%;height:auto}
+#lvis .дк.дк314 .paleo-group:has(.paleo-dinosaur){min-height:200px}
+
+/* Rows share one excavation surface, so regrouping preserves every find. */
+#lvis .дк.дк314 .paleo-array{display:grid;gap:9px;min-width:0;padding:18px 10px 16px;border:1px solid #a79c79;border-radius:1px 9px 2px 1px;background:#d9cca9;box-shadow:4px 4px 0 #152f2466;color:#344936}
+#lvis .дк.дк314 .paleo-array-caption{padding:0 0 5px;color:#354e3a;font:400 18px/1.4 PaleoHand314,cursive;text-align:center}
+#lvis .дк.дк314 .paleo-row{appearance:none;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:64px;margin:0;padding:7px 5px;border:1px solid #9d92705c;border-radius:0;background:none;box-shadow:none;font:400 18px/1.35 PaleoHand314,cursive}
+#lvis .дк.дк314 button.paleo-row{cursor:pointer}
+#lvis .дк.дк314 .paleo-row .paleo-fossils{flex-wrap:nowrap;gap:5px}
+#lvis .дк.дк314 .paleo-row .paleo-fossil{flex:1 1 0;max-width:45px;min-width:0}
+#lvis .дк.дк314 .paleo-row.is-marked{border:2px solid #4c7153;padding:6px 4px;background:#adba8a55}
+#lvis .дк.дк314 .paleo-array.is-swapped{border-color:#8ea486;background:#d6d4b1}
+
+/* Tools work on the group directly above them. The reserve is visibly separate. */
+#lvis .дк.дк314 .paleo-repair-group{display:grid;gap:11px;min-width:0}
+#lvis .дк.дк314 .paleo-repair{grid-template-columns:minmax(0,1fr)}
+#lvis .дк.дк314 .paleo-toolbox{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;align-items:center;gap:10px;min-width:0;text-align:center}
+#lvis .дк.дк314 .paleo-toolbox>span{min-width:0;color:var(--paleo-muted);font:400 18px/1.35 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-toolbox>.paleo-button.tool{min-width:56px;min-height:56px;padding:9px;border:1px solid #a8ad85;border-radius:3px 9px 3px 9px;background:#c5cbaa;color:#2a4735;font-size:30px;line-height:1;box-shadow:0 3px 0 #5a7054}
+#lvis .дк.дк314 .paleo-reserve{position:relative;display:grid;gap:12px;min-width:0;margin:9px 0 0;padding:15px 10px 12px 15px;border:0;border-left:3px solid #bda071;border-top:1px solid #baac8244;background:none;color:#ddd0ae;font:400 18px/1.45 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-reserve .paleo-fossils{justify-content:flex-start}
+#lvis .дк.дк314 .paleo-reserve .paleo-empty{text-align:left}
+#lvis .дк.дк314 .paleo-example{display:grid;gap:12px;min-width:0;padding:13px 14px;border:1px dashed #a3b293;border-radius:0;background:#a6b08a0b;color:#cbd5bd;font:400 18px/1.45 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-example .paleo-fossils{justify-content:flex-start}
+#lvis .дк.дк314 .paleo-taken-label{padding-top:9px;color:var(--paleo-gold);font:400 20px/1.4 PaleoHand314,cursive;text-align:center}
+#lvis .дк.дк314 .paleo-no-groups{grid-column:1/-1;display:grid;align-content:center;gap:12px;min-height:145px;min-width:0;padding:18px 15px;border:0;border-top:2px solid #a1b193;border-bottom:2px solid #a1b193;background:#78916c0c;text-align:center}
+#lvis .дк.дк314 .paleo-no-groups>span{color:var(--paleo-paper);font:400 22px/1.35 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-no-groups>p{color:var(--paleo-muted);font:400 18px/1.45 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-workbench{display:grid;gap:14px;min-width:0;padding:12px 0;border-top:1px solid #abb18b77;border-bottom:1px solid #abb18b77}
+#lvis .дк.дк314 .paleo-workbench .paleo-dig>.paleo-empty{grid-column:1/-1;min-height:90px;display:flex;align-items:center;justify-content:center}
+#lvis .дк.дк314 .paleo-constructor{display:grid;gap:24px;min-width:0}
+#lvis .дк.дк314 .paleo-constructor .paleo-toolbox{grid-template-columns:56px minmax(0,1fr) 56px;padding:0 12px 17px;border-bottom:1px solid #a8b18b55}
+#lvis .дк.дк314 .paleo-constructor .paleo-toolbox>span{grid-column:1/-1;padding-bottom:4px;text-align:left}
+#lvis .дк.дк314 .paleo-constructor .paleo-toolbox>b{font:400 32px/1.25 PaleoHand314,cursive;color:var(--paleo-paper)}
+
+/* Live mathematical notation and a notebook used only for the actual table. */
+#lvis .дк.дк314 .paleo-equation{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(7px,2.3vw,13px);min-width:0;padding:8px 0;color:var(--paleo-paper);font:400 32px/1.3 PaleoHand314,cursive;font-variant-numeric:tabular-nums;text-align:center}
+#lvis .дк.дк314 .paleo-equation>span{display:inline-flex;align-items:center;justify-content:center;min-width:19px;min-height:42px}
+#lvis .дк.дк314 .paleo-sum{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;min-width:0;padding:12px 0;color:var(--paleo-gold);font:400 29px/1.35 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-term{display:inline-flex;align-items:center;gap:8px;min-height:44px}
+#lvis .дк.дк314 .paleo-term>b{color:var(--paleo-muted)}
+#lvis .дк.дк314 .paleo-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;max-width:250px;min-width:0;margin:0 auto;padding:8px 2px}
+#lvis .дк.дк314 .paleo-slot{display:flex;align-items:center;justify-content:center;min-width:0;min-height:58px;border:0;border-bottom:2px dashed #cfbe8d;color:var(--paleo-gold);font:400 32px/1.25 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-ledger{width:100%;max-width:100%;table-layout:fixed;border-collapse:collapse;border:0;background:#e2d9bb;color:#344c37;box-shadow:3px 4px 0 #162e2366}
+#lvis .дк.дк314 .paleo-ledger caption{padding:0 2px 12px;color:var(--paleo-gold);font:400 21px/1.35 PaleoHand314,cursive;text-align:left}
+#lvis .дк.дк314 .paleo-ledger :is(th,td){padding:12px 5px;border:0;border-bottom:1px solid #a9a48388;color:#344c37;font:400 28px/1.25 PaleoHand314,cursive;text-align:center;overflow-wrap:break-word}
+#lvis .дк.дк314 .paleo-ledger th{padding-top:16px;font-size:18px;line-height:1.35;color:#4a5f43;vertical-align:middle}
+#lvis .дк.дк314 .paleo-ledger .current td{background:#bcc9a077;color:#294b30;border-bottom:2px solid #789567}
+#lvis .дк.дк314 .paleo-ledger tbody tr:last-child td{padding-bottom:16px}
+#lvis .дк.дк314 .paleo-ledger button.paleo-button.table-row{width:56px;min-width:48px;min-height:48px;margin:0;padding:7px 8px;font-size:26px;line-height:1.25;box-shadow:0 2px 0 #827252}
+#lvis .дк.дк314 .paleo-ledger .current button.paleo-button.table-row{outline:2px solid #567a47;outline-offset:2px;color:#29482c}
+#lvis .дк.дк314 .paleo-proof{display:grid;gap:10px;min-width:0;padding:12px 4px 14px 14px;border-left:2px solid #b9ce96;color:#dce9c4;font:400 19px/1.45 PaleoHand314,cursive;overflow-wrap:break-word}
+#lvis .дк.дк314 .paleo-proof .paleo-equation{color:#e6edcd}
+#lvis .дк.дк314 .paleo-mistake{display:grid;gap:5px;min-width:0;padding:16px 12px;border:0;border-left:3px solid #b69569;background:#e0d6b8;color:#394f3a;font:400 18px/1.4 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-mistake .paleo-equation{color:#71543a}
+
+#lvis .дк.дк314 :is(.paleo-feedback,.готово,.разбор,.дт-совет){display:block;min-width:0;margin:0;padding:12px 6px 12px 15px;border:0;border-left:2px solid #c5ad76;border-radius:0;background:none;box-shadow:none;color:var(--paleo-paper);font:400 19px/1.45 PaleoHand314,cursive;text-align:left;overflow-wrap:break-word;scroll-margin-block:100px 130px}
+#lvis .дк.дк314 :is(.paleo-feedback.is-success,.готово){border-left-color:#bed69d;color:#dfebc6}
+#lvis .дк.дк314 :is(.paleo-feedback.is-error,.разбор){border-left-color:#ecb394;color:#ffcfb8}
+#lvis .дк.дк314 .paleo-feedback.is-hint{border-left-color:#a8b99c;color:#e0e6ce}
+#lvis .дк.дк314 .готово>span{display:inline-block;margin-right:7px;color:#e5c17f;font-size:20px}
+#lvis .дк.дк314 .дт-совет{display:flex;gap:9px}
+#lvis .дк.дк314 .дт-подсказки{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+#lvis .дк.дк314 .дт-лента{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;align-self:stretch;gap:8px 14px;padding:0 2px 9px;border:0;border-bottom:1px solid #c1b17f55;border-radius:0;background:none;box-shadow:none;color:var(--paleo-gold);font:400 18px/1.4 PaleoHand314,cursive}
+#lvis .дк.дк314 .дт-лента .зв{display:flex;flex-wrap:wrap;gap:5px;max-width:100%}
+#lvis .дк.дк314 .дт-лента .зв i{font-style:normal;color:#e0bf7f;text-shadow:none}
+#lvis .дк.дк314 .дт-лента .зв i.нет{color:#7e9277}
+#lvis .дк.дк314 .дт-итог{color:var(--paleo-paper);font:400 25px/1.35 PaleoHand314,cursive}
+#lvis .дк.дк314:has(.paleo-practice)>:is(.числа,.дт-ряд,.готово,.дт-подсказки,.дт-совет){display:none}
+#lvis .дк.дк314 .paleo-finale{gap:20px;text-align:center}
+#lvis .дк.дк314 .paleo-finale>.слушать{grid-column:auto;grid-row:auto;justify-self:center}
+#lvis .дк.дк314 .paleo-atlas-reference{position:relative;display:grid;gap:15px;min-width:0;margin-top:13px;padding:22px 0 3px;border-top:2px solid #b8aa7d;text-align:left}
+#lvis .дк.дк314 .paleo-atlas-reference::before{content:'';position:absolute;top:-2px;left:18px;width:19px;height:18px;border-left:5px solid #b49767;border-right:5px solid #b49767;border-bottom:5px solid #b49767;pointer-events:none}
+#lvis .дк.дк314 .paleo-atlas-reference>p{color:var(--paleo-paper);font:400 19px/1.45 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-atlas-reference label{color:var(--paleo-gold);font:400 22px/1.35 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-atlas-reference select{appearance:none;display:block;width:100%;min-width:0;min-height:62px;padding:12px 48px 12px 18px;border:1px solid #a79570;border-radius:2px 10px 2px 10px;background-color:#d8c6a0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 8L12 15L19 8' fill='none' stroke='%2341593d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 15px center;background-size:24px;background-repeat:no-repeat;box-shadow:inset 0 0 0 4px #ecdebd88,0 3px 0 #756748;color:#304934;font:400 26px/1.25 PaleoHand314,cursive;cursor:pointer;touch-action:manipulation}
+#lvis .дк.дк314 .paleo-atlas-reference select:focus-visible{outline:3px solid #ffe0a0;outline-offset:4px}
+#lvis .дк.дк314 .paleo-atlas-reference .paleo-ledger td{font-size:24px;padding-block:11px}
+#lvis .дк.дк314 .paleo-atlas-reference .paleo-ledger th{font-size:18px}
+#lvis .дк.дк314 .paleo-atlas-reference .paleo-reference-table tbody th{padding:11px 5px;color:#344c37;font:400 24px/1.25 PaleoHand314,cursive}
+
+/* See the scene, hear one short invitation, then use the objects. */
+#lvis .дк.дк314:has(.paleo-game)>.реплика{display:none}
+#lvis .дк.дк314 .реплика.paleo-dialogue{grid-template-columns:60px minmax(0,1fr) 44px;gap:3px 10px;padding:2px 0 10px;border-bottom:1px solid #beae8333}
+#lvis .дк.дк314 .реплика.paleo-dialogue .аватар{display:contents}
+#lvis .дк.дк314 .реплика.paleo-dialogue .аватар img{grid-column:1;grid-row:1/3;align-self:center;width:60px;height:76px;object-fit:contain;object-position:center bottom}
+#lvis .дк.дк314 .реплика.paleo-dialogue .аватар span{grid-column:2;grid-row:1;align-self:center;min-width:0;font:400 20px/1.25 PaleoHand314,cursive}
+#lvis .дк.дк314 .реплика.paleo-dialogue p{grid-column:2/-1;grid-row:2;font:400 18px/1.4 PaleoHand314,cursive;overflow-wrap:break-word}
+#lvis .дк.дк314 .реплика.paleo-dialogue .слушать{grid-column:3;grid-row:1;width:44px;height:44px;min-height:44px;margin:0}
+#lvis .дк.дк314 .paleo-game .paleo-instruction{font-size:18px;line-height:1.4}
+#lvis .дк.дк314 .paleo-game :is(.paleo-feedback,.paleo-proof){gap:7px;padding-block:9px;font-size:18px;line-height:1.4}
+#lvis .дк.дк314 .paleo-game .paleo-proof .paleo-equation{padding-block:3px}
+#lvis .дк.дк314 :is(.paleo-more,.paleo-atlas-answers){min-width:0;margin:2px 0;padding:0;border:0;background:none;color:var(--paleo-muted);font:400 18px/1.45 PaleoHand314,cursive;text-align:left}
+#lvis .дк.дк314 :is(.paleo-more,.paleo-atlas-answers)>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:11px 3px;border-bottom:1px solid #aeb58a66;color:#e2d2a9;font:400 18px/1.4 PaleoHand314,cursive;list-style:none;cursor:pointer;touch-action:manipulation}
+#lvis .дк.дк314 :is(.paleo-more,.paleo-atlas-answers)>summary::-webkit-details-marker{display:none}
+#lvis .дк.дк314 :is(.paleo-more,.paleo-atlas-answers)>summary::after{content:'';flex:none;width:10px;height:10px;margin:0 7px 4px 2px;border-right:2px solid #c7b780;border-bottom:2px solid #c7b780;transform:rotate(45deg)}
+#lvis .дк.дк314 :is(.paleo-more,.paleo-atlas-answers)[open]>summary::after{margin-top:7px;transform:rotate(225deg)}
+#lvis .дк.дк314 :is(.paleo-more,.paleo-atlas-answers)>summary:focus-visible{outline:3px solid #ffe0a0;outline-offset:3px}
+#lvis .дк.дк314 .paleo-more[open]{padding-bottom:8px}
+#lvis .дк.дк314 .paleo-more>p{padding:11px 3px 0;color:var(--paleo-muted);font:400 18px/1.45 PaleoHand314,cursive}
+#lvis .дк.дк314 .paleo-atlas-answers[open]>div{padding-top:14px}
+#lvis .дк.дк314 #paleo314-atlas-workspace{display:grid;gap:14px;min-width:0}
+#lvis .дк.дк314 .paleo-atlas-reference{gap:12px;margin-top:4px;padding-top:19px}
+#lvis .дк.дк314 .paleo-atlas-reference>h4{font:400 26px/1.25 PaleoTitle314,cursive;color:var(--paleo-paper)}
+#lvis .дк.дк314 .paleo-atlas-quantity{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;align-items:center;gap:9px 12px;min-width:0;padding:6px 0 11px;border-bottom:1px solid #abb18b55}
+#lvis .дк.дк314 .paleo-atlas-quantity>:is(label,span){grid-column:1/-1;color:var(--paleo-muted);font:400 18px/1.4 PaleoHand314,cursive;text-align:left}
+#lvis .дк.дк314 .paleo-atlas-quantity>output{display:block;min-width:0;color:var(--paleo-paper);font:400 32px/1.25 PaleoHand314,cursive;text-align:center}
+#lvis .дк.дк314 .paleo-atlas-quantity>.paleo-button.tool{width:56px;min-width:56px;min-height:56px;padding:9px;border:1px solid #a8ad85;border-radius:3px 9px 3px 9px;background:#c5cbaa;color:#2a4735;font-size:30px;line-height:1;box-shadow:0 3px 0 #5a7054}
+#lvis .дк.дк314 .paleo-atlas-result{display:grid;gap:5px;min-width:0;padding:2px 0 4px;color:var(--paleo-muted);font:400 18px/1.4 PaleoHand314,cursive;text-align:center}
+#lvis .дк.дк314 .paleo-atlas-result .paleo-equation{padding-block:4px}
+#lvis .дк.дк314 .paleo-atlas-empty{display:grid;align-content:center;gap:8px;min-width:0;min-height:120px;padding:18px 12px;border-top:1px solid #a4b28a;border-bottom:1px solid #a4b28a;color:var(--paleo-muted);font:400 18px/1.4 PaleoHand314,cursive;text-align:center}
+
+/* A compact doorway into the separate game leaves the lesson scene in view. */
+#screen:has(.дк314)>.игра-плашка{display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;gap:6px 11px;margin:2px 0 12px;padding:10px 8px;border:0;border-top:1px solid #b6ac7f66;border-bottom:1px solid #b6ac7f66;border-radius:0;background:none;box-shadow:none;color:#eee2c6;font:400 18px/1.35 PaleoHand314,cursive}
+#screen:has(.дк314)>.игра-плашка .ип-низ{display:contents}
+#screen:has(.дк314)>.игра-плашка :is(.ип-кадр,.ип-мини){grid-column:1;grid-row:1/3;align-self:center;display:block;width:72px;height:72px;aspect-ratio:auto;border-radius:2px;background:none}
+#screen:has(.дк314)>.игра-плашка .ип-кадр img{display:block;width:72px;height:72px;object-fit:cover;object-position:center}
+#screen:has(.дк314)>.игра-плашка .ип-мини{object-fit:cover}
+#screen:has(.дк314)>.игра-плашка .ип-текст{grid-column:2;grid-row:1;min-width:0;line-height:1.3}
+#screen:has(.дк314)>.игра-плашка .ип-имя{font:400 18px/1.3 PaleoHand314,cursive;color:#eee2c6}
+#screen:has(.дк314)>.игра-плашка :is(.ип-метка,.ип-про){display:none}
+#screen:has(.дк314)>.игра-плашка .ип-шкала{gap:4px;margin-top:4px}
+#screen:has(.дк314)>.игра-плашка .ип-шкала i{height:4px;border-radius:1px}
+#screen:has(.дк314)>.игра-плашка .ип-кнопка{grid-column:2;grid-row:2;justify-self:start;min-height:44px;max-width:100%;padding:8px 18px;border:1px solid #a7ad87;border-radius:2px 7px 2px 7px;background:#c5cbaa;color:#2b4735;box-shadow:0 2px 0 #617353;font:400 18px/1.3 PaleoHand314,cursive;white-space:normal}
+
+/* Lesson-local navigation, never the application's header or footer. */
+#screen:has(.дк314) .btnrow{display:flex;flex-wrap:wrap;gap:12px}
+#screen:has(.дк314) .btnrow .btn{display:flex;align-items:center;justify-content:center;flex:1 1 125px;min-width:0;min-height:60px;padding:14px 18px;border:1px solid #a5af8d;border-radius:2px 6px 2px 6px;background:#c6cdaa;box-shadow:0 3px 0 #647454;color:#2d4735;font:400 19px/1.4 PaleoHand314,cursive;text-align:center;white-space:normal;overflow-wrap:break-word;touch-action:manipulation}
+#screen:has(.дк314) .btnrow .btn.ghost{border-color:#829b80;background:none;box-shadow:none;color:#e0d7b7}
+#screen:has(.дк314) .btnrow .btn:disabled{opacity:.45}
+#screen:has(.дк314) .btnrow .btn:focus-visible{outline:3px solid #ffe0a0;outline-offset:3px}
+@media(min-width:480px){
+  #lvis .дк.дк314 .paleo-art img{max-height:370px}
+  #lvis .дк.дк314 .paleo-fossil{flex-basis:54px;width:54px;min-height:49px}
+  #lvis .дк.дк314 .paleo-group{padding:16px 12px 18px}
+  #lvis .дк.дк314 .paleo-dig{gap:18px}
+  #lvis .дк.дк314 .paleo-dig>.paleo-group:last-child:nth-child(odd):not(:has(.paleo-fossil:nth-child(6))):not(:has(.paleo-dinosaur)){width:calc(50% - 9px)}
+  #lvis .дк.дк314 .paleo-array{padding:22px 18px}
+  #lvis .дк.дк314 .paleo-row .paleo-fossil{max-width:54px}
+}
+@media(max-width:350px){
+  #lvis .дк.дк314{gap:14px}
+  #lvis .дк.дк314 :is(.paleo314,.paleo-game){gap:12px}
+  #lvis .дк.дк314 :is(.paleo-controls,.числа,.дт-ряд){gap:10px}
+  #lvis .дк.дк314 .paleo-equation{gap:7px;font-size:30px}
+  #lvis .дк.дк314 :is(button.paleo-button.primary,.дальше-кн){padding-inline:24px}
+  #lvis .дк.дк314 .paleo-fossils{gap:6px}
+}
+@media(prefers-reduced-motion:reduce){
+  #lvis .дк.дк314 *,#lvis .дк.дк314 *::before,#lvis .дк.дк314 *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* First encounter: the same six finds stay visible while the notation grows. */
+#lvis .дк.дк314 .paleo314 .paleo-teaching-mats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:stretch}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats .paleo-group{min-width:0;width:100%;padding:11px 5px;min-height:135px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats .paleo-fossils{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats .paleo-fossil{width:34px;flex:0 0 34px;max-width:34px}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats .paleo-group-label,#lvis .дк.дк314 .paleo314 .paleo-teaching-mats .paleo-group-count{font-size:18px;line-height:1.25;text-align:center}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats button:disabled{opacity:1}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats button:disabled:not(.is-marked){border-style:dashed}#lvis .дк.дк314 .paleo314 .paleo-loose{padding:10px 0;border-bottom:1px dashed #a0ac88}#lvis .дк.дк314 .paleo314 .paleo-loose>p{margin:0 0 8px;text-align:center;font-size:18px}#lvis .дк.дк314 .paleo314 .paleo-loose .paleo-fossils{justify-content:center;flex-wrap:wrap}#lvis .дк.дк314 .paleo314 .paleo-loose .paleo-fossil{width:39px;max-width:39px;flex:0 0 39px}#lvis .дк.дк314 .paleo314 .paleo-counting-trail{display:grid;gap:10px;padding:12px 0;border-block:1px solid #b9bd8a88}#lvis .дк.дк314 .paleo314 .paleo-counting-trail p{font-size:19px;line-height:1.4;margin:0}#lvis .дк.дк314 .paleo314 .paleo-counting-trail .paleo-equation{gap:7px;flex-wrap:nowrap;font-size:27px}#lvis .дк.дк314 .paleo314 .paleo-teaching-line{font-size:22px;text-align:center;margin:4px 0}#lvis .дк.дк314 .paleo314 .paleo-focus-group{outline:3px solid #f2cd7e;outline-offset:1px;background:#45674c}#lvis .дк.дк314 .paleo314 .paleo-meaning{display:grid;grid-template-columns:1fr .7fr 1fr;gap:8px;align-items:start}#lvis .дк.дк314 .paleo314 .paleo-meaning>div{display:grid;gap:8px;text-align:center}#lvis .дк.дк314 .paleo314 .paleo-meaning b{font-size:42px;line-height:1.1;color:#f0d395;font-weight:400}#lvis .дк.дк314 .paleo314 .paleo-meaning span{font-size:18px;line-height:1.35;color:#e3dec5}#lvis .дк.дк314 .paleo314 .paleo-teaching-result{font-size:20px;line-height:1.4;margin:0;padding-left:12px;border-left:3px solid #b4cf99}#lvis .дк.дк314 .paleo314 [data-kind=tutorial] .paleo-more{margin-top:8px}@media(max-width:350px){#lvis .дк.дк314 .paleo314 .paleo-teaching-mats .paleo-fossil{width:29px;max-width:29px;flex-basis:29px}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats{gap:6px}#lvis .дк.дк314 .paleo314 .paleo-teaching-mats .paleo-group-label{font-size:18px}#lvis .дк.дк314 .paleo314 .paleo-counting-trail .paleo-equation{font-size:23px;gap:5px}}
+#lvis .дк.дк314 .paleo314 .paleo-count-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,120px));justify-content:center;gap:clamp(12px,5vw,24px);min-width:0;padding:16px 4px}#lvis .дк.дк314 .paleo314 .paleo-count-tile{appearance:none;width:100%;min-width:0;min-height:140px;display:grid;justify-items:center;gap:10px;background:transparent;border:2px dashed #b5bf9a;border-radius:8px 3px;color:#ebdfbd;padding:12px;font:20px/1.2 PaleoHand314,cursive}#lvis .дк.дк314 .paleo314 .paleo-count-tile svg{display:block;width:86px;height:auto}#lvis .дк.дк314 .paleo314 .paleo-count-tile:disabled{opacity:1}#lvis .дк.дк314 .paleo314 .paleo-count-tile.is-counted{border-style:solid;border-color:#f0cc81;background:#355d48}#lvis .дк.дк314 .paleo314 .paleo-count-tile.is-counted span{font-size:27px;color:#f4d99e}
+#lvis:has(.paleo314){padding-bottom:90px}#lvis .дк.дк314 .paleo-controls,#lvis .дк.дк314 .paleo-constructor{scroll-margin-bottom:150px}#lvis .дк.дк314 .paleo-practice{padding-bottom:25px}

@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "sources": {
+    "workshop": "exec-b4c855b6-ceb4-406c-8ae5-0a089380acbf.png",
+    "jetty": "exec-21c1db03-074b-4aa5-b7b4-87cf97dfecb4.png",
+    "stream": "exec-76dfc967-051f-4e4d-9389-f08e0670ab83.png",
+    "concert": "exec-d0b599ce-e58d-4eac-8e76-eb3c0273ea50.png",
+    "lada": "exec-2277c983-b4f5-4f8d-8e96-ac23f369cf54.png",
+    "flik": "exec-6f1b6d7e-d94e-4a46-a9ba-6d5ac52b1173.png"
+  },
+  "style": "Original river workshop storybook illustrations. Forest green, sage, cream and muted gold. Otter Lada and kingfisher Flik. No apples or baskets.",
+  "scenes": {
+    "workshop": "Lada introduces the silent instrument, Flik listens.",
+    "jetty": "Lada guides an empty raft; Flik indicates the bank.",
+    "stream": "Lada joins willow frame pieces; Flik helps.",
+    "concert": "Lada plays the restored instrument; Flik conducts."
+  },
+  "derivatives": "WebP encoding and thumbnail sizing only. Source images retained."
+}

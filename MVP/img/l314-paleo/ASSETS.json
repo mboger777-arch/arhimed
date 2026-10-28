@@ -1,0 +1,59 @@
+{
+  "tool": "built-in image_gen",
+  "characters": {
+    "rum": "Young coral-grey armadillo, indigo waistcoat, ochre neckerchief",
+    "taya": "Sandy fennec, turquoise belt, brown notebook, grey tailtip"
+  },
+  "sources": {
+    "camp": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-46c0d1f8-1e40-4561-a962-cece06f09e79.png",
+    "dig": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-576b0fd1-8b20-4a83-b8a3-e1884f2d6b48.png",
+    "plateau": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-ddd4bd21-5dce-4d42-b78a-587114cd024d.png",
+    "canyon": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-bb1fb7fd-cec2-44ca-884d-3ac736ee6436.png",
+    "atlas": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-7bf4b6eb-d52b-4aaf-862a-95d452444b95.png",
+    "dusk": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-eb681bb0-6b2f-46d9-8c08-81ae683d22e8.png",
+    "rum": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-cde5d69e-bb44-4022-b4b1-8fa8814d3e7d.png",
+    "taya": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-a304c4d7-e9a6-4d66-89d5-541239690fc4.png",
+    "workshop": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-7948aacc-46ab-44ba-8f80-6122231a9874.png",
+    "bridge": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-72ff2c39-c2d2-419d-b547-f28ceab47aa1.png",
+    "observatory": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-03bedb14-03b5-4973-8e15-8d599feb2e39.png",
+    "museum": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-17827ea5-7372-481a-a56f-dca9d62ee6c8.png"
+  },
+  "prompts": [
+    {
+      "key": "dig",
+      "prompt": "Create another original landscape 3:2 children's storybook illustration in EXACTLY the painterly style and character identity of the reference, with luminous gouache and fine pencil textures. Same two heroes, warm coral-grey stocky armadillo RUM in short indigo waistcoat/ochre scarf, and sandy FENNEC TAYA with huge pink-inside ears, turquoise belt and small brown notebook, grey tailtip. Same proportions: equal shoulder height when standing, Taya's ears taller. Feet firmly grounded, believable anatomy, clear expressive deliberate action. Colourful sandstone expedition palette, not green-filtered. No text, digits, UI, borders, no apples/baskets, no counting diagrams or counted groups. This image is narrative scenery; mathematical objects will be drawn separately. At a dusty rose archaeological dig between low ochre rock terraces, Rum crouches brushing sand away from a beautiful single spiral fossil; Taya kneels opposite carefully lifts a flat fossil cast with both paws. Main subjects large and visible on phone. Changed viewpoint at ground level, triangular composition, one brush on side and plain rolled cloth, bright turquoise sky and lavender shadows, rich coherent natural lighting.",
+      "ref": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-46c0d1f8-1e40-4561-a962-cece06f09e79.png"
+    },
+    {
+      "key": "plateau",
+      "prompt": "Create another original landscape 3:2 children's storybook illustration in EXACTLY the painterly style and character identity of the reference, with luminous gouache and fine pencil textures. Same two heroes, warm coral-grey stocky armadillo RUM in short indigo waistcoat/ochre scarf, and sandy FENNEC TAYA with huge pink-inside ears, turquoise belt and small brown notebook, grey tailtip. Same proportions: equal shoulder height when standing, Taya's ears taller. Feet firmly grounded, believable anatomy, clear expressive deliberate action. Colourful sandstone expedition palette, not green-filtered. No text, digits, UI, borders, no apples/baskets, no counting diagrams or counted groups. This image is narrative scenery; mathematical objects will be drawn separately. An elevated medium wide oblique view on a broad flat pale limestone plateau. Rum stands on left carrying a single square clay impression tile with both paws, Taya on right leans forward and indicates the EMPTY broad flat stone surface where they plan to arrange finds. A narrow trail down cliffs in background, cobalt sky, ochre distance, turquoise cool shadows. Characters occupy lower half; bold clear diagonal staging, no tiles prearranged in groups.",
+      "ref": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-46c0d1f8-1e40-4561-a962-cece06f09e79.png"
+    },
+    {
+      "key": "canyon",
+      "prompt": "Create another original landscape 3:2 children's storybook illustration in EXACTLY the painterly style and character identity of the reference, with luminous gouache and fine pencil textures. Same two heroes, warm coral-grey stocky armadillo RUM in short indigo waistcoat/ochre scarf, and sandy FENNEC TAYA with huge pink-inside ears, turquoise belt and small brown notebook, grey tailtip. Same proportions: equal shoulder height when standing, Taya's ears taller. Feet firmly grounded, believable anatomy, clear expressive deliberate action. Colourful sandstone expedition palette, not green-filtered. No text, digits, UI, borders, no apples/baskets, no counting diagrams or counted groups. This image is narrative scenery; mathematical objects will be drawn separately. A dynamic but calm exploratory scene in tall peach-orange sandstone canyon, a winding trail and one enormous ancient footprint sunk in foreground rock. Taya crouches at right, gently points to an edge of that one footprint, curious and delighted; Rum stands at left with one paw on his brow, looking toward distant safe passage and pictographs on wall. Backlit peach walls, blue skylight, violet shadows. No chase, no danger. New poses and composition.",
+      "ref": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-46c0d1f8-1e40-4561-a962-cece06f09e79.png"
+    },
+    {
+      "key": "atlas",
+      "prompt": "Create another original landscape 3:2 children's storybook illustration in EXACTLY the painterly style and character identity of the reference, with luminous gouache and fine pencil textures. Same two heroes, warm coral-grey stocky armadillo RUM in short indigo waistcoat/ochre scarf, and sandy FENNEC TAYA with huge pink-inside ears, turquoise belt and small brown notebook, grey tailtip. Same proportions: equal shoulder height when standing, Taya's ears taller. Feet firmly grounded, believable anatomy, clear expressive deliberate action. Colourful sandstone expedition palette, not green-filtered. No text, digits, UI, borders, no apples/baskets, no counting diagrams or counted groups. This image is narrative scenery; mathematical objects will be drawn separately. Intimate close-up on the two heroes leaning over a large open handmade explorer atlas placed on a wide low sandstone slab. Rum at left gently turns one page with his paw; Taya at right traces a blank cream page with a small pencil, notebook at turquoise belt visible. Pages beautifully blank for later live text, no letters/digits. In background see warm pale canvas and lavender evening canyon beyond. Soft mellow light, heads at equal scale; book is foreground centre, full hands correctly drawn.",
+      "ref": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-46c0d1f8-1e40-4561-a962-cece06f09e79.png"
+    },
+    {
+      "key": "dusk",
+      "prompt": "Create another original landscape 3:2 children's storybook illustration in EXACTLY the painterly style and character identity of the reference, with luminous gouache and fine pencil textures. Same two heroes, warm coral-grey stocky armadillo RUM in short indigo waistcoat/ochre scarf, and sandy FENNEC TAYA with huge pink-inside ears, turquoise belt and small brown notebook, grey tailtip. Same proportions: equal shoulder height when standing, Taya's ears taller. Feet firmly grounded, believable anatomy, clear expressive deliberate action. Colourful sandstone expedition palette, not green-filtered. No text, digits, UI, borders, no apples/baskets, no counting diagrams or counted groups. This image is narrative scenery; mathematical objects will be drawn separately. Finale, a wide awe-filled view from a safe foreground overlook into a gorgeous lavender and apricot prehistoric valley. Rum and Taya full-body stand together in THREE QUARTER VIEW near left foreground, Rum holding their closed atlas proudly, Taya excitedly points into valley. Two gentle quadruped long-neck ancient animals wander far below near a ribbon river. Not scientific documentary, kind storybook discovery. Turquoise water, mauve mountains, peach-gold evening clouds; warm rim light on unchanged clothes/fur. No lanterns/fireflies/music instruments.",
+      "ref": "/Users/mihaildrozdov/.codex/generated_images/01a13719-8563-7ec3-b93c-49561573bb77/exec-46c0d1f8-1e40-4561-a962-cece06f09e79.png"
+    }
+  ],
+  "avatars": [
+    {
+      "key": "rum",
+      "prompt": "Only RUM the young stocky armadillo from the reference, EXACT same warm coral-grey broad plated shell, indigo waistcoat and ochre neckerchief. Full body, standing firmly on both hind feet, same face and proportions; one hand gently presents a single fossil tile and the other touches his scarf. Kind curious expression, slight three-quarter view. No other character. Create a detailed painterly storybook cutout asset on true transparent background, no scenery, no text, no frame, no glow or white halo. Clean soft-edge fur and tactile handmade gouache pencil rendering matching reference."
+    },
+    {
+      "key": "taya",
+      "prompt": "Only TAYA the fennec fox from the reference, EXACT same sandy fur, cream muzzle, very large ears warm pink inside, turquoise belt and brown notebook, grey tip of tail. Full body, standing firmly on both feet, same face and proportions. One paw holds the notebook at waist, other paw lifted in a helpful explanatory gesture, friendly thoughtful expression. No other character. Create a detailed painterly storybook cutout asset on true transparent background, no scenery, no text, no frame, no glow or white halo. Clean soft-edge fur and tactile handmade gouache pencil rendering matching reference."
+    }
+  ],
+  "derivatives": "WebP encoding and thumbnail sizing only. Originals retained."
+}
