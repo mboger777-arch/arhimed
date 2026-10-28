@@ -1,0 +1,1 @@
+{"name": "Варя и Тетрадная страна", "short_name": "Тетрадная страна", "start_url": "./index.html", "display": "fullscreen", "orientation": "landscape", "background_color": "#3a5aa8", "theme_color": "#3a5aa8", "icons": [{"src": "assets/ui/icon192.png", "sizes": "192x192", "type": "image/png"}, {"src": "assets/ui/icon512.png", "sizes": "512x512", "type": "image/png"}]}

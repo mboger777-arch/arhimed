@@ -1,4 +1,4 @@
-"""Проверка игр к урокам: из каждого урока по плашке (в комиксе 314 — по кнопке «🎮 Игра»)
+"""Проверка игр к урокам (девятнадцать, у 306 — две): из каждого урока по плашке (в комиксе 314 — по кнопке «🎮 Игра»)
 открывается своя игра, на её заставке видна «← В урок», и она возвращает в тот же урок.
 Телефон вертикально и горизонтально. Нужен сервер (preview «arhimed» на 8123);
 прод: BASE='https://123.teramont.pro/MVP/' PYTHONPATH=.py-libs python3 deploy/игры_проверить.py
@@ -11,14 +11,15 @@ with sync_playwright() as p:
     b=p.chromium.launch(executable_path=br)
     for (W,H) in [(375,812),(812,375)]:
         ctx=b.new_context(viewport={'width':W,'height':H}, has_touch=True, is_mobile=True, device_scale_factor=2)
-        pg=ctx.new_page(); err=[]; pg.on('pageerror', lambda e, pg=pg: err.append(pg.url.split('/')[-2]+': '+str(e)[:90]))
-        for id,g in [(253,'desyat-fonarei'),(255,'vesy-znaki'),(60,'chasy'),(30,'sto-monetok'),(314,'sad-umnozheniya'),(71,'tsyplyata-parami'),(73,'igrushki-na-polkah'),(74,'polovina-yabloka'),(81,'gonka-za-sotymi'),(197,'kubicheskiy-mir'),(309,'ostrov-hitryh-igr'),(310,'prostye-kristally'),(638,'yarmarka-podskazok'),(68,'zvezdnaya-pesnya'),(500,'tima-i-glyuk')]:
+        pg=ctx.new_page(); err=[]; вид=[]; pg.on('pageerror', lambda e, pg=pg: err.append(pg.url.split('/')[-2]+': '+str(e)[:90]))
+        for id,g in [(253,'desyat-fonarei'),(255,'vesy-znaki'),(60,'chasy'),(30,'sto-monetok'),(314,'sad-umnozheniya'),(71,'tsyplyata-parami'),(73,'igrushki-na-polkah'),(74,'polovina-yabloka'),(81,'gonka-za-sotymi'),(197,'kubicheskiy-mir'),(309,'ostrov-hitryh-igr'),(310,'prostye-kristally'),(638,'yarmarka-podskazok'),(68,'zvezdnaya-pesnya'),(500,'tima-i-glyuk'),(303,'zlata-raskolotaya-luna'),(306,'yarik-zavodnoy-gorod'),(306,'bitva-za-girlyandu'),(311,'varya-tetradnaya-strana')]:
             pg.goto('about:blank')   # иначе смена одного #хеша оставляет открытым комикс прошлого урока
             pg.goto(BASE+'index.html#lesson-'+str(id), timeout=90000); pg.wait_for_timeout(3500 if '127.0.0.1' in BASE else 8000)
             pg.evaluate("()=>document.getElementById('pinPadOverlay')?.remove()")
             sel = '.игра-чип:visible' if pg.locator('.игра-чип:visible').count() else '.игра-плашка:visible'   # у комиксов — кнопка в шапке
             ok_btn = pg.locator(sel).count()
-            pg.locator(sel).first.dispatch_event('click'); pg.wait_for_timeout(6000)
+            n = [x for x in вид if x == id].__len__(); вид.append(id)   # у урока 306 две игры: вторая — вторая плашка
+            pg.locator(sel).nth(n).dispatch_event('click'); pg.wait_for_timeout(6000)
             u1 = pg.url
             back = pg.locator('a[href*="index.html"]')
             vis = back.is_visible()

@@ -1,9 +1,10 @@
 /* ============ ИГРЫ К УРОКАМ НАЧАЛЬНОЙ ШКОЛЫ ============
-   Пятнадцать игр с озвучкой (репозитории mboger777-arch/<папка> на GitHub; 14.10.2026 добавлены
+   Девятнадцать игр с озвучкой (репозитории mboger777-arch/<папка> на GitHub; 14.10.2026 добавлены
    «Цыплята парами», «Игрушки на полках», «Половина яблока» к урокам 71, 73, 74;
    21.10.2026 — «Гонка за сотыми» → 81, «Кубический мир» → 197, «Остров хитрых игр» → 309,
    «Пещера простых кристаллов» → 310, «Ярмарка подсказок» → 638; 22.10.2026 — «Звёздная песня» → 68,
-   «Тима и Глюк» → 500)
+   «Тима и Глюк» → 500; 24.10.2026 — «Злата и Расколотая Луна» → 303, «Ярик и Заводной город» и «Кира и Буран:
+   Битва за гирлянду» → 306 (две игры у одного урока — запись списком), «Варя и Тетрадная страна» → 311)
    лежат копиями в MVP/games/<папка>/ и открываются из своего урока.
 
    Как работает.
@@ -45,9 +46,16 @@
     /* 22.10.2026: «Звёздная песня» — ритм-игра про состав числа 10, «Тима и Глюк» — путешествие внутрь компьютера */
     68:  { папка:'zvezdnaya-pesnya',   имя:'Звёздная песня',     уровней:5, про:'состав числа 10',           прогресс(){ return звёзды('zvezd68'); } },
     500: { папка:'tima-i-glyuk',       имя:'Тима и Глюк',        уровней:5, про:'информация и компьютер',    прогресс(){ return звёзды('tima500'); } },
+    /* 24.10.2026: ещё четыре игры; у урока 306 их две — запись списком, плашек тоже две */
+    303: { папка:'zlata-raskolotaya-luna', имя:'Злата и Расколотая Луна', уровней:5, про:'уравнения «часть–целое»', прогресс(){ return звёзды('luna303'); } },
+    306: [ { папка:'yarik-zavodnoy-gorod', имя:'Ярик и Заводной город', уровней:5, про:'закономерности и таблицы', прогресс(){ return звёзды('zavod306'); } },
+           { папка:'bitva-za-girlyandu',   имя:'Кира и Буран: Битва за гирлянду', уровней:5, про:'закономерности и таблицы', прогресс(){ return звёзды('girl306'); } } ],
+    311: { папка:'varya-tetradnaya-strana', имя:'Варя и Тетрадная страна', уровней:5, про:'клетки и фигуры', прогресс(){ return звёзды('varya311'); } }
   };
   function звёзды(ключ){ try { const sv = JSON.parse(localStorage.getItem(ключ) || '{}'); return 1 + (sv.stars || []).filter(x => x > 0).length; } catch(e){ return 1; } }
   window.ИГРЫ_УРОКОВ = ИГРЫ;
+  /* у урока может быть одна игра (объект) или несколько (список) */
+  const игры = (id) => { const v = ИГРЫ[id]; return !v ? [] : Array.isArray(v) ? v : [v]; };
 
   function пройдено(g){
     let n = 1;
@@ -55,21 +63,21 @@
     return Math.max(0, Math.min(g.уровней, (n||1) - 1));
   }
   /* в журнал урока: сколько уровней игры пройдено (родитель видит вместе с уроком) */
-  function вЖурнал(id, g){
+  function вЖурнал(id){
     try{
       if(typeof DB==='undefined' || !DB.profile) return;
-      const n = пройдено(g);
+      const все = игры(id), n = все.reduce((s, g) => s + пройдено(g), 0), из = все.reduce((s, g) => s + g.уровней, 0);
       DB.lessons = DB.lessons || {};
       const rec = DB.lessons[id] || (DB.lessons[id] = {done:false, stars:0, tasks:[]});
-      /* The new 314 expedition has seven stages. Keep the previous garden result intact. */
+      /* Preserve the previous garden result when installing the seven-stage expedition. */
       if(id===314 && rec.game && rec.game.of===5 && !rec.gameLegacyUm) rec.gameLegacyUm=Object.assign({},rec.game);
-      if(rec.game && rec.game.done === n && (id!==314 || rec.game.of===g.уровней)) return;
-      rec.game = { done:n, of:g.уровней };
+      if(rec.game && rec.game.done === n && rec.game.of === из) return;
+      rec.game = { done:n, of:из };
       if(typeof save==='function') save();
     }catch(e){}
   }
-  window.играУрока = function(id){
-    const g = ИГРЫ[id]; if(!g) return;
+  window.играУрока = function(id, k){
+    const g = игры(id)[k || 0]; if(!g) return;
     location.href = 'games/' + g.папка + '/?lesson=' + id;
   };
 
@@ -102,13 +110,13 @@
     document.head.appendChild(st);
   }
   /* на первом шаге урока — афиша с заставкой игры, дальше — компактная строка */
-  function плашка(id, g, мини){
+  function плашка(id, g, мини, k){
     const n = пройдено(g), все = n >= g.уровней;
     const шкала = Array.from({length:g.уровней}, (_,i)=>`<i class="${i<n?'да':''}"></i>`).join('');
     const el = document.createElement('div');
     el.className = 'игра-плашка' + (мини ? ' мини' : ''); el.setAttribute('role','button');
     el.setAttribute('aria-label', 'Игра к уроку: ' + g.имя);
-    el.onclick = ()=>играУрока(id);
+    el.onclick = ()=>играУрока(id, k || 0);
     const картинка = `img/games/${g.папка}.jpg`;
     el.innerHTML = (мини ? '' : `<span class="ип-кадр"><img src="${картинка}" alt=""></span>`) +
       `<div class="ип-низ">${мини ? `<img class="ип-мини" src="${картинка}" alt="">` : ''}<div class="ип-текст">
@@ -127,9 +135,10 @@
       const scr = document.getElementById('screen'); if(!scr) return;
       if(scr.querySelector(':scope > .игра-плашка')) return;
       const card = scr.querySelector(':scope > .card'); if(!card) return;
-      стиль(); вЖурнал(LV.id, ИГРЫ[LV.id]);
+      стиль(); вЖурнал(LV.id);
       const мини = !(LV.phase==='explain' && LV.step===0);
-      scr.insertBefore(плашка(LV.id, ИГРЫ[LV.id], мини), card);
+      /* афиша — только у первой игры; остальные — компактной строкой */
+      игры(LV.id).forEach((g, k) => scr.insertBefore(плашка(LV.id, g, мини || k > 0, k), card));
     }catch(e){}
   }
   if(typeof window.renderLessonView === 'function'){
@@ -142,12 +151,15 @@
     try{
       if(typeof LV==='undefined' || !LV || !ИГРЫ[LV.id] || ov.style.display==='none') return;
       const top = ov.querySelector('.comic-top'); if(!top || top.querySelector('.игра-чип')) return;
-      стиль(); вЖурнал(LV.id, ИГРЫ[LV.id]);
-      const b = document.createElement('button');
-      b.className = 'игра-чип'; b.type = 'button'; b.textContent = '🎮 Игра';
-      b.setAttribute('aria-label', 'Игра к уроку: ' + ИГРЫ[LV.id].имя);
-      const id = LV.id; b.onclick = ()=>играУрока(id);
-      top.insertBefore(b, top.querySelector('.ct-x'));
+      стиль(); вЖурнал(LV.id);
+      const id = LV.id, все = игры(id);
+      все.forEach((g, k) => {
+        const b = document.createElement('button');
+        b.className = 'игра-чип'; b.type = 'button'; b.textContent = все.length > 1 ? '🎮 ' + (k + 1) : '🎮 Игра';
+        b.setAttribute('aria-label', 'Игра к уроку: ' + g.имя);
+        b.onclick = ()=>играУрока(id, k);
+        top.insertBefore(b, top.querySelector('.ct-x'));
+      });
     }catch(e){}
   }
   const следим = new WeakSet();
